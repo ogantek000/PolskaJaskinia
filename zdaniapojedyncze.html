@@ -169,7 +169,6 @@ body {
 .ex-word.correct { animation: popIn 0.3s ease; }
 .ex-word.wrong   { animation: shake 0.35s ease; }
 
-/* Dwupoziomowy picker */
 .picker-wrap { margin-bottom: 0.5rem; }
 .picker-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text3); margin-bottom: 7px; }
 .role-btns { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 0.75rem; }
@@ -182,7 +181,6 @@ body {
 .role-btn:hover { filter: brightness(1.2); transform: translateY(-1px); }
 .role-btn.role-active { box-shadow: 0 0 0 2px #fff4; }
 
-/* Subtype area */
 .subtype-area {
   background: var(--bg4); border: 1px solid var(--border2);
   border-radius: var(--radius); padding: 0.8rem 1rem;
@@ -250,7 +248,7 @@ body {
 <header class="header">
   <div>
     <div class="header-title">📘 Składnia Polska</div>
-    <div class="header-sub"><a href = "index.html">"Powrót"</a></div>
+    <div class="header-sub"><a href="index.html">"Powrót"</a></div>
   </div>
   <div class="score-box">Punkty: <span class="pts" id="scoreDisplay">0</span></div>
 </header>
@@ -382,9 +380,6 @@ body {
 </main>
 
 <script>
-/* ================================================================
-   PODTYPY
-   ================================================================ */
 const SUBTYPES = {
   podmiot:     ["gramatyczny","domyślny","szeregowy","logiczny"],
   orzeczenie:  ["czasownikowe","imienne"],
@@ -404,126 +399,988 @@ const ROLE_COLORS = {
 };
 
 /* ================================================================
-   ZDANIA – 100+ z pełną analizą (rola + rodzaj każdego wyrazu)
+   ZDANIA – rozwinięte (min. 5 wyrazów)
    ================================================================ */
 const SENTENCES = {
 
-/* ---------- ŁATWY (30 zdań) ---------- */
+/* ---------- ŁATWY ---------- */
 easy: [
-  {text:"Janek biegnie.",words:[{t:"Janek",r:"podmiot",s:"gramatyczny"},{t:"biegnie.",r:"orzeczenie",s:"czasownikowe"}]},
-  {text:"Pies śpi.",words:[{t:"Pies",r:"podmiot",s:"gramatyczny"},{t:"śpi.",r:"orzeczenie",s:"czasownikowe"}]},
-  {text:"Mama gotuje.",words:[{t:"Mama",r:"podmiot",s:"gramatyczny"},{t:"gotuje.",r:"orzeczenie",s:"czasownikowe"}]},
-  {text:"Kot miauczy głośno.",words:[{t:"Kot",r:"podmiot",s:"gramatyczny"},{t:"miauczy",r:"orzeczenie",s:"czasownikowe"},{t:"głośno.",r:"okolicznik",s:"sposobu"}]},
-  {text:"Ola czyta książkę.",words:[{t:"Ola",r:"podmiot",s:"gramatyczny"},{t:"czyta",r:"orzeczenie",s:"czasownikowe"},{t:"książkę.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Ptak leci wysoko.",words:[{t:"Ptak",r:"podmiot",s:"gramatyczny"},{t:"leci",r:"orzeczenie",s:"czasownikowe"},{t:"wysoko.",r:"okolicznik",s:"miejsca"}]},
-  {text:"Asia śpiewa pięknie.",words:[{t:"Asia",r:"podmiot",s:"gramatyczny"},{t:"śpiewa",r:"orzeczenie",s:"czasownikowe"},{t:"pięknie.",r:"okolicznik",s:"sposobu"}]},
-  {text:"Słońce świeci.",words:[{t:"Słońce",r:"podmiot",s:"gramatyczny"},{t:"świeci.",r:"orzeczenie",s:"czasownikowe"}]},
-  {text:"Mama jest wesoła.",words:[{t:"Mama",r:"podmiot",s:"gramatyczny"},{t:"jest",r:"orzeczenie",s:"imienne"},{t:"wesoła.",r:"orzeczenie",s:"imienne"}]},
-  {text:"Pies jest duży.",words:[{t:"Pies",r:"podmiot",s:"gramatyczny"},{t:"jest",r:"orzeczenie",s:"imienne"},{t:"duży.",r:"orzeczenie",s:"imienne"}]},
-  {text:"Niebo jest niebieskie.",words:[{t:"Niebo",r:"podmiot",s:"gramatyczny"},{t:"jest",r:"orzeczenie",s:"imienne"},{t:"niebieskie.",r:"orzeczenie",s:"imienne"}]},
-  {text:"Kasia pije mleko.",words:[{t:"Kasia",r:"podmiot",s:"gramatyczny"},{t:"pije",r:"orzeczenie",s:"czasownikowe"},{t:"mleko.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Marek lubi sport.",words:[{t:"Marek",r:"podmiot",s:"gramatyczny"},{t:"lubi",r:"orzeczenie",s:"czasownikowe"},{t:"sport.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Ryba pływa.",words:[{t:"Ryba",r:"podmiot",s:"gramatyczny"},{t:"pływa.",r:"orzeczenie",s:"czasownikowe"}]},
-  {text:"Dziadek śpi długo.",words:[{t:"Dziadek",r:"podmiot",s:"gramatyczny"},{t:"śpi",r:"orzeczenie",s:"czasownikowe"},{t:"długo.",r:"okolicznik",s:"czasu"}]},
-  {text:"Babcia gotuje zupę.",words:[{t:"Babcia",r:"podmiot",s:"gramatyczny"},{t:"gotuje",r:"orzeczenie",s:"czasownikowe"},{t:"zupę.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Uczeń pisze zadanie.",words:[{t:"Uczeń",r:"podmiot",s:"gramatyczny"},{t:"pisze",r:"orzeczenie",s:"czasownikowe"},{t:"zadanie.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Chłopiec skacze radośnie.",words:[{t:"Chłopiec",r:"podmiot",s:"gramatyczny"},{t:"skacze",r:"orzeczenie",s:"czasownikowe"},{t:"radośnie.",r:"okolicznik",s:"sposobu"}]},
-  {text:"Dziewczynka rysuje.",words:[{t:"Dziewczynka",r:"podmiot",s:"gramatyczny"},{t:"rysuje.",r:"orzeczenie",s:"czasownikowe"}]},
-  {text:"Wiatr wieje mocno.",words:[{t:"Wiatr",r:"podmiot",s:"gramatyczny"},{t:"wieje",r:"orzeczenie",s:"czasownikowe"},{t:"mocno.",r:"okolicznik",s:"sposobu"}]},
-  {text:"Deszcz pada.",words:[{t:"Deszcz",r:"podmiot",s:"gramatyczny"},{t:"pada.",r:"orzeczenie",s:"czasownikowe"}]},
-  {text:"Biegam codziennie.",words:[{t:"Biegam",r:"orzeczenie",s:"czasownikowe"},{t:"codziennie.",r:"okolicznik",s:"czasu"}]},
-  {text:"Czytam książkę.",words:[{t:"Czytam",r:"orzeczenie",s:"czasownikowe"},{t:"książkę.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Siostra tańczy.",words:[{t:"Siostra",r:"podmiot",s:"gramatyczny"},{t:"tańczy.",r:"orzeczenie",s:"czasownikowe"}]},
-  {text:"Kot je rybę.",words:[{t:"Kot",r:"podmiot",s:"gramatyczny"},{t:"je",r:"orzeczenie",s:"czasownikowe"},{t:"rybę.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Pada śnieg.",words:[{t:"Pada",r:"orzeczenie",s:"czasownikowe"},{t:"śnieg.",r:"podmiot",s:"gramatyczny"}]},
-  {text:"Lew ryczy głośno.",words:[{t:"Lew",r:"podmiot",s:"gramatyczny"},{t:"ryczy",r:"orzeczenie",s:"czasownikowe"},{t:"głośno.",r:"okolicznik",s:"sposobu"}]},
-  {text:"Piszę list.",words:[{t:"Piszę",r:"orzeczenie",s:"czasownikowe"},{t:"list.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Nauczyciel mówi cicho.",words:[{t:"Nauczyciel",r:"podmiot",s:"gramatyczny"},{t:"mówi",r:"orzeczenie",s:"czasownikowe"},{t:"cicho.",r:"okolicznik",s:"sposobu"}]},
-  {text:"Brat gra w piłkę.",words:[{t:"Brat",r:"podmiot",s:"gramatyczny"},{t:"gra",r:"orzeczenie",s:"czasownikowe"},{t:"w",r:"okolicznik",s:"sposobu"},{t:"piłkę.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Mały Janek biega szybko po podwórku.",words:[
+    {t:"Mały",r:"przydawka",s:"przymiotna"},
+    {t:"Janek",r:"podmiot",s:"gramatyczny"},
+    {t:"biega",r:"orzeczenie",s:"czasownikowe"},
+    {t:"szybko",r:"okolicznik",s:"sposobu"},
+    {t:"po",r:"okolicznik",s:"miejsca"},
+    {t:"podwórku.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Stary pies śpi spokojnie przy kominku.",words:[
+    {t:"Stary",r:"przydawka",s:"przymiotna"},
+    {t:"pies",r:"podmiot",s:"gramatyczny"},
+    {t:"śpi",r:"orzeczenie",s:"czasownikowe"},
+    {t:"spokojnie",r:"okolicznik",s:"sposobu"},
+    {t:"przy",r:"okolicznik",s:"miejsca"},
+    {t:"kominku.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Mama gotuje smaczny obiad dla rodziny.",words:[
+    {t:"Mama",r:"podmiot",s:"gramatyczny"},
+    {t:"gotuje",r:"orzeczenie",s:"czasownikowe"},
+    {t:"smaczny",r:"przydawka",s:"przymiotna"},
+    {t:"obiad",r:"dopelnienie",s:"bliższe"},
+    {t:"dla",r:"okolicznik",s:"celu"},
+    {t:"rodziny.",r:"okolicznik",s:"celu"}
+  ]},
+  {text:"Głośny kot miauczy przy drzwiach wieczorem.",words:[
+    {t:"Głośny",r:"przydawka",s:"przymiotna"},
+    {t:"kot",r:"podmiot",s:"gramatyczny"},
+    {t:"miauczy",r:"orzeczenie",s:"czasownikowe"},
+    {t:"przy",r:"okolicznik",s:"miejsca"},
+    {t:"drzwiach",r:"okolicznik",s:"miejsca"},
+    {t:"wieczorem.",r:"okolicznik",s:"czasu"}
+  ]},
+  {text:"Ola czyta ciekawą książkę w swoim pokoju.",words:[
+    {t:"Ola",r:"podmiot",s:"gramatyczny"},
+    {t:"czyta",r:"orzeczenie",s:"czasownikowe"},
+    {t:"ciekawą",r:"przydawka",s:"przymiotna"},
+    {t:"książkę",r:"dopelnienie",s:"bliższe"},
+    {t:"w",r:"okolicznik",s:"miejsca"},
+    {t:"swoim",r:"przydawka",s:"zaimkowa"},
+    {t:"pokoju.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Kolorowy ptak leci wysoko nad drzewami.",words:[
+    {t:"Kolorowy",r:"przydawka",s:"przymiotna"},
+    {t:"ptak",r:"podmiot",s:"gramatyczny"},
+    {t:"leci",r:"orzeczenie",s:"czasownikowe"},
+    {t:"wysoko",r:"okolicznik",s:"miejsca"},
+    {t:"nad",r:"okolicznik",s:"miejsca"},
+    {t:"drzewami.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Asia śpiewa pięknie na szkolnej scenie.",words:[
+    {t:"Asia",r:"podmiot",s:"gramatyczny"},
+    {t:"śpiewa",r:"orzeczenie",s:"czasownikowe"},
+    {t:"pięknie",r:"okolicznik",s:"sposobu"},
+    {t:"na",r:"okolicznik",s:"miejsca"},
+    {t:"szkolnej",r:"przydawka",s:"przymiotna"},
+    {t:"scenie.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Jasne słońce świeci mocno przez okno.",words:[
+    {t:"Jasne",r:"przydawka",s:"przymiotna"},
+    {t:"słońce",r:"podmiot",s:"gramatyczny"},
+    {t:"świeci",r:"orzeczenie",s:"czasownikowe"},
+    {t:"mocno",r:"okolicznik",s:"sposobu"},
+    {t:"przez",r:"okolicznik",s:"miejsca"},
+    {t:"okno.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Mama jest dziś bardzo wesoła.",words:[
+    {t:"Mama",r:"podmiot",s:"gramatyczny"},
+    {t:"jest",r:"orzeczenie",s:"imienne"},
+    {t:"dziś",r:"okolicznik",s:"czasu"},
+    {t:"bardzo",r:"okolicznik",s:"sposobu"},
+    {t:"wesoła.",r:"orzeczenie",s:"imienne"}
+  ]},
+  {text:"Nasz duży pies jest bardzo łagodny.",words:[
+    {t:"Nasz",r:"przydawka",s:"zaimkowa"},
+    {t:"duży",r:"przydawka",s:"przymiotna"},
+    {t:"pies",r:"podmiot",s:"gramatyczny"},
+    {t:"jest",r:"orzeczenie",s:"imienne"},
+    {t:"bardzo",r:"okolicznik",s:"sposobu"},
+    {t:"łagodny.",r:"orzeczenie",s:"imienne"}
+  ]},
+  {text:"Niebo jest dziś wyjątkowo niebieskie.",words:[
+    {t:"Niebo",r:"podmiot",s:"gramatyczny"},
+    {t:"jest",r:"orzeczenie",s:"imienne"},
+    {t:"dziś",r:"okolicznik",s:"czasu"},
+    {t:"wyjątkowo",r:"okolicznik",s:"sposobu"},
+    {t:"niebieskie.",r:"orzeczenie",s:"imienne"}
+  ]},
+  {text:"Kasia pije ciepłe mleko przed snem.",words:[
+    {t:"Kasia",r:"podmiot",s:"gramatyczny"},
+    {t:"pije",r:"orzeczenie",s:"czasownikowe"},
+    {t:"ciepłe",r:"przydawka",s:"przymiotna"},
+    {t:"mleko",r:"dopelnienie",s:"bliższe"},
+    {t:"przed",r:"okolicznik",s:"czasu"},
+    {t:"snem.",r:"okolicznik",s:"czasu"}
+  ]},
+  {text:"Marek bardzo lubi piłkę nożną.",words:[
+    {t:"Marek",r:"podmiot",s:"gramatyczny"},
+    {t:"bardzo",r:"okolicznik",s:"sposobu"},
+    {t:"lubi",r:"orzeczenie",s:"czasownikowe"},
+    {t:"piłkę",r:"dopelnienie",s:"bliższe"},
+    {t:"nożną.",r:"przydawka",s:"przymiotna"}
+  ]},
+  {text:"Złota rybka pływa wolno w akwarium.",words:[
+    {t:"Złota",r:"przydawka",s:"przymiotna"},
+    {t:"rybka",r:"podmiot",s:"gramatyczny"},
+    {t:"pływa",r:"orzeczenie",s:"czasownikowe"},
+    {t:"wolno",r:"okolicznik",s:"sposobu"},
+    {t:"w",r:"okolicznik",s:"miejsca"},
+    {t:"akwarium.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Zmęczony dziadek śpi długo w niedzielę.",words:[
+    {t:"Zmęczony",r:"przydawka",s:"przymiotna"},
+    {t:"dziadek",r:"podmiot",s:"gramatyczny"},
+    {t:"śpi",r:"orzeczenie",s:"czasownikowe"},
+    {t:"długo",r:"okolicznik",s:"czasu"},
+    {t:"w",r:"okolicznik",s:"czasu"},
+    {t:"niedzielę.",r:"okolicznik",s:"czasu"}
+  ]},
+  {text:"Babcia gotuje aromatyczną zupę od rana.",words:[
+    {t:"Babcia",r:"podmiot",s:"gramatyczny"},
+    {t:"gotuje",r:"orzeczenie",s:"czasownikowe"},
+    {t:"aromatyczną",r:"przydawka",s:"przymiotna"},
+    {t:"zupę",r:"dopelnienie",s:"bliższe"},
+    {t:"od",r:"okolicznik",s:"czasu"},
+    {t:"rana.",r:"okolicznik",s:"czasu"}
+  ]},
+  {text:"Pilny uczeń pisze zadanie bardzo starannie.",words:[
+    {t:"Pilny",r:"przydawka",s:"przymiotna"},
+    {t:"uczeń",r:"podmiot",s:"gramatyczny"},
+    {t:"pisze",r:"orzeczenie",s:"czasownikowe"},
+    {t:"zadanie",r:"dopelnienie",s:"bliższe"},
+    {t:"bardzo",r:"okolicznik",s:"sposobu"},
+    {t:"starannie.",r:"okolicznik",s:"sposobu"}
+  ]},
+  {text:"Wesoły chłopiec skacze radośnie przez kałuże.",words:[
+    {t:"Wesoły",r:"przydawka",s:"przymiotna"},
+    {t:"chłopiec",r:"podmiot",s:"gramatyczny"},
+    {t:"skacze",r:"orzeczenie",s:"czasownikowe"},
+    {t:"radośnie",r:"okolicznik",s:"sposobu"},
+    {t:"przez",r:"okolicznik",s:"miejsca"},
+    {t:"kałuże.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Mała dziewczynka rysuje kredkami na papierze.",words:[
+    {t:"Mała",r:"przydawka",s:"przymiotna"},
+    {t:"dziewczynka",r:"podmiot",s:"gramatyczny"},
+    {t:"rysuje",r:"orzeczenie",s:"czasownikowe"},
+    {t:"kredkami",r:"okolicznik",s:"sposobu"},
+    {t:"na",r:"okolicznik",s:"miejsca"},
+    {t:"papierze.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Silny wiatr wieje mocno nad morzem.",words:[
+    {t:"Silny",r:"przydawka",s:"przymiotna"},
+    {t:"wiatr",r:"podmiot",s:"gramatyczny"},
+    {t:"wieje",r:"orzeczenie",s:"czasownikowe"},
+    {t:"mocno",r:"okolicznik",s:"sposobu"},
+    {t:"nad",r:"okolicznik",s:"miejsca"},
+    {t:"morzem.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Zimny deszcz pada od samego rana.",words:[
+    {t:"Zimny",r:"przydawka",s:"przymiotna"},
+    {t:"deszcz",r:"podmiot",s:"gramatyczny"},
+    {t:"pada",r:"orzeczenie",s:"czasownikowe"},
+    {t:"od",r:"okolicznik",s:"czasu"},
+    {t:"samego",r:"przydawka",s:"przymiotna"},
+    {t:"rana.",r:"okolicznik",s:"czasu"}
+  ]},
+  {text:"Codziennie biegam po parku przez godzinę.",words:[
+    {t:"Codziennie",r:"okolicznik",s:"czasu"},
+    {t:"biegam",r:"orzeczenie",s:"czasownikowe"},
+    {t:"po",r:"okolicznik",s:"miejsca"},
+    {t:"parku",r:"okolicznik",s:"miejsca"},
+    {t:"przez",r:"okolicznik",s:"czasu"},
+    {t:"godzinę.",r:"okolicznik",s:"czasu"}
+  ]},
+  {text:"Wieczorem chętnie czytam ciekawą książkę.",words:[
+    {t:"Wieczorem",r:"okolicznik",s:"czasu"},
+    {t:"chętnie",r:"okolicznik",s:"sposobu"},
+    {t:"czytam",r:"orzeczenie",s:"czasownikowe"},
+    {t:"ciekawą",r:"przydawka",s:"przymiotna"},
+    {t:"książkę.",r:"dopelnienie",s:"bliższe"}
+  ]},
+  {text:"Starsza siostra tańczy gracko na balu.",words:[
+    {t:"Starsza",r:"przydawka",s:"przymiotna"},
+    {t:"siostra",r:"podmiot",s:"gramatyczny"},
+    {t:"tańczy",r:"orzeczenie",s:"czasownikowe"},
+    {t:"gracko",r:"okolicznik",s:"sposobu"},
+    {t:"na",r:"okolicznik",s:"miejsca"},
+    {t:"balu.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Rudy kot zjada świeżą rybę z miski.",words:[
+    {t:"Rudy",r:"przydawka",s:"przymiotna"},
+    {t:"kot",r:"podmiot",s:"gramatyczny"},
+    {t:"zjada",r:"orzeczenie",s:"czasownikowe"},
+    {t:"świeżą",r:"przydawka",s:"przymiotna"},
+    {t:"rybę",r:"dopelnienie",s:"bliższe"},
+    {t:"z",r:"okolicznik",s:"miejsca"},
+    {t:"miski.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Gęsty śnieg pada cicho w lesie.",words:[
+    {t:"Gęsty",r:"przydawka",s:"przymiotna"},
+    {t:"śnieg",r:"podmiot",s:"gramatyczny"},
+    {t:"pada",r:"orzeczenie",s:"czasownikowe"},
+    {t:"cicho",r:"okolicznik",s:"sposobu"},
+    {t:"w",r:"okolicznik",s:"miejsca"},
+    {t:"lesie.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Dumny lew ryczy głośno na sawannie.",words:[
+    {t:"Dumny",r:"przydawka",s:"przymiotna"},
+    {t:"lew",r:"podmiot",s:"gramatyczny"},
+    {t:"ryczy",r:"orzeczenie",s:"czasownikowe"},
+    {t:"głośno",r:"okolicznik",s:"sposobu"},
+    {t:"na",r:"okolicznik",s:"miejsca"},
+    {t:"sawannie.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Rano piszę długi list do babci.",words:[
+    {t:"Rano",r:"okolicznik",s:"czasu"},
+    {t:"piszę",r:"orzeczenie",s:"czasownikowe"},
+    {t:"długi",r:"przydawka",s:"przymiotna"},
+    {t:"list",r:"dopelnienie",s:"bliższe"},
+    {t:"do",r:"okolicznik",s:"celu"},
+    {t:"babci.",r:"dopelnienie",s:"dalsze"}
+  ]},
+  {text:"Życzliwy nauczyciel mówi cicho do uczniów.",words:[
+    {t:"Życzliwy",r:"przydawka",s:"przymiotna"},
+    {t:"nauczyciel",r:"podmiot",s:"gramatyczny"},
+    {t:"mówi",r:"orzeczenie",s:"czasownikowe"},
+    {t:"cicho",r:"okolicznik",s:"sposobu"},
+    {t:"do",r:"okolicznik",s:"celu"},
+    {t:"uczniów.",r:"dopelnienie",s:"dalsze"}
+  ]},
+  {text:"Starszy brat gra w piłkę na boisku.",words:[
+    {t:"Starszy",r:"przydawka",s:"przymiotna"},
+    {t:"brat",r:"podmiot",s:"gramatyczny"},
+    {t:"gra",r:"orzeczenie",s:"czasownikowe"},
+    {t:"w",r:"okolicznik",s:"sposobu"},
+    {t:"piłkę",r:"dopelnienie",s:"bliższe"},
+    {t:"na",r:"okolicznik",s:"miejsca"},
+    {t:"boisku.",r:"okolicznik",s:"miejsca"}
+  ]},
 ],
 
-/* ---------- ŚREDNI (40 zdań) ---------- */
+/* ---------- ŚREDNI ---------- */
 medium: [
-  {text:"Mała Ola czyta grubą książkę.",words:[{t:"Mała",r:"przydawka",s:"przymiotna"},{t:"Ola",r:"podmiot",s:"gramatyczny"},{t:"czyta",r:"orzeczenie",s:"czasownikowe"},{t:"grubą",r:"przydawka",s:"przymiotna"},{t:"książkę.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Stary pies śpi na dywanie.",words:[{t:"Stary",r:"przydawka",s:"przymiotna"},{t:"pies",r:"podmiot",s:"gramatyczny"},{t:"śpi",r:"orzeczenie",s:"czasownikowe"},{t:"na",r:"okolicznik",s:"miejsca"},{t:"dywanie.",r:"okolicznik",s:"miejsca"}]},
-  {text:"Tomek jest bardzo zmęczony.",words:[{t:"Tomek",r:"podmiot",s:"gramatyczny"},{t:"jest",r:"orzeczenie",s:"imienne"},{t:"bardzo",r:"okolicznik",s:"sposobu"},{t:"zmęczony.",r:"orzeczenie",s:"imienne"}]},
-  {text:"Uczennica pisze wypracowanie starannie.",words:[{t:"Uczennica",r:"podmiot",s:"gramatyczny"},{t:"pisze",r:"orzeczenie",s:"czasownikowe"},{t:"wypracowanie",r:"dopelnienie",s:"bliższe"},{t:"starannie.",r:"okolicznik",s:"sposobu"}]},
-  {text:"Mama piecze ciasto dla gości.",words:[{t:"Mama",r:"podmiot",s:"gramatyczny"},{t:"piecze",r:"orzeczenie",s:"czasownikowe"},{t:"ciasto",r:"dopelnienie",s:"bliższe"},{t:"dla",r:"okolicznik",s:"celu"},{t:"gości.",r:"okolicznik",s:"celu"}]},
-  {text:"Uczniowie idą do szkoły rano.",words:[{t:"Uczniowie",r:"podmiot",s:"gramatyczny"},{t:"idą",r:"orzeczenie",s:"czasownikowe"},{t:"do",r:"okolicznik",s:"miejsca"},{t:"szkoły",r:"okolicznik",s:"miejsca"},{t:"rano.",r:"okolicznik",s:"czasu"}]},
-  {text:"Tata naprawia stary samochód.",words:[{t:"Tata",r:"podmiot",s:"gramatyczny"},{t:"naprawia",r:"orzeczenie",s:"czasownikowe"},{t:"stary",r:"przydawka",s:"przymiotna"},{t:"samochód.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Babcia opowiada ciekawą historię.",words:[{t:"Babcia",r:"podmiot",s:"gramatyczny"},{t:"opowiada",r:"orzeczenie",s:"czasownikowe"},{t:"ciekawą",r:"przydawka",s:"przymiotna"},{t:"historię.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Chłopiec biega po ogrodzie szybko.",words:[{t:"Chłopiec",r:"podmiot",s:"gramatyczny"},{t:"biega",r:"orzeczenie",s:"czasownikowe"},{t:"po",r:"okolicznik",s:"miejsca"},{t:"ogrodzie",r:"okolicznik",s:"miejsca"},{t:"szybko.",r:"okolicznik",s:"sposobu"}]},
-  {text:"Nauczycielka czyta uczniom bajkę.",words:[{t:"Nauczycielka",r:"podmiot",s:"gramatyczny"},{t:"czyta",r:"orzeczenie",s:"czasownikowe"},{t:"uczniom",r:"dopelnienie",s:"dalsze"},{t:"bajkę.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Kasia stała się sławna.",words:[{t:"Kasia",r:"podmiot",s:"gramatyczny"},{t:"stała",r:"orzeczenie",s:"imienne"},{t:"się",r:"orzeczenie",s:"imienne"},{t:"sławna.",r:"orzeczenie",s:"imienne"}]},
-  {text:"Dziadek idzie powoli do sklepu.",words:[{t:"Dziadek",r:"podmiot",s:"gramatyczny"},{t:"idzie",r:"orzeczenie",s:"czasownikowe"},{t:"powoli",r:"okolicznik",s:"sposobu"},{t:"do",r:"okolicznik",s:"miejsca"},{t:"sklepu.",r:"okolicznik",s:"miejsca"}]},
-  {text:"Trzy koty śpią na kanapie.",words:[{t:"Trzy",r:"przydawka",s:"liczebna"},{t:"koty",r:"podmiot",s:"gramatyczny"},{t:"śpią",r:"orzeczenie",s:"czasownikowe"},{t:"na",r:"okolicznik",s:"miejsca"},{t:"kanapie.",r:"okolicznik",s:"miejsca"}]},
-  {text:"Moja siostra gra na skrzypcach.",words:[{t:"Moja",r:"przydawka",s:"zaimkowa"},{t:"siostra",r:"podmiot",s:"gramatyczny"},{t:"gra",r:"orzeczenie",s:"czasownikowe"},{t:"na",r:"okolicznik",s:"sposobu"},{t:"skrzypcach.",r:"okolicznik",s:"sposobu"}]},
-  {text:"Ten uczeń okazał się zdolny.",words:[{t:"Ten",r:"przydawka",s:"zaimkowa"},{t:"uczeń",r:"podmiot",s:"gramatyczny"},{t:"okazał",r:"orzeczenie",s:"imienne"},{t:"się",r:"orzeczenie",s:"imienne"},{t:"zdolny.",r:"orzeczenie",s:"imienne"}]},
-  {text:"Mama kupiła mi nowe buty.",words:[{t:"Mama",r:"podmiot",s:"gramatyczny"},{t:"kupiła",r:"orzeczenie",s:"czasownikowe"},{t:"mi",r:"dopelnienie",s:"dalsze"},{t:"nowe",r:"przydawka",s:"przymiotna"},{t:"buty.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Wieczorem czytamy razem bajki.",words:[{t:"Wieczorem",r:"okolicznik",s:"czasu"},{t:"czytamy",r:"orzeczenie",s:"czasownikowe"},{t:"razem",r:"okolicznik",s:"sposobu"},{t:"bajki.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Stara kamienica stoi przy rynku.",words:[{t:"Stara",r:"przydawka",s:"przymiotna"},{t:"kamienica",r:"podmiot",s:"gramatyczny"},{t:"stoi",r:"orzeczenie",s:"czasownikowe"},{t:"przy",r:"okolicznik",s:"miejsca"},{t:"rynku.",r:"okolicznik",s:"miejsca"}]},
-  {text:"Zima jest bardzo mroźna.",words:[{t:"Zima",r:"podmiot",s:"gramatyczny"},{t:"jest",r:"orzeczenie",s:"imienne"},{t:"bardzo",r:"okolicznik",s:"sposobu"},{t:"mroźna.",r:"orzeczenie",s:"imienne"}]},
-  {text:"Nasze miasto leży nad rzeką.",words:[{t:"Nasze",r:"przydawka",s:"zaimkowa"},{t:"miasto",r:"podmiot",s:"gramatyczny"},{t:"leży",r:"orzeczenie",s:"czasownikowe"},{t:"nad",r:"okolicznik",s:"miejsca"},{t:"rzeką.",r:"okolicznik",s:"miejsca"}]},
-  {text:"Ojciec wrócił późno do domu.",words:[{t:"Ojciec",r:"podmiot",s:"gramatyczny"},{t:"wrócił",r:"orzeczenie",s:"czasownikowe"},{t:"późno",r:"okolicznik",s:"czasu"},{t:"do",r:"okolicznik",s:"miejsca"},{t:"domu.",r:"okolicznik",s:"miejsca"}]},
-  {text:"Nowa nauczycielka jest miła.",words:[{t:"Nowa",r:"przydawka",s:"przymiotna"},{t:"nauczycielka",r:"podmiot",s:"gramatyczny"},{t:"jest",r:"orzeczenie",s:"imienne"},{t:"miła.",r:"orzeczenie",s:"imienne"}]},
-  {text:"Babcia siedzi w fotelu.",words:[{t:"Babcia",r:"podmiot",s:"gramatyczny"},{t:"siedzi",r:"orzeczenie",s:"czasownikowe"},{t:"w",r:"okolicznik",s:"miejsca"},{t:"fotelu.",r:"okolicznik",s:"miejsca"}]},
-  {text:"Kwiaty rosną w ogrodzie pięknie.",words:[{t:"Kwiaty",r:"podmiot",s:"gramatyczny"},{t:"rosną",r:"orzeczenie",s:"czasownikowe"},{t:"w",r:"okolicznik",s:"miejsca"},{t:"ogrodzie",r:"okolicznik",s:"miejsca"},{t:"pięknie.",r:"okolicznik",s:"sposobu"}]},
-  {text:"Letni wieczór jest ciepły.",words:[{t:"Letni",r:"przydawka",s:"przymiotna"},{t:"wieczór",r:"podmiot",s:"gramatyczny"},{t:"jest",r:"orzeczenie",s:"imienne"},{t:"ciepły.",r:"orzeczenie",s:"imienne"}]},
-  {text:"Marek napisał list do kolegi.",words:[{t:"Marek",r:"podmiot",s:"gramatyczny"},{t:"napisał",r:"orzeczenie",s:"czasownikowe"},{t:"list",r:"dopelnienie",s:"bliższe"},{t:"do",r:"okolicznik",s:"celu"},{t:"kolegi.",r:"dopelnienie",s:"dalsze"}]},
-  {text:"Siostra i brat jedzą śniadanie.",words:[{t:"Siostra",r:"podmiot",s:"szeregowy"},{t:"i",r:"podmiot",s:"szeregowy"},{t:"brat",r:"podmiot",s:"szeregowy"},{t:"jedzą",r:"orzeczenie",s:"czasownikowe"},{t:"śniadanie.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Kolega Marka mieszka niedaleko.",words:[{t:"Kolega",r:"podmiot",s:"gramatyczny"},{t:"Marka",r:"przydawka",s:"rzeczowna"},{t:"mieszka",r:"orzeczenie",s:"czasownikowe"},{t:"niedaleko.",r:"okolicznik",s:"miejsca"}]},
-  {text:"Dzieci biegają po placu.",words:[{t:"Dzieci",r:"podmiot",s:"gramatyczny"},{t:"biegają",r:"orzeczenie",s:"czasownikowe"},{t:"po",r:"okolicznik",s:"miejsca"},{t:"placu.",r:"okolicznik",s:"miejsca"}]},
-  {text:"Brat pomaga mi w nauce.",words:[{t:"Brat",r:"podmiot",s:"gramatyczny"},{t:"pomaga",r:"orzeczenie",s:"czasownikowe"},{t:"mi",r:"dopelnienie",s:"dalsze"},{t:"w",r:"okolicznik",s:"celu"},{t:"nauce.",r:"okolicznik",s:"celu"}]},
-  {text:"Chłopiec pomógł sąsiadce z zakupami.",words:[{t:"Chłopiec",r:"podmiot",s:"gramatyczny"},{t:"pomógł",r:"orzeczenie",s:"czasownikowe"},{t:"sąsiadce",r:"dopelnienie",s:"dalsze"},{t:"z",r:"okolicznik",s:"celu"},{t:"zakupami.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Pójdę do kina jutro.",words:[{t:"Pójdę",r:"orzeczenie",s:"czasownikowe"},{t:"do",r:"okolicznik",s:"miejsca"},{t:"kina",r:"okolicznik",s:"miejsca"},{t:"jutro.",r:"okolicznik",s:"czasu"}]},
-  {text:"Wysoka wieża widoczna jest z daleka.",words:[{t:"Wysoka",r:"przydawka",s:"przymiotna"},{t:"wieża",r:"podmiot",s:"gramatyczny"},{t:"widoczna",r:"orzeczenie",s:"imienne"},{t:"jest",r:"orzeczenie",s:"imienne"},{t:"z",r:"okolicznik",s:"miejsca"},{t:"daleka.",r:"okolicznik",s:"miejsca"}]},
-  {text:"Pies szczeka na przechodniów głośno.",words:[{t:"Pies",r:"podmiot",s:"gramatyczny"},{t:"szczeka",r:"orzeczenie",s:"czasownikowe"},{t:"na",r:"okolicznik",s:"celu"},{t:"przechodniów",r:"dopelnienie",s:"bliższe"},{t:"głośno.",r:"okolicznik",s:"sposobu"}]},
-  {text:"Dzieci sąsiadów hałasowały do późna.",words:[{t:"Dzieci",r:"podmiot",s:"gramatyczny"},{t:"sąsiadów",r:"przydawka",s:"rzeczowna"},{t:"hałasowały",r:"orzeczenie",s:"czasownikowe"},{t:"do",r:"okolicznik",s:"czasu"},{t:"późna.",r:"okolicznik",s:"czasu"}]},
-  {text:"Mama i tata wyjechali w niedzielę.",words:[{t:"Mama",r:"podmiot",s:"szeregowy"},{t:"i",r:"podmiot",s:"szeregowy"},{t:"tata",r:"podmiot",s:"szeregowy"},{t:"wyjechali",r:"orzeczenie",s:"czasownikowe"},{t:"w",r:"okolicznik",s:"czasu"},{t:"niedzielę.",r:"okolicznik",s:"czasu"}]},
-  {text:"Nowy uczeń szybko zaprzyjaźnił się z klasą.",words:[{t:"Nowy",r:"przydawka",s:"przymiotna"},{t:"uczeń",r:"podmiot",s:"gramatyczny"},{t:"szybko",r:"okolicznik",s:"sposobu"},{t:"zaprzyjaźnił",r:"orzeczenie",s:"czasownikowe"},{t:"się",r:"dopelnienie",s:"bliższe"},{t:"z",r:"okolicznik",s:"sposobu"},{t:"klasą.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Wszystkie dzieci z klasy zdały test.",words:[{t:"Wszystkie",r:"przydawka",s:"zaimkowa"},{t:"dzieci",r:"podmiot",s:"gramatyczny"},{t:"z",r:"przydawka",s:"rzeczowna"},{t:"klasy",r:"przydawka",s:"rzeczowna"},{t:"zdały",r:"orzeczenie",s:"czasownikowe"},{t:"test.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Gorąca herbata stała na stole.",words:[{t:"Gorąca",r:"przydawka",s:"przymiotna"},{t:"herbata",r:"podmiot",s:"gramatyczny"},{t:"stała",r:"orzeczenie",s:"czasownikowe"},{t:"na",r:"okolicznik",s:"miejsca"},{t:"stole.",r:"okolicznik",s:"miejsca"}]},
-  {text:"Zimny wiatr wieje od strony gór.",words:[{t:"Zimny",r:"przydawka",s:"przymiotna"},{t:"wiatr",r:"podmiot",s:"gramatyczny"},{t:"wieje",r:"orzeczenie",s:"czasownikowe"},{t:"od",r:"okolicznik",s:"miejsca"},{t:"strony",r:"okolicznik",s:"miejsca"},{t:"gór.",r:"okolicznik",s:"miejsca"}]},
+  {text:"Mała Ola czyta grubą książkę pod drzewem.",words:[
+    {t:"Mała",r:"przydawka",s:"przymiotna"},
+    {t:"Ola",r:"podmiot",s:"gramatyczny"},
+    {t:"czyta",r:"orzeczenie",s:"czasownikowe"},
+    {t:"grubą",r:"przydawka",s:"przymiotna"},
+    {t:"książkę",r:"dopelnienie",s:"bliższe"},
+    {t:"pod",r:"okolicznik",s:"miejsca"},
+    {t:"drzewem.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Stary pies śpi spokojnie na miękkim dywanie.",words:[
+    {t:"Stary",r:"przydawka",s:"przymiotna"},
+    {t:"pies",r:"podmiot",s:"gramatyczny"},
+    {t:"śpi",r:"orzeczenie",s:"czasownikowe"},
+    {t:"spokojnie",r:"okolicznik",s:"sposobu"},
+    {t:"na",r:"okolicznik",s:"miejsca"},
+    {t:"miękkim",r:"przydawka",s:"przymiotna"},
+    {t:"dywanie.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Tomek jest dziś bardzo zmęczony po treningu.",words:[
+    {t:"Tomek",r:"podmiot",s:"gramatyczny"},
+    {t:"jest",r:"orzeczenie",s:"imienne"},
+    {t:"dziś",r:"okolicznik",s:"czasu"},
+    {t:"bardzo",r:"okolicznik",s:"sposobu"},
+    {t:"zmęczony",r:"orzeczenie",s:"imienne"},
+    {t:"po",r:"okolicznik",s:"czasu"},
+    {t:"treningu.",r:"okolicznik",s:"czasu"}
+  ]},
+  {text:"Pilna uczennica pisze wypracowanie bardzo starannie.",words:[
+    {t:"Pilna",r:"przydawka",s:"przymiotna"},
+    {t:"uczennica",r:"podmiot",s:"gramatyczny"},
+    {t:"pisze",r:"orzeczenie",s:"czasownikowe"},
+    {t:"wypracowanie",r:"dopelnienie",s:"bliższe"},
+    {t:"bardzo",r:"okolicznik",s:"sposobu"},
+    {t:"starannie.",r:"okolicznik",s:"sposobu"}
+  ]},
+  {text:"Mama piecze pyszne ciasto czekoladowe dla gości.",words:[
+    {t:"Mama",r:"podmiot",s:"gramatyczny"},
+    {t:"piecze",r:"orzeczenie",s:"czasownikowe"},
+    {t:"pyszne",r:"przydawka",s:"przymiotna"},
+    {t:"ciasto",r:"dopelnienie",s:"bliższe"},
+    {t:"czekoladowe",r:"przydawka",s:"przymiotna"},
+    {t:"dla",r:"okolicznik",s:"celu"},
+    {t:"gości.",r:"okolicznik",s:"celu"}
+  ]},
+  {text:"Uczniowie idą razem do szkoły każdego ranka.",words:[
+    {t:"Uczniowie",r:"podmiot",s:"gramatyczny"},
+    {t:"idą",r:"orzeczenie",s:"czasownikowe"},
+    {t:"razem",r:"okolicznik",s:"sposobu"},
+    {t:"do",r:"okolicznik",s:"miejsca"},
+    {t:"szkoły",r:"okolicznik",s:"miejsca"},
+    {t:"każdego",r:"przydawka",s:"zaimkowa"},
+    {t:"ranka.",r:"okolicznik",s:"czasu"}
+  ]},
+  {text:"Tata naprawia stary czerwony samochód w garażu.",words:[
+    {t:"Tata",r:"podmiot",s:"gramatyczny"},
+    {t:"naprawia",r:"orzeczenie",s:"czasownikowe"},
+    {t:"stary",r:"przydawka",s:"przymiotna"},
+    {t:"czerwony",r:"przydawka",s:"przymiotna"},
+    {t:"samochód",r:"dopelnienie",s:"bliższe"},
+    {t:"w",r:"okolicznik",s:"miejsca"},
+    {t:"garażu.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Babcia opowiada wnukom ciekawą historię sprzed lat.",words:[
+    {t:"Babcia",r:"podmiot",s:"gramatyczny"},
+    {t:"opowiada",r:"orzeczenie",s:"czasownikowe"},
+    {t:"wnukom",r:"dopelnienie",s:"dalsze"},
+    {t:"ciekawą",r:"przydawka",s:"przymiotna"},
+    {t:"historię",r:"dopelnienie",s:"bliższe"},
+    {t:"sprzed",r:"okolicznik",s:"czasu"},
+    {t:"lat.",r:"okolicznik",s:"czasu"}
+  ]},
+  {text:"Wesoły chłopiec biega szybko po zielonym ogrodzie.",words:[
+    {t:"Wesoły",r:"przydawka",s:"przymiotna"},
+    {t:"chłopiec",r:"podmiot",s:"gramatyczny"},
+    {t:"biega",r:"orzeczenie",s:"czasownikowe"},
+    {t:"szybko",r:"okolicznik",s:"sposobu"},
+    {t:"po",r:"okolicznik",s:"miejsca"},
+    {t:"zielonym",r:"przydawka",s:"przymiotna"},
+    {t:"ogrodzie.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Nauczycielka czyta uczniom bajkę przed lekcją.",words:[
+    {t:"Nauczycielka",r:"podmiot",s:"gramatyczny"},
+    {t:"czyta",r:"orzeczenie",s:"czasownikowe"},
+    {t:"uczniom",r:"dopelnienie",s:"dalsze"},
+    {t:"bajkę",r:"dopelnienie",s:"bliższe"},
+    {t:"przed",r:"okolicznik",s:"czasu"},
+    {t:"lekcją.",r:"okolicznik",s:"czasu"}
+  ]},
+  {text:"Kasia szybko stała się sławna w całym mieście.",words:[
+    {t:"Kasia",r:"podmiot",s:"gramatyczny"},
+    {t:"szybko",r:"okolicznik",s:"sposobu"},
+    {t:"stała",r:"orzeczenie",s:"imienne"},
+    {t:"się",r:"orzeczenie",s:"imienne"},
+    {t:"sławna",r:"orzeczenie",s:"imienne"},
+    {t:"w",r:"okolicznik",s:"miejsca"},
+    {t:"całym",r:"przydawka",s:"zaimkowa"},
+    {t:"mieście.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Zmęczony dziadek idzie powoli do pobliskiego sklepu.",words:[
+    {t:"Zmęczony",r:"przydawka",s:"przymiotna"},
+    {t:"dziadek",r:"podmiot",s:"gramatyczny"},
+    {t:"idzie",r:"orzeczenie",s:"czasownikowe"},
+    {t:"powoli",r:"okolicznik",s:"sposobu"},
+    {t:"do",r:"okolicznik",s:"miejsca"},
+    {t:"pobliskiego",r:"przydawka",s:"przymiotna"},
+    {t:"sklepu.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Trzy wiercipiętki koty śpią razem na kanapie.",words:[
+    {t:"Trzy",r:"przydawka",s:"liczebna"},
+    {t:"wiercipiętki",r:"przydawka",s:"przymiotna"},
+    {t:"koty",r:"podmiot",s:"gramatyczny"},
+    {t:"śpią",r:"orzeczenie",s:"czasownikowe"},
+    {t:"razem",r:"okolicznik",s:"sposobu"},
+    {t:"na",r:"okolicznik",s:"miejsca"},
+    {t:"kanapie.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Moja starsza siostra gra codziennie na skrzypcach.",words:[
+    {t:"Moja",r:"przydawka",s:"zaimkowa"},
+    {t:"starsza",r:"przydawka",s:"przymiotna"},
+    {t:"siostra",r:"podmiot",s:"gramatyczny"},
+    {t:"gra",r:"orzeczenie",s:"czasownikowe"},
+    {t:"codziennie",r:"okolicznik",s:"czasu"},
+    {t:"na",r:"okolicznik",s:"sposobu"},
+    {t:"skrzypcach.",r:"okolicznik",s:"sposobu"}
+  ]},
+  {text:"Ten spokojny uczeń okazał się niezwykle zdolny.",words:[
+    {t:"Ten",r:"przydawka",s:"zaimkowa"},
+    {t:"spokojny",r:"przydawka",s:"przymiotna"},
+    {t:"uczeń",r:"podmiot",s:"gramatyczny"},
+    {t:"okazał",r:"orzeczenie",s:"imienne"},
+    {t:"się",r:"orzeczenie",s:"imienne"},
+    {t:"niezwykle",r:"okolicznik",s:"sposobu"},
+    {t:"zdolny.",r:"orzeczenie",s:"imienne"}
+  ]},
+  {text:"Mama kupiła mi nowe wygodne buty na zimę.",words:[
+    {t:"Mama",r:"podmiot",s:"gramatyczny"},
+    {t:"kupiła",r:"orzeczenie",s:"czasownikowe"},
+    {t:"mi",r:"dopelnienie",s:"dalsze"},
+    {t:"nowe",r:"przydawka",s:"przymiotna"},
+    {t:"wygodne",r:"przydawka",s:"przymiotna"},
+    {t:"buty",r:"dopelnienie",s:"bliższe"},
+    {t:"na",r:"okolicznik",s:"czasu"},
+    {t:"zimę.",r:"okolicznik",s:"czasu"}
+  ]},
+  {text:"Wieczorem czytamy razem ciekawe bajki przy lampce.",words:[
+    {t:"Wieczorem",r:"okolicznik",s:"czasu"},
+    {t:"czytamy",r:"orzeczenie",s:"czasownikowe"},
+    {t:"razem",r:"okolicznik",s:"sposobu"},
+    {t:"ciekawe",r:"przydawka",s:"przymiotna"},
+    {t:"bajki",r:"dopelnienie",s:"bliższe"},
+    {t:"przy",r:"okolicznik",s:"miejsca"},
+    {t:"lampce.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Stara kamienica dziadka stoi tuż przy rynku.",words:[
+    {t:"Stara",r:"przydawka",s:"przymiotna"},
+    {t:"kamienica",r:"podmiot",s:"gramatyczny"},
+    {t:"dziadka",r:"przydawka",s:"rzeczowna"},
+    {t:"stoi",r:"orzeczenie",s:"czasownikowe"},
+    {t:"tuż",r:"okolicznik",s:"miejsca"},
+    {t:"przy",r:"okolicznik",s:"miejsca"},
+    {t:"rynku.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Ta zima jest wyjątkowo mroźna i śnieżna.",words:[
+    {t:"Ta",r:"przydawka",s:"zaimkowa"},
+    {t:"zima",r:"podmiot",s:"gramatyczny"},
+    {t:"jest",r:"orzeczenie",s:"imienne"},
+    {t:"wyjątkowo",r:"okolicznik",s:"sposobu"},
+    {t:"mroźna",r:"orzeczenie",s:"imienne"},
+    {t:"i",r:"orzeczenie",s:"imienne"},
+    {t:"śnieżna.",r:"orzeczenie",s:"imienne"}
+  ]},
+  {text:"Nasze małe miasto pięknie leży nad szeroką rzeką.",words:[
+    {t:"Nasze",r:"przydawka",s:"zaimkowa"},
+    {t:"małe",r:"przydawka",s:"przymiotna"},
+    {t:"miasto",r:"podmiot",s:"gramatyczny"},
+    {t:"pięknie",r:"okolicznik",s:"sposobu"},
+    {t:"leży",r:"orzeczenie",s:"czasownikowe"},
+    {t:"nad",r:"okolicznik",s:"miejsca"},
+    {t:"szeroką",r:"przydawka",s:"przymiotna"},
+    {t:"rzeką.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Ojciec wrócił bardzo późno do domu z pracy.",words:[
+    {t:"Ojciec",r:"podmiot",s:"gramatyczny"},
+    {t:"wrócił",r:"orzeczenie",s:"czasownikowe"},
+    {t:"bardzo",r:"okolicznik",s:"sposobu"},
+    {t:"późno",r:"okolicznik",s:"czasu"},
+    {t:"do",r:"okolicznik",s:"miejsca"},
+    {t:"domu",r:"okolicznik",s:"miejsca"},
+    {t:"z",r:"okolicznik",s:"miejsca"},
+    {t:"pracy.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Nowa miła nauczycielka jest bardzo lubiana przez uczniów.",words:[
+    {t:"Nowa",r:"przydawka",s:"przymiotna"},
+    {t:"miła",r:"przydawka",s:"przymiotna"},
+    {t:"nauczycielka",r:"podmiot",s:"gramatyczny"},
+    {t:"jest",r:"orzeczenie",s:"imienne"},
+    {t:"bardzo",r:"okolicznik",s:"sposobu"},
+    {t:"lubiana",r:"orzeczenie",s:"imienne"},
+    {t:"przez",r:"okolicznik",s:"przyczyny"},
+    {t:"uczniów.",r:"dopelnienie",s:"bliższe"}
+  ]},
+  {text:"Staruszka babcia siedzi wygodnie w swoim ulubionym fotelu.",words:[
+    {t:"Staruszka",r:"przydawka",s:"przymiotna"},
+    {t:"babcia",r:"podmiot",s:"gramatyczny"},
+    {t:"siedzi",r:"orzeczenie",s:"czasownikowe"},
+    {t:"wygodnie",r:"okolicznik",s:"sposobu"},
+    {t:"w",r:"okolicznik",s:"miejsca"},
+    {t:"swoim",r:"przydawka",s:"zaimkowa"},
+    {t:"ulubionym",r:"przydawka",s:"przymiotna"},
+    {t:"fotelu.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Kolorowe kwiaty rosną pięknie w babcinym ogrodzie.",words:[
+    {t:"Kolorowe",r:"przydawka",s:"przymiotna"},
+    {t:"kwiaty",r:"podmiot",s:"gramatyczny"},
+    {t:"rosną",r:"orzeczenie",s:"czasownikowe"},
+    {t:"pięknie",r:"okolicznik",s:"sposobu"},
+    {t:"w",r:"okolicznik",s:"miejsca"},
+    {t:"babcinym",r:"przydawka",s:"przymiotna"},
+    {t:"ogrodzie.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Ciepły letni wieczór jest wyjątkowo przyjemny.",words:[
+    {t:"Ciepły",r:"przydawka",s:"przymiotna"},
+    {t:"letni",r:"przydawka",s:"przymiotna"},
+    {t:"wieczór",r:"podmiot",s:"gramatyczny"},
+    {t:"jest",r:"orzeczenie",s:"imienne"},
+    {t:"wyjątkowo",r:"okolicznik",s:"sposobu"},
+    {t:"przyjemny.",r:"orzeczenie",s:"imienne"}
+  ]},
+  {text:"Marek napisał długi list do swojego szkolnego kolegi.",words:[
+    {t:"Marek",r:"podmiot",s:"gramatyczny"},
+    {t:"napisał",r:"orzeczenie",s:"czasownikowe"},
+    {t:"długi",r:"przydawka",s:"przymiotna"},
+    {t:"list",r:"dopelnienie",s:"bliższe"},
+    {t:"do",r:"okolicznik",s:"celu"},
+    {t:"swojego",r:"przydawka",s:"zaimkowa"},
+    {t:"szkolnego",r:"przydawka",s:"przymiotna"},
+    {t:"kolegi.",r:"dopelnienie",s:"dalsze"}
+  ]},
+  {text:"Siostra i brat jedzą razem śniadanie przy stole.",words:[
+    {t:"Siostra",r:"podmiot",s:"szeregowy"},
+    {t:"i",r:"podmiot",s:"szeregowy"},
+    {t:"brat",r:"podmiot",s:"szeregowy"},
+    {t:"jedzą",r:"orzeczenie",s:"czasownikowe"},
+    {t:"razem",r:"okolicznik",s:"sposobu"},
+    {t:"śniadanie",r:"dopelnienie",s:"bliższe"},
+    {t:"przy",r:"okolicznik",s:"miejsca"},
+    {t:"stole.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Bliski kolega Marka mieszka całkiem niedaleko szkoły.",words:[
+    {t:"Bliski",r:"przydawka",s:"przymiotna"},
+    {t:"kolega",r:"podmiot",s:"gramatyczny"},
+    {t:"Marka",r:"przydawka",s:"rzeczowna"},
+    {t:"mieszka",r:"orzeczenie",s:"czasownikowe"},
+    {t:"całkiem",r:"okolicznik",s:"sposobu"},
+    {t:"niedaleko",r:"okolicznik",s:"miejsca"},
+    {t:"szkoły.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Małe dzieci biegają głośno po szkolnym placu.",words:[
+    {t:"Małe",r:"przydawka",s:"przymiotna"},
+    {t:"dzieci",r:"podmiot",s:"gramatyczny"},
+    {t:"biegają",r:"orzeczenie",s:"czasownikowe"},
+    {t:"głośno",r:"okolicznik",s:"sposobu"},
+    {t:"po",r:"okolicznik",s:"miejsca"},
+    {t:"szkolnym",r:"przydawka",s:"przymiotna"},
+    {t:"placu.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Starszy brat pomaga mi chętnie w trudnej nauce.",words:[
+    {t:"Starszy",r:"przydawka",s:"przymiotna"},
+    {t:"brat",r:"podmiot",s:"gramatyczny"},
+    {t:"pomaga",r:"orzeczenie",s:"czasownikowe"},
+    {t:"mi",r:"dopelnienie",s:"dalsze"},
+    {t:"chętnie",r:"okolicznik",s:"sposobu"},
+    {t:"w",r:"okolicznik",s:"celu"},
+    {t:"trudnej",r:"przydawka",s:"przymiotna"},
+    {t:"nauce.",r:"okolicznik",s:"celu"}
+  ]},
+  {text:"Grzeczny chłopiec pomógł starszej sąsiadce z ciężkimi zakupami.",words:[
+    {t:"Grzeczny",r:"przydawka",s:"przymiotna"},
+    {t:"chłopiec",r:"podmiot",s:"gramatyczny"},
+    {t:"pomógł",r:"orzeczenie",s:"czasownikowe"},
+    {t:"starszej",r:"przydawka",s:"przymiotna"},
+    {t:"sąsiadce",r:"dopelnienie",s:"dalsze"},
+    {t:"z",r:"okolicznik",s:"celu"},
+    {t:"ciężkimi",r:"przydawka",s:"przymiotna"},
+    {t:"zakupami.",r:"dopelnienie",s:"bliższe"}
+  ]},
+  {text:"Jutro pójdę z przyjacielem do nowego kina.",words:[
+    {t:"Jutro",r:"okolicznik",s:"czasu"},
+    {t:"pójdę",r:"orzeczenie",s:"czasownikowe"},
+    {t:"z",r:"okolicznik",s:"sposobu"},
+    {t:"przyjacielem",r:"dopelnienie",s:"bliższe"},
+    {t:"do",r:"okolicznik",s:"miejsca"},
+    {t:"nowego",r:"przydawka",s:"przymiotna"},
+    {t:"kina.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Wysoka stara wieża widoczna jest z bardzo daleka.",words:[
+    {t:"Wysoka",r:"przydawka",s:"przymiotna"},
+    {t:"stara",r:"przydawka",s:"przymiotna"},
+    {t:"wieża",r:"podmiot",s:"gramatyczny"},
+    {t:"widoczna",r:"orzeczenie",s:"imienne"},
+    {t:"jest",r:"orzeczenie",s:"imienne"},
+    {t:"z",r:"okolicznik",s:"miejsca"},
+    {t:"bardzo",r:"okolicznik",s:"sposobu"},
+    {t:"daleka.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Zdenerwowany pies szczeka głośno na obcych przechodniów.",words:[
+    {t:"Zdenerwowany",r:"przydawka",s:"przymiotna"},
+    {t:"pies",r:"podmiot",s:"gramatyczny"},
+    {t:"szczeka",r:"orzeczenie",s:"czasownikowe"},
+    {t:"głośno",r:"okolicznik",s:"sposobu"},
+    {t:"na",r:"okolicznik",s:"celu"},
+    {t:"obcych",r:"przydawka",s:"przymiotna"},
+    {t:"przechodniów.",r:"dopelnienie",s:"bliższe"}
+  ]},
+  {text:"Hałaśliwe dzieci sąsiadów bawiły się głośno do późna.",words:[
+    {t:"Hałaśliwe",r:"przydawka",s:"przymiotna"},
+    {t:"dzieci",r:"podmiot",s:"gramatyczny"},
+    {t:"sąsiadów",r:"przydawka",s:"rzeczowna"},
+    {t:"bawiły",r:"orzeczenie",s:"czasownikowe"},
+    {t:"się",r:"dopelnienie",s:"bliższe"},
+    {t:"głośno",r:"okolicznik",s:"sposobu"},
+    {t:"do",r:"okolicznik",s:"czasu"},
+    {t:"późna.",r:"okolicznik",s:"czasu"}
+  ]},
+  {text:"Mama i tata razem wyjechali na wycieczkę w niedzielę.",words:[
+    {t:"Mama",r:"podmiot",s:"szeregowy"},
+    {t:"i",r:"podmiot",s:"szeregowy"},
+    {t:"tata",r:"podmiot",s:"szeregowy"},
+    {t:"razem",r:"okolicznik",s:"sposobu"},
+    {t:"wyjechali",r:"orzeczenie",s:"czasownikowe"},
+    {t:"na",r:"okolicznik",s:"celu"},
+    {t:"wycieczkę",r:"dopelnienie",s:"bliższe"},
+    {t:"w",r:"okolicznik",s:"czasu"},
+    {t:"niedzielę.",r:"okolicznik",s:"czasu"}
+  ]},
+  {text:"Gorąca herbata z cytryną stała na drewnianym stole.",words:[
+    {t:"Gorąca",r:"przydawka",s:"przymiotna"},
+    {t:"herbata",r:"podmiot",s:"gramatyczny"},
+    {t:"z",r:"przydawka",s:"rzeczowna"},
+    {t:"cytryną",r:"przydawka",s:"rzeczowna"},
+    {t:"stała",r:"orzeczenie",s:"czasownikowe"},
+    {t:"na",r:"okolicznik",s:"miejsca"},
+    {t:"drewnianym",r:"przydawka",s:"przymiotna"},
+    {t:"stole.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Zimny poranny wiatr wieje od strony wysokich gór.",words:[
+    {t:"Zimny",r:"przydawka",s:"przymiotna"},
+    {t:"poranny",r:"przydawka",s:"przymiotna"},
+    {t:"wiatr",r:"podmiot",s:"gramatyczny"},
+    {t:"wieje",r:"orzeczenie",s:"czasownikowe"},
+    {t:"od",r:"okolicznik",s:"miejsca"},
+    {t:"strony",r:"okolicznik",s:"miejsca"},
+    {t:"wysokich",r:"przydawka",s:"przymiotna"},
+    {t:"gór.",r:"okolicznik",s:"miejsca"}
+  ]},
 ],
 
-/* ---------- TRUDNY (35 zdań) ---------- */
+/* ---------- TRUDNY ---------- */
 hard: [
-  {text:"Mimo zmęczenia drużyna wygrała mecz.",words:[{t:"Mimo",r:"okolicznik",s:"przyzwolenia"},{t:"zmęczenia",r:"okolicznik",s:"przyzwolenia"},{t:"drużyna",r:"podmiot",s:"gramatyczny"},{t:"wygrała",r:"orzeczenie",s:"czasownikowe"},{t:"mecz.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Z powodu deszczu uczniowie zostali w klasie.",words:[{t:"Z",r:"okolicznik",s:"przyczyny"},{t:"powodu",r:"okolicznik",s:"przyczyny"},{t:"deszczu",r:"okolicznik",s:"przyczyny"},{t:"uczniowie",r:"podmiot",s:"gramatyczny"},{t:"zostali",r:"orzeczenie",s:"czasownikowe"},{t:"w",r:"okolicznik",s:"miejsca"},{t:"klasie.",r:"okolicznik",s:"miejsca"}]},
-  {text:"Ubyło mu sił po długiej podróży.",words:[{t:"Ubyło",r:"orzeczenie",s:"czasownikowe"},{t:"mu",r:"podmiot",s:"logiczny"},{t:"sił",r:"dopelnienie",s:"bliższe"},{t:"po",r:"okolicznik",s:"czasu"},{t:"długiej",r:"przydawka",s:"przymiotna"},{t:"podróży.",r:"okolicznik",s:"czasu"}]},
-  {text:"Dzielna uczennica okazała się najlepsza.",words:[{t:"Dzielna",r:"przydawka",s:"przymiotna"},{t:"uczennica",r:"podmiot",s:"gramatyczny"},{t:"okazała",r:"orzeczenie",s:"imienne"},{t:"się",r:"orzeczenie",s:"imienne"},{t:"najlepsza.",r:"orzeczenie",s:"imienne"}]},
-  {text:"Przybyło nam nowych sił.",words:[{t:"Przybyło",r:"orzeczenie",s:"czasownikowe"},{t:"nam",r:"podmiot",s:"logiczny"},{t:"nowych",r:"przydawka",s:"przymiotna"},{t:"sił.",r:"podmiot",s:"logiczny"}]},
-  {text:"Stara chatka stoi samotnie na skraju lasu.",words:[{t:"Stara",r:"przydawka",s:"przymiotna"},{t:"chatka",r:"podmiot",s:"gramatyczny"},{t:"stoi",r:"orzeczenie",s:"czasownikowe"},{t:"samotnie",r:"okolicznik",s:"sposobu"},{t:"na",r:"okolicznik",s:"miejsca"},{t:"skraju",r:"okolicznik",s:"miejsca"},{t:"lasu.",r:"okolicznik",s:"miejsca"}]},
-  {text:"Chłopiec biegnie szybko żeby zdążyć.",words:[{t:"Chłopiec",r:"podmiot",s:"gramatyczny"},{t:"biegnie",r:"orzeczenie",s:"czasownikowe"},{t:"szybko",r:"okolicznik",s:"sposobu"},{t:"żeby",r:"okolicznik",s:"celu"},{t:"zdążyć.",r:"okolicznik",s:"celu"}]},
-  {text:"Mimo porażki zawodnik nie stracił ducha.",words:[{t:"Mimo",r:"okolicznik",s:"przyzwolenia"},{t:"porażki",r:"okolicznik",s:"przyzwolenia"},{t:"zawodnik",r:"podmiot",s:"gramatyczny"},{t:"nie",r:"okolicznik",s:"sposobu"},{t:"stracił",r:"orzeczenie",s:"czasownikowe"},{t:"ducha.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Z powodu burzy samolot wylądował na lotnisku.",words:[{t:"Z",r:"okolicznik",s:"przyczyny"},{t:"powodu",r:"okolicznik",s:"przyczyny"},{t:"burzy",r:"okolicznik",s:"przyczyny"},{t:"samolot",r:"podmiot",s:"gramatyczny"},{t:"wylądował",r:"orzeczenie",s:"czasownikowe"},{t:"na",r:"okolicznik",s:"miejsca"},{t:"lotnisku.",r:"okolicznik",s:"miejsca"}]},
-  {text:"Wytrwała praca ucznia przyniosła owoce.",words:[{t:"Wytrwała",r:"przydawka",s:"przymiotna"},{t:"praca",r:"podmiot",s:"gramatyczny"},{t:"ucznia",r:"przydawka",s:"rzeczowna"},{t:"przyniosła",r:"orzeczenie",s:"czasownikowe"},{t:"owoce.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Nauczycielka matematyki wyjaśniła trudne zadanie.",words:[{t:"Nauczycielka",r:"podmiot",s:"gramatyczny"},{t:"matematyki",r:"przydawka",s:"rzeczowna"},{t:"wyjaśniła",r:"orzeczenie",s:"czasownikowe"},{t:"trudne",r:"przydawka",s:"przymiotna"},{t:"zadanie.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Pięć jabłek leżało w koszu.",words:[{t:"Pięć",r:"podmiot",s:"logiczny"},{t:"jabłek",r:"podmiot",s:"logiczny"},{t:"leżało",r:"orzeczenie",s:"czasownikowe"},{t:"w",r:"okolicznik",s:"miejsca"},{t:"koszu.",r:"okolicznik",s:"miejsca"}]},
-  {text:"Wbrew pozorom zadanie było proste.",words:[{t:"Wbrew",r:"okolicznik",s:"przyzwolenia"},{t:"pozorom",r:"okolicznik",s:"przyzwolenia"},{t:"zadanie",r:"podmiot",s:"gramatyczny"},{t:"było",r:"orzeczenie",s:"imienne"},{t:"proste.",r:"orzeczenie",s:"imienne"}]},
-  {text:"Cierpliwy i wytrwały Janek zdał egzamin.",words:[{t:"Cierpliwy",r:"przydawka",s:"przymiotna"},{t:"i",r:"przydawka",s:"przymiotna"},{t:"wytrwały",r:"przydawka",s:"przymiotna"},{t:"Janek",r:"podmiot",s:"gramatyczny"},{t:"zdał",r:"orzeczenie",s:"czasownikowe"},{t:"egzamin.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Nawet zmęczony sportowiec ukończył maraton.",words:[{t:"Nawet",r:"okolicznik",s:"przyzwolenia"},{t:"zmęczony",r:"przydawka",s:"przymiotna"},{t:"sportowiec",r:"podmiot",s:"gramatyczny"},{t:"ukończył",r:"orzeczenie",s:"czasownikowe"},{t:"maraton.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Stary dąb rósł samotnie pośród łąki.",words:[{t:"Stary",r:"przydawka",s:"przymiotna"},{t:"dąb",r:"podmiot",s:"gramatyczny"},{t:"rósł",r:"orzeczenie",s:"czasownikowe"},{t:"samotnie",r:"okolicznik",s:"sposobu"},{t:"pośród",r:"okolicznik",s:"miejsca"},{t:"łąki.",r:"okolicznik",s:"miejsca"}]},
-  {text:"Mimo deszczu wyszedł bez parasola.",words:[{t:"Mimo",r:"okolicznik",s:"przyzwolenia"},{t:"deszczu",r:"okolicznik",s:"przyzwolenia"},{t:"wyszedł",r:"orzeczenie",s:"czasownikowe"},{t:"bez",r:"okolicznik",s:"sposobu"},{t:"parasola.",r:"okolicznik",s:"sposobu"}]},
-  {text:"Dla zdrowia warto ćwiczyć regularnie.",words:[{t:"Dla",r:"okolicznik",s:"celu"},{t:"zdrowia",r:"okolicznik",s:"celu"},{t:"warto",r:"orzeczenie",s:"czasownikowe"},{t:"ćwiczyć",r:"orzeczenie",s:"czasownikowe"},{t:"regularnie.",r:"okolicznik",s:"sposobu"}]},
-  {text:"Pod warunkiem dobrej pogody pójdziemy w góry.",words:[{t:"Pod",r:"okolicznik",s:"warunku"},{t:"warunkiem",r:"okolicznik",s:"warunku"},{t:"dobrej",r:"przydawka",s:"przymiotna"},{t:"pogody",r:"okolicznik",s:"warunku"},{t:"pójdziemy",r:"orzeczenie",s:"czasownikowe"},{t:"w",r:"okolicznik",s:"miejsca"},{t:"góry.",r:"okolicznik",s:"miejsca"}]},
-  {text:"Przez nieuwagę uczeń popełnił błąd.",words:[{t:"Przez",r:"okolicznik",s:"przyczyny"},{t:"nieuwagę",r:"okolicznik",s:"przyczyny"},{t:"uczeń",r:"podmiot",s:"gramatyczny"},{t:"popełnił",r:"orzeczenie",s:"czasownikowe"},{t:"błąd.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Nawet po latach pamiętał jej imię.",words:[{t:"Nawet",r:"okolicznik",s:"przyzwolenia"},{t:"po",r:"okolicznik",s:"czasu"},{t:"latach",r:"okolicznik",s:"czasu"},{t:"pamiętał",r:"orzeczenie",s:"czasownikowe"},{t:"jej",r:"przydawka",s:"zaimkowa"},{t:"imię.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Zbyt głośna muzyka przeszkadzała sąsiadom.",words:[{t:"Zbyt",r:"okolicznik",s:"sposobu"},{t:"głośna",r:"przydawka",s:"przymiotna"},{t:"muzyka",r:"podmiot",s:"gramatyczny"},{t:"przeszkadzała",r:"orzeczenie",s:"czasownikowe"},{t:"sąsiadom.",r:"dopelnienie",s:"dalsze"}]},
-  {text:"Kochana mama Tomka wróciła z zagranicy.",words:[{t:"Kochana",r:"przydawka",s:"przymiotna"},{t:"mama",r:"podmiot",s:"gramatyczny"},{t:"Tomka",r:"przydawka",s:"rzeczowna"},{t:"wróciła",r:"orzeczenie",s:"czasownikowe"},{t:"z",r:"okolicznik",s:"miejsca"},{t:"zagranicy.",r:"okolicznik",s:"miejsca"}]},
-  {text:"Wbrew zakazowi wyszedł późno w nocy.",words:[{t:"Wbrew",r:"okolicznik",s:"przyzwolenia"},{t:"zakazowi",r:"okolicznik",s:"przyzwolenia"},{t:"wyszedł",r:"orzeczenie",s:"czasownikowe"},{t:"późno",r:"okolicznik",s:"czasu"},{t:"w",r:"okolicznik",s:"czasu"},{t:"nocy.",r:"okolicznik",s:"czasu"}]},
-  {text:"Gdyby miał czas pomógłby ci.",words:[{t:"Gdyby",r:"okolicznik",s:"warunku"},{t:"miał",r:"orzeczenie",s:"czasownikowe"},{t:"czas",r:"dopelnienie",s:"bliższe"},{t:"pomógłby",r:"orzeczenie",s:"czasownikowe"},{t:"ci.",r:"dopelnienie",s:"dalsze"}]},
-  {text:"Wysokie drzewo zostało ścięte przez robotników.",words:[{t:"Wysokie",r:"przydawka",s:"przymiotna"},{t:"drzewo",r:"podmiot",s:"gramatyczny"},{t:"zostało",r:"orzeczenie",s:"imienne"},{t:"ścięte",r:"orzeczenie",s:"imienne"},{t:"przez",r:"okolicznik",s:"przyczyny"},{t:"robotników.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Zrobiłem to celowo żeby zwrócić uwagę.",words:[{t:"Zrobiłem",r:"orzeczenie",s:"czasownikowe"},{t:"to",r:"dopelnienie",s:"bliższe"},{t:"celowo",r:"okolicznik",s:"celu"},{t:"żeby",r:"okolicznik",s:"celu"},{t:"zwrócić",r:"okolicznik",s:"celu"},{t:"uwagę.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Dlaczego nie przyszedłeś na trening?",words:[{t:"Dlaczego",r:"okolicznik",s:"przyczyny"},{t:"nie",r:"okolicznik",s:"sposobu"},{t:"przyszedłeś",r:"orzeczenie",s:"czasownikowe"},{t:"na",r:"okolicznik",s:"miejsca"},{t:"trening?",r:"okolicznik",s:"miejsca"}]},
-  {text:"Wytrwały i cierpliwy uczeń osiągnął sukces.",words:[{t:"Wytrwały",r:"przydawka",s:"przymiotna"},{t:"i",r:"przydawka",s:"przymiotna"},{t:"cierpliwy",r:"przydawka",s:"przymiotna"},{t:"uczeń",r:"podmiot",s:"gramatyczny"},{t:"osiągnął",r:"orzeczenie",s:"czasownikowe"},{t:"sukces.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Przez lata pracował sumiennie dla rodziny.",words:[{t:"Przez",r:"okolicznik",s:"czasu"},{t:"lata",r:"okolicznik",s:"czasu"},{t:"pracował",r:"orzeczenie",s:"czasownikowe"},{t:"sumiennie",r:"okolicznik",s:"sposobu"},{t:"dla",r:"okolicznik",s:"celu"},{t:"rodziny.",r:"okolicznik",s:"celu"}]},
-  {text:"Stare miasto zostało odbudowane po wojnie.",words:[{t:"Stare",r:"przydawka",s:"przymiotna"},{t:"miasto",r:"podmiot",s:"gramatyczny"},{t:"zostało",r:"orzeczenie",s:"imienne"},{t:"odbudowane",r:"orzeczenie",s:"imienne"},{t:"po",r:"okolicznik",s:"czasu"},{t:"wojnie.",r:"okolicznik",s:"czasu"}]},
-  {text:"Mimo trudności nie poddał się.",words:[{t:"Mimo",r:"okolicznik",s:"przyzwolenia"},{t:"trudności",r:"okolicznik",s:"przyzwolenia"},{t:"nie",r:"okolicznik",s:"sposobu"},{t:"poddał",r:"orzeczenie",s:"czasownikowe"},{t:"się.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Nasz stary pies zaginął wczoraj po południu.",words:[{t:"Nasz",r:"przydawka",s:"zaimkowa"},{t:"stary",r:"przydawka",s:"przymiotna"},{t:"pies",r:"podmiot",s:"gramatyczny"},{t:"zaginął",r:"orzeczenie",s:"czasownikowe"},{t:"wczoraj",r:"okolicznik",s:"czasu"},{t:"po",r:"okolicznik",s:"czasu"},{t:"południu.",r:"okolicznik",s:"czasu"}]},
-  {text:"Każde dziecko zasługuje na miłość.",words:[{t:"Każde",r:"przydawka",s:"zaimkowa"},{t:"dziecko",r:"podmiot",s:"gramatyczny"},{t:"zasługuje",r:"orzeczenie",s:"czasownikowe"},{t:"na",r:"okolicznik",s:"celu"},{t:"miłość.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Dzięki wysiłkowi zdał najtrudniejszy egzamin.",words:[{t:"Dzięki",r:"okolicznik",s:"przyczyny"},{t:"wysiłkowi",r:"okolicznik",s:"przyczyny"},{t:"zdał",r:"orzeczenie",s:"czasownikowe"},{t:"najtrudniejszy",r:"przydawka",s:"przymiotna"},{t:"egzamin.",r:"dopelnienie",s:"bliższe"}]},
-  {text:"Mała dziewczynka sąsiadki zgubiła piłkę.",words:[{t:"Mała",r:"przydawka",s:"przymiotna"},{t:"dziewczynka",r:"podmiot",s:"gramatyczny"},{t:"sąsiadki",r:"przydawka",s:"rzeczowna"},{t:"zgubiła",r:"orzeczenie",s:"czasownikowe"},{t:"piłkę.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Mimo ogromnego zmęczenia dzielna drużyna wygrała ważny mecz.",words:[
+    {t:"Mimo",r:"okolicznik",s:"przyzwolenia"},
+    {t:"ogromnego",r:"przydawka",s:"przymiotna"},
+    {t:"zmęczenia",r:"okolicznik",s:"przyzwolenia"},
+    {t:"dzielna",r:"przydawka",s:"przymiotna"},
+    {t:"drużyna",r:"podmiot",s:"gramatyczny"},
+    {t:"wygrała",r:"orzeczenie",s:"czasownikowe"},
+    {t:"ważny",r:"przydawka",s:"przymiotna"},
+    {t:"mecz.",r:"dopelnienie",s:"bliższe"}
+  ]},
+  {text:"Z powodu silnego deszczu uczniowie zostali w klasie.",words:[
+    {t:"Z",r:"okolicznik",s:"przyczyny"},
+    {t:"powodu",r:"okolicznik",s:"przyczyny"},
+    {t:"silnego",r:"przydawka",s:"przymiotna"},
+    {t:"deszczu",r:"okolicznik",s:"przyczyny"},
+    {t:"uczniowie",r:"podmiot",s:"gramatyczny"},
+    {t:"zostali",r:"orzeczenie",s:"czasownikowe"},
+    {t:"w",r:"okolicznik",s:"miejsca"},
+    {t:"klasie.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Ubyło mu resztek sił po długiej wyczerpującej podróży.",words:[
+    {t:"Ubyło",r:"orzeczenie",s:"czasownikowe"},
+    {t:"mu",r:"podmiot",s:"logiczny"},
+    {t:"resztek",r:"podmiot",s:"logiczny"},
+    {t:"sił",r:"podmiot",s:"logiczny"},
+    {t:"po",r:"okolicznik",s:"czasu"},
+    {t:"długiej",r:"przydawka",s:"przymiotna"},
+    {t:"wyczerpującej",r:"przydawka",s:"przymiotna"},
+    {t:"podróży.",r:"okolicznik",s:"czasu"}
+  ]},
+  {text:"Dzielna i pracowita uczennica okazała się najlepsza w klasie.",words:[
+    {t:"Dzielna",r:"przydawka",s:"przymiotna"},
+    {t:"i",r:"przydawka",s:"przymiotna"},
+    {t:"pracowita",r:"przydawka",s:"przymiotna"},
+    {t:"uczennica",r:"podmiot",s:"gramatyczny"},
+    {t:"okazała",r:"orzeczenie",s:"imienne"},
+    {t:"się",r:"orzeczenie",s:"imienne"},
+    {t:"najlepsza",r:"orzeczenie",s:"imienne"},
+    {t:"w",r:"okolicznik",s:"miejsca"},
+    {t:"klasie.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Przybyło nam nagle nowych sił i odwagi.",words:[
+    {t:"Przybyło",r:"orzeczenie",s:"czasownikowe"},
+    {t:"nam",r:"podmiot",s:"logiczny"},
+    {t:"nagle",r:"okolicznik",s:"czasu"},
+    {t:"nowych",r:"przydawka",s:"przymiotna"},
+    {t:"sił",r:"podmiot",s:"logiczny"},
+    {t:"i",r:"podmiot",s:"logiczny"},
+    {t:"odwagi.",r:"podmiot",s:"logiczny"}
+  ]},
+  {text:"Stara mała chatka stoi samotnie na skraju ciemnego lasu.",words:[
+    {t:"Stara",r:"przydawka",s:"przymiotna"},
+    {t:"mała",r:"przydawka",s:"przymiotna"},
+    {t:"chatka",r:"podmiot",s:"gramatyczny"},
+    {t:"stoi",r:"orzeczenie",s:"czasownikowe"},
+    {t:"samotnie",r:"okolicznik",s:"sposobu"},
+    {t:"na",r:"okolicznik",s:"miejsca"},
+    {t:"skraju",r:"okolicznik",s:"miejsca"},
+    {t:"ciemnego",r:"przydawka",s:"przymiotna"},
+    {t:"lasu.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Mały chłopiec biegnie bardzo szybko żeby zdążyć do szkoły.",words:[
+    {t:"Mały",r:"przydawka",s:"przymiotna"},
+    {t:"chłopiec",r:"podmiot",s:"gramatyczny"},
+    {t:"biegnie",r:"orzeczenie",s:"czasownikowe"},
+    {t:"bardzo",r:"okolicznik",s:"sposobu"},
+    {t:"szybko",r:"okolicznik",s:"sposobu"},
+    {t:"żeby",r:"okolicznik",s:"celu"},
+    {t:"zdążyć",r:"okolicznik",s:"celu"},
+    {t:"do",r:"okolicznik",s:"miejsca"},
+    {t:"szkoły.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Mimo dotkliwej porażki doświadczony zawodnik nie stracił ducha.",words:[
+    {t:"Mimo",r:"okolicznik",s:"przyzwolenia"},
+    {t:"dotkliwej",r:"przydawka",s:"przymiotna"},
+    {t:"porażki",r:"okolicznik",s:"przyzwolenia"},
+    {t:"doświadczony",r:"przydawka",s:"przymiotna"},
+    {t:"zawodnik",r:"podmiot",s:"gramatyczny"},
+    {t:"nie",r:"okolicznik",s:"sposobu"},
+    {t:"stracił",r:"orzeczenie",s:"czasownikowe"},
+    {t:"ducha.",r:"dopelnienie",s:"bliższe"}
+  ]},
+  {text:"Z powodu gwałtownej burzy samolot wylądował awaryjnie na lotnisku.",words:[
+    {t:"Z",r:"okolicznik",s:"przyczyny"},
+    {t:"powodu",r:"okolicznik",s:"przyczyny"},
+    {t:"gwałtownej",r:"przydawka",s:"przymiotna"},
+    {t:"burzy",r:"okolicznik",s:"przyczyny"},
+    {t:"samolot",r:"podmiot",s:"gramatyczny"},
+    {t:"wylądował",r:"orzeczenie",s:"czasownikowe"},
+    {t:"awaryjnie",r:"okolicznik",s:"sposobu"},
+    {t:"na",r:"okolicznik",s:"miejsca"},
+    {t:"lotnisku.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Wytrwała codzienna praca pilnego ucznia przyniosła wspaniałe owoce.",words:[
+    {t:"Wytrwała",r:"przydawka",s:"przymiotna"},
+    {t:"codzienna",r:"przydawka",s:"przymiotna"},
+    {t:"praca",r:"podmiot",s:"gramatyczny"},
+    {t:"pilnego",r:"przydawka",s:"przymiotna"},
+    {t:"ucznia",r:"przydawka",s:"rzeczowna"},
+    {t:"przyniosła",r:"orzeczenie",s:"czasownikowe"},
+    {t:"wspaniałe",r:"przydawka",s:"przymiotna"},
+    {t:"owoce.",r:"dopelnienie",s:"bliższe"}
+  ]},
+  {text:"Nauczycielka matematyki cierpliwie wyjaśniła uczniom trudne zadanie.",words:[
+    {t:"Nauczycielka",r:"podmiot",s:"gramatyczny"},
+    {t:"matematyki",r:"przydawka",s:"rzeczowna"},
+    {t:"cierpliwie",r:"okolicznik",s:"sposobu"},
+    {t:"wyjaśniła",r:"orzeczenie",s:"czasownikowe"},
+    {t:"uczniom",r:"dopelnienie",s:"dalsze"},
+    {t:"trudne",r:"przydawka",s:"przymiotna"},
+    {t:"zadanie.",r:"dopelnienie",s:"bliższe"}
+  ]},
+  {text:"Pięć dojrzałych jabłek leżało spokojnie w wiklinowym koszu.",words:[
+    {t:"Pięć",r:"podmiot",s:"logiczny"},
+    {t:"dojrzałych",r:"przydawka",s:"przymiotna"},
+    {t:"jabłek",r:"podmiot",s:"logiczny"},
+    {t:"leżało",r:"orzeczenie",s:"czasownikowe"},
+    {t:"spokojnie",r:"okolicznik",s:"sposobu"},
+    {t:"w",r:"okolicznik",s:"miejsca"},
+    {t:"wiklinowym",r:"przydawka",s:"przymiotna"},
+    {t:"koszu.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Wbrew wszelkim pozorom to zadanie było zaskakująco proste.",words:[
+    {t:"Wbrew",r:"okolicznik",s:"przyzwolenia"},
+    {t:"wszelkim",r:"przydawka",s:"zaimkowa"},
+    {t:"pozorom",r:"okolicznik",s:"przyzwolenia"},
+    {t:"to",r:"przydawka",s:"zaimkowa"},
+    {t:"zadanie",r:"podmiot",s:"gramatyczny"},
+    {t:"było",r:"orzeczenie",s:"imienne"},
+    {t:"zaskakująco",r:"okolicznik",s:"sposobu"},
+    {t:"proste.",r:"orzeczenie",s:"imienne"}
+  ]},
+  {text:"Cierpliwy wytrwały i spokojny Janek zdał najtrudniejszy egzamin.",words:[
+    {t:"Cierpliwy",r:"przydawka",s:"przymiotna"},
+    {t:"wytrwały",r:"przydawka",s:"przymiotna"},
+    {t:"i",r:"przydawka",s:"przymiotna"},
+    {t:"spokojny",r:"przydawka",s:"przymiotna"},
+    {t:"Janek",r:"podmiot",s:"gramatyczny"},
+    {t:"zdał",r:"orzeczenie",s:"czasownikowe"},
+    {t:"najtrudniejszy",r:"przydawka",s:"przymiotna"},
+    {t:"egzamin.",r:"dopelnienie",s:"bliższe"}
+  ]},
+  {text:"Nawet całkowicie zmęczony wiekowy sportowiec ukończył długi maraton.",words:[
+    {t:"Nawet",r:"okolicznik",s:"przyzwolenia"},
+    {t:"całkowicie",r:"okolicznik",s:"sposobu"},
+    {t:"zmęczony",r:"przydawka",s:"przymiotna"},
+    {t:"wiekowy",r:"przydawka",s:"przymiotna"},
+    {t:"sportowiec",r:"podmiot",s:"gramatyczny"},
+    {t:"ukończył",r:"orzeczenie",s:"czasownikowe"},
+    {t:"długi",r:"przydawka",s:"przymiotna"},
+    {t:"maraton.",r:"dopelnienie",s:"bliższe"}
+  ]},
+  {text:"Stary rozłożysty dąb rósł samotnie pośród rozległej łąki.",words:[
+    {t:"Stary",r:"przydawka",s:"przymiotna"},
+    {t:"rozłożysty",r:"przydawka",s:"przymiotna"},
+    {t:"dąb",r:"podmiot",s:"gramatyczny"},
+    {t:"rósł",r:"orzeczenie",s:"czasownikowe"},
+    {t:"samotnie",r:"okolicznik",s:"sposobu"},
+    {t:"pośród",r:"okolicznik",s:"miejsca"},
+    {t:"rozległej",r:"przydawka",s:"przymiotna"},
+    {t:"łąki.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Mimo ulewnego deszczu wyszedł z domu bez parasola.",words:[
+    {t:"Mimo",r:"okolicznik",s:"przyzwolenia"},
+    {t:"ulewnego",r:"przydawka",s:"przymiotna"},
+    {t:"deszczu",r:"okolicznik",s:"przyzwolenia"},
+    {t:"wyszedł",r:"orzeczenie",s:"czasownikowe"},
+    {t:"z",r:"okolicznik",s:"miejsca"},
+    {t:"domu",r:"okolicznik",s:"miejsca"},
+    {t:"bez",r:"okolicznik",s:"sposobu"},
+    {t:"parasola.",r:"okolicznik",s:"sposobu"}
+  ]},
+  {text:"Dla dobrego zdrowia warto ćwiczyć regularnie i systematycznie.",words:[
+    {t:"Dla",r:"okolicznik",s:"celu"},
+    {t:"dobrego",r:"przydawka",s:"przymiotna"},
+    {t:"zdrowia",r:"okolicznik",s:"celu"},
+    {t:"warto",r:"orzeczenie",s:"czasownikowe"},
+    {t:"ćwiczyć",r:"orzeczenie",s:"czasownikowe"},
+    {t:"regularnie",r:"okolicznik",s:"sposobu"},
+    {t:"i",r:"okolicznik",s:"sposobu"},
+    {t:"systematycznie.",r:"okolicznik",s:"sposobu"}
+  ]},
+  {text:"Pod warunkiem ładnej pogody jutro pójdziemy razem w góry.",words:[
+    {t:"Pod",r:"okolicznik",s:"warunku"},
+    {t:"warunkiem",r:"okolicznik",s:"warunku"},
+    {t:"ładnej",r:"przydawka",s:"przymiotna"},
+    {t:"pogody",r:"okolicznik",s:"warunku"},
+    {t:"jutro",r:"okolicznik",s:"czasu"},
+    {t:"pójdziemy",r:"orzeczenie",s:"czasownikowe"},
+    {t:"razem",r:"okolicznik",s:"sposobu"},
+    {t:"w",r:"okolicznik",s:"miejsca"},
+    {t:"góry.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Przez nieuwagę roztargniony uczeń popełnił poważny błąd w zadaniu.",words:[
+    {t:"Przez",r:"okolicznik",s:"przyczyny"},
+    {t:"nieuwagę",r:"okolicznik",s:"przyczyny"},
+    {t:"roztargniony",r:"przydawka",s:"przymiotna"},
+    {t:"uczeń",r:"podmiot",s:"gramatyczny"},
+    {t:"popełnił",r:"orzeczenie",s:"czasownikowe"},
+    {t:"poważny",r:"przydawka",s:"przymiotna"},
+    {t:"błąd",r:"dopelnienie",s:"bliższe"},
+    {t:"w",r:"okolicznik",s:"miejsca"},
+    {t:"zadaniu.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Nawet po wielu długich latach wciąż pamiętał jej piękne imię.",words:[
+    {t:"Nawet",r:"okolicznik",s:"przyzwolenia"},
+    {t:"po",r:"okolicznik",s:"czasu"},
+    {t:"wielu",r:"przydawka",s:"liczebna"},
+    {t:"długich",r:"przydawka",s:"przymiotna"},
+    {t:"latach",r:"okolicznik",s:"czasu"},
+    {t:"wciąż",r:"okolicznik",s:"czasu"},
+    {t:"pamiętał",r:"orzeczenie",s:"czasownikowe"},
+    {t:"jej",r:"przydawka",s:"zaimkowa"},
+    {t:"piękne",r:"przydawka",s:"przymiotna"},
+    {t:"imię.",r:"dopelnienie",s:"bliższe"}
+  ]},
+  {text:"Zbyt głośna nocna muzyka bardzo przeszkadzała zdenerwowanym sąsiadom.",words:[
+    {t:"Zbyt",r:"okolicznik",s:"sposobu"},
+    {t:"głośna",r:"przydawka",s:"przymiotna"},
+    {t:"nocna",r:"przydawka",s:"przymiotna"},
+    {t:"muzyka",r:"podmiot",s:"gramatyczny"},
+    {t:"bardzo",r:"okolicznik",s:"sposobu"},
+    {t:"przeszkadzała",r:"orzeczenie",s:"czasownikowe"},
+    {t:"zdenerwowanym",r:"przydawka",s:"przymiotna"},
+    {t:"sąsiadom.",r:"dopelnienie",s:"dalsze"}
+  ]},
+  {text:"Kochana i troskliwa mama Tomka wróciła niedawno z dalekiej zagranicy.",words:[
+    {t:"Kochana",r:"przydawka",s:"przymiotna"},
+    {t:"i",r:"przydawka",s:"przymiotna"},
+    {t:"troskliwa",r:"przydawka",s:"przymiotna"},
+    {t:"mama",r:"podmiot",s:"gramatyczny"},
+    {t:"Tomka",r:"przydawka",s:"rzeczowna"},
+    {t:"wróciła",r:"orzeczenie",s:"czasownikowe"},
+    {t:"niedawno",r:"okolicznik",s:"czasu"},
+    {t:"z",r:"okolicznik",s:"miejsca"},
+    {t:"dalekiej",r:"przydawka",s:"przymiotna"},
+    {t:"zagranicy.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Wbrew wyraźnemu zakazowi rodziców wyszedł bardzo późno w nocy.",words:[
+    {t:"Wbrew",r:"okolicznik",s:"przyzwolenia"},
+    {t:"wyraźnemu",r:"przydawka",s:"przymiotna"},
+    {t:"zakazowi",r:"okolicznik",s:"przyzwolenia"},
+    {t:"rodziców",r:"przydawka",s:"rzeczowna"},
+    {t:"wyszedł",r:"orzeczenie",s:"czasownikowe"},
+    {t:"bardzo",r:"okolicznik",s:"sposobu"},
+    {t:"późno",r:"okolicznik",s:"czasu"},
+    {t:"w",r:"okolicznik",s:"czasu"},
+    {t:"nocy.",r:"okolicznik",s:"czasu"}
+  ]},
+  {text:"Gdyby miał więcej wolnego czasu pomógłby ci w nauce.",words:[
+    {t:"Gdyby",r:"okolicznik",s:"warunku"},
+    {t:"miał",r:"orzeczenie",s:"czasownikowe"},
+    {t:"więcej",r:"przydawka",s:"liczebna"},
+    {t:"wolnego",r:"przydawka",s:"przymiotna"},
+    {t:"czasu",r:"dopelnienie",s:"bliższe"},
+    {t:"pomógłby",r:"orzeczenie",s:"czasownikowe"},
+    {t:"ci",r:"dopelnienie",s:"dalsze"},
+    {t:"w",r:"okolicznik",s:"celu"},
+    {t:"nauce.",r:"okolicznik",s:"celu"}
+  ]},
+  {text:"Stare wysokie drzewo zostało ścięte przez robotników przy drodze.",words:[
+    {t:"Stare",r:"przydawka",s:"przymiotna"},
+    {t:"wysokie",r:"przydawka",s:"przymiotna"},
+    {t:"drzewo",r:"podmiot",s:"gramatyczny"},
+    {t:"zostało",r:"orzeczenie",s:"imienne"},
+    {t:"ścięte",r:"orzeczenie",s:"imienne"},
+    {t:"przez",r:"okolicznik",s:"przyczyny"},
+    {t:"robotników",r:"dopelnienie",s:"bliższe"},
+    {t:"przy",r:"okolicznik",s:"miejsca"},
+    {t:"drodze.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Zrobiłem to celowo żeby zwrócić uwagę nauczyciela na problem.",words:[
+    {t:"Zrobiłem",r:"orzeczenie",s:"czasownikowe"},
+    {t:"to",r:"dopelnienie",s:"bliższe"},
+    {t:"celowo",r:"okolicznik",s:"celu"},
+    {t:"żeby",r:"okolicznik",s:"celu"},
+    {t:"zwrócić",r:"okolicznik",s:"celu"},
+    {t:"uwagę",r:"dopelnienie",s:"bliższe"},
+    {t:"nauczyciela",r:"przydawka",s:"rzeczowna"},
+    {t:"na",r:"okolicznik",s:"celu"},
+    {t:"problem.",r:"dopelnienie",s:"bliższe"}
+  ]},
+  {text:"Wytrwały i ambitny uczeń po długich staraniach osiągnął sukces.",words:[
+    {t:"Wytrwały",r:"przydawka",s:"przymiotna"},
+    {t:"i",r:"przydawka",s:"przymiotna"},
+    {t:"ambitny",r:"przydawka",s:"przymiotna"},
+    {t:"uczeń",r:"podmiot",s:"gramatyczny"},
+    {t:"po",r:"okolicznik",s:"czasu"},
+    {t:"długich",r:"przydawka",s:"przymiotna"},
+    {t:"staraniach",r:"okolicznik",s:"czasu"},
+    {t:"osiągnął",r:"orzeczenie",s:"czasownikowe"},
+    {t:"sukces.",r:"dopelnienie",s:"bliższe"}
+  ]},
+  {text:"Przez długie lata pracował sumiennie i wytrwale dla swojej rodziny.",words:[
+    {t:"Przez",r:"okolicznik",s:"czasu"},
+    {t:"długie",r:"przydawka",s:"przymiotna"},
+    {t:"lata",r:"okolicznik",s:"czasu"},
+    {t:"pracował",r:"orzeczenie",s:"czasownikowe"},
+    {t:"sumiennie",r:"okolicznik",s:"sposobu"},
+    {t:"i",r:"okolicznik",s:"sposobu"},
+    {t:"wytrwale",r:"okolicznik",s:"sposobu"},
+    {t:"dla",r:"okolicznik",s:"celu"},
+    {t:"swojej",r:"przydawka",s:"zaimkowa"},
+    {t:"rodziny.",r:"okolicznik",s:"celu"}
+  ]},
+  {text:"Stare historyczne miasto zostało starannie odbudowane tuż po wojnie.",words:[
+    {t:"Stare",r:"przydawka",s:"przymiotna"},
+    {t:"historyczne",r:"przydawka",s:"przymiotna"},
+    {t:"miasto",r:"podmiot",s:"gramatyczny"},
+    {t:"zostało",r:"orzeczenie",s:"imienne"},
+    {t:"starannie",r:"okolicznik",s:"sposobu"},
+    {t:"odbudowane",r:"orzeczenie",s:"imienne"},
+    {t:"tuż",r:"okolicznik",s:"czasu"},
+    {t:"po",r:"okolicznik",s:"czasu"},
+    {t:"wojnie.",r:"okolicznik",s:"czasu"}
+  ]},
+  {text:"Mimo ogromnych trudności i przeszkód nie poddał się ani razu.",words:[
+    {t:"Mimo",r:"okolicznik",s:"przyzwolenia"},
+    {t:"ogromnych",r:"przydawka",s:"przymiotna"},
+    {t:"trudności",r:"okolicznik",s:"przyzwolenia"},
+    {t:"i",r:"okolicznik",s:"przyzwolenia"},
+    {t:"przeszkód",r:"okolicznik",s:"przyzwolenia"},
+    {t:"nie",r:"okolicznik",s:"sposobu"},
+    {t:"poddał",r:"orzeczenie",s:"czasownikowe"},
+    {t:"się",r:"dopelnienie",s:"bliższe"},
+    {t:"ani",r:"okolicznik",s:"sposobu"},
+    {t:"razu.",r:"okolicznik",s:"czasu"}
+  ]},
+  {text:"Nasz wierny stary pies niespodziewanie zaginął wczoraj po południu.",words:[
+    {t:"Nasz",r:"przydawka",s:"zaimkowa"},
+    {t:"wierny",r:"przydawka",s:"przymiotna"},
+    {t:"stary",r:"przydawka",s:"przymiotna"},
+    {t:"pies",r:"podmiot",s:"gramatyczny"},
+    {t:"niespodziewanie",r:"okolicznik",s:"sposobu"},
+    {t:"zaginął",r:"orzeczenie",s:"czasownikowe"},
+    {t:"wczoraj",r:"okolicznik",s:"czasu"},
+    {t:"po",r:"okolicznik",s:"czasu"},
+    {t:"południu.",r:"okolicznik",s:"czasu"}
+  ]},
+  {text:"Każde małe dziecko na świecie zasługuje na miłość i troskę.",words:[
+    {t:"Każde",r:"przydawka",s:"zaimkowa"},
+    {t:"małe",r:"przydawka",s:"przymiotna"},
+    {t:"dziecko",r:"podmiot",s:"gramatyczny"},
+    {t:"na",r:"okolicznik",s:"miejsca"},
+    {t:"świecie",r:"okolicznik",s:"miejsca"},
+    {t:"zasługuje",r:"orzeczenie",s:"czasownikowe"},
+    {t:"na",r:"okolicznik",s:"celu"},
+    {t:"miłość",r:"dopelnienie",s:"bliższe"},
+    {t:"i",r:"dopelnienie",s:"bliższe"},
+    {t:"troskę.",r:"dopelnienie",s:"bliższe"}
+  ]},
+  {text:"Dzięki wielkiemu wysiłkowi i determinacji zdał najtrudniejszy egzamin w życiu.",words:[
+    {t:"Dzięki",r:"okolicznik",s:"przyczyny"},
+    {t:"wielkiemu",r:"przydawka",s:"przymiotna"},
+    {t:"wysiłkowi",r:"okolicznik",s:"przyczyny"},
+    {t:"i",r:"okolicznik",s:"przyczyny"},
+    {t:"determinacji",r:"okolicznik",s:"przyczyny"},
+    {t:"zdał",r:"orzeczenie",s:"czasownikowe"},
+    {t:"najtrudniejszy",r:"przydawka",s:"przymiotna"},
+    {t:"egzamin",r:"dopelnienie",s:"bliższe"},
+    {t:"w",r:"okolicznik",s:"miejsca"},
+    {t:"życiu.",r:"okolicznik",s:"miejsca"}
+  ]},
+  {text:"Mała nieśmiała dziewczynka sąsiadki niechcący zgubiła swoją nową piłkę.",words:[
+    {t:"Mała",r:"przydawka",s:"przymiotna"},
+    {t:"nieśmiała",r:"przydawka",s:"przymiotna"},
+    {t:"dziewczynka",r:"podmiot",s:"gramatyczny"},
+    {t:"sąsiadki",r:"przydawka",s:"rzeczowna"},
+    {t:"niechcący",r:"okolicznik",s:"sposobu"},
+    {t:"zgubiła",r:"orzeczenie",s:"czasownikowe"},
+    {t:"swoją",r:"przydawka",s:"zaimkowa"},
+    {t:"nową",r:"przydawka",s:"przymiotna"},
+    {t:"piłkę.",r:"dopelnienie",s:"bliższe"}
+  ]},
 ]
 
 };
@@ -532,7 +1389,6 @@ hard: [
    STAN
    ================================================================ */
 let score=0, currentDiff="easy", currentSentence=null;
-/* wordAssignments[i] = { r: rola, s: podtyp } */
 let wordAssignments={}, selectedWordIdx=null, selectedRole=null;
 let correctCount=0, totalAttempts=0;
 
@@ -626,7 +1482,7 @@ function selectWord(idx){
 function pickRole(role){
   if(selectedWordIdx===null) return;
   selectedRole=role;
-  renderRolePicker(); // odśwież podświetlenie aktywnej roli
+  renderRolePicker();
   showSubtypes(role);
 }
 
@@ -664,7 +1520,7 @@ function checkExercise(){
   let missing=[], roleErr=[], subErr=[];
 
   words.forEach((w,i)=>{
-    if(w.custom) return; // własne zdanie – nie sprawdzaj
+    if(w.custom) return;
     const a=wordAssignments[i];
     if(!a){ missing.push(w.t); return; }
     if(a.r!==w.r) roleErr.push(`„${w.t}": rola powinna być <b>${ROLE_LABELS[w.r]}</b> (Ty: ${ROLE_LABELS[a.r]})`);
