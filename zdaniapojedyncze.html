@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Składnia Polska – Zdanie Pojedyncze</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:       #0d0d12;
+  --bg2:      #13131a;
+  --bg3:      #1a1a24;
+  --bg4:      #22222e;
+  --bg5:      #2a2a38;
+  --border:   rgba(255,255,255,0.07);
+  --border2:  rgba(255,255,255,0.14);
+  --text:     #e4e4f0;
+  --text2:    #9090a8;
+  --text3:    #55556a;
+  --podmiot:     #3d9bff;
+  --orzeczenie:  #ff4f4f;
+  --przydawka:   #3dd68c;
+  --dopelnienie: #c57bff;
+  --okolicznik:  #ffaa33;
+  --radius:    10px;
+  --radius-lg: 16px;
+  --tr:        0.17s ease;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+  min-height: 100vh;
+}
+
+.header {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 1.5rem;
+  display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+}
+.header-title { font-size: 1.1rem; font-weight: 700; }
+.header-sub   { font-size: 0.78rem; color: var(--text3); margin-top: 1px; }
+.score-box {
+  margin-left: auto;
+  background: var(--bg4); border: 1px solid var(--border2);
+  border-radius: var(--radius); padding: 0.4rem 1rem;
+  font-size: 0.85rem; color: var(--text2); white-space: nowrap;
+}
+.score-box .pts { font-size: 1.05rem; font-weight: 700; color: var(--okolicznik); }
+
+.nav {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  padding: 1.1rem 1.5rem 0;
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+}
+.nav-btn {
+  padding: 0.5rem 1.15rem;
+  border-radius: 8px 8px 0 0;
+  border: 1px solid transparent; border-bottom: none;
+  background: transparent; color: var(--text2);
+  font-size: 0.87rem; font-weight: 500; cursor: pointer; transition: var(--tr);
+}
+.nav-btn:hover { color: var(--text); background: var(--bg4); }
+.nav-btn.active {
+  background: var(--bg); color: var(--text);
+  border-color: var(--border2); border-bottom-color: var(--bg);
+  position: relative; bottom: -1px;
+}
+
+.main { max-width: 900px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+.panel { display: none; }
+.panel.active { display: block; }
+
+.legend { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.75rem; }
+.legend-item {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: 999px; padding: 0.28rem 0.75rem;
+  font-size: 0.78rem; color: var(--text2);
+}
+.legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+.theory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
+  gap: 1rem; margin-bottom: 2rem;
+}
+.theory-card {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1.1rem 1.2rem;
+  border-top: 3px solid; transition: var(--tr);
+}
+.theory-card:hover { background: var(--bg4); }
+.theory-card h3 { font-size: 0.98rem; font-weight: 600; margin-bottom: 0.35rem; }
+.theory-card p  { font-size: 0.83rem; color: var(--text2); line-height: 1.6; }
+.theory-card .subtypes { margin-top: 0.55rem; font-size: 0.79rem; color: var(--text3); line-height: 1.8; }
+.theory-card .subtypes span {
+  background: var(--bg4); border-radius: 4px; padding: 1px 6px;
+  margin-right: 3px; color: var(--text2); display: inline-block; margin-bottom: 2px;
+}
+.bq { display: inline-block; font-size: 0.73rem; background: var(--bg5);
+  border: 1px solid var(--border2); border-radius: 999px; padding: 1px 7px;
+  color: var(--text2); margin-top: 3px; }
+
+.example-sentence {
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 0.85rem 1rem;
+  margin-bottom: 0.55rem; font-size: 0.9rem; line-height: 1.9;
+}
+.word {
+  display: inline-block; padding: 1px 5px;
+  border-radius: 4px; margin: 1px; font-weight: 500;
+}
+
+.exercise-controls {
+  display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+  margin-bottom: 1.25rem;
+}
+.diff-group { display: flex; gap: 5px; }
+.diff-btn {
+  padding: 0.38rem 0.85rem; border-radius: 999px;
+  border: 1px solid var(--border2); background: var(--bg3);
+  color: var(--text2); font-size: 0.81rem; cursor: pointer; transition: var(--tr);
+}
+.diff-btn:hover { background: var(--bg4); color: var(--text); }
+.diff-btn.active { background: var(--bg5); color: var(--text); border-color: rgba(255,255,255,0.28); }
+
+.btn-primary {
+  padding: 0.52rem 1.25rem; border-radius: var(--radius); border: none;
+  background: var(--podmiot); color: #fff;
+  font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: var(--tr);
+}
+.btn-primary:hover { filter: brightness(1.15); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+
+.btn-secondary {
+  padding: 0.52rem 1.05rem; border-radius: var(--radius);
+  border: 1px solid var(--border2); background: var(--bg3);
+  color: var(--text); font-size: 0.87rem; font-weight: 500; cursor: pointer; transition: var(--tr);
+}
+.btn-secondary:hover { background: var(--bg4); }
+
+.exercise-box {
+  background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: var(--radius-lg); padding: 1.4rem;
+  margin-bottom: 1.1rem;
+}
+.ex-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text3); margin-bottom: 0.7rem; }
+.exercise-words { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1.15rem; }
+.ex-word {
+  padding: 0.48rem 0.95rem;
+  background: var(--bg4); border: 1px solid var(--border2);
+  border-radius: 8px; font-size: 0.97rem; font-weight: 500;
+  cursor: pointer; transition: var(--tr); user-select: none;
+}
+.ex-word:hover { background: var(--bg5); border-color: rgba(255,255,255,0.28); transform: translateY(-2px); }
+.ex-word.sel { outline: 2px solid rgba(255,255,255,0.55); outline-offset: 2px; }
+.role-tag { display: block; font-size: 0.62rem; text-align: center; opacity: 0.75; margin-top: 1px; font-weight: 400; }
+.sub-tag  { display: block; font-size: 0.58rem; text-align: center; opacity: 0.55; font-weight: 400; }
+
+@keyframes popIn  { 0%{transform:scale(1)} 50%{transform:scale(1.12)} 100%{transform:scale(1)} }
+@keyframes shake  { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+.ex-word.correct { animation: popIn 0.3s ease; }
+.ex-word.wrong   { animation: shake 0.35s ease; }
+
+/* Dwupoziomowy picker */
+.picker-wrap { margin-bottom: 0.5rem; }
+.picker-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text3); margin-bottom: 7px; }
+.role-btns { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 0.75rem; }
+.role-btn {
+  padding: 0.42rem 0.95rem;
+  border-radius: 8px; border: 1px solid transparent;
+  font-size: 0.83rem; font-weight: 600;
+  cursor: pointer; transition: var(--tr);
+}
+.role-btn:hover { filter: brightness(1.2); transform: translateY(-1px); }
+.role-btn.role-active { box-shadow: 0 0 0 2px #fff4; }
+
+/* Subtype area */
+.subtype-area {
+  background: var(--bg4); border: 1px solid var(--border2);
+  border-radius: var(--radius); padding: 0.8rem 1rem;
+  margin-top: 0; margin-bottom: 0.75rem;
+  display: none;
+  animation: fadeIn 0.15s ease;
+}
+@keyframes fadeIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:translateY(0)} }
+.subtype-area.visible { display: block; }
+.sub-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text3); margin-bottom: 7px; }
+.subtype-btns { display: flex; flex-wrap: wrap; gap: 7px; }
+.sub-btn {
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px; border: 1px solid var(--border2);
+  background: var(--bg5); color: var(--text2);
+  font-size: 0.8rem; cursor: pointer; transition: var(--tr);
+}
+.sub-btn:hover { color: var(--text); background: var(--bg); border-color: rgba(255,255,255,0.3); }
+
+.feedback-bar {
+  border-radius: var(--radius); padding: 0.75rem 1rem;
+  font-size: 0.88rem; font-weight: 500; margin-top: 0.85rem; display: none;
+}
+.feedback-bar.ok  { background: #0d2e1a; border: 1px solid #2a7a45; color: #4dca88; display: block; }
+.feedback-bar.err { background: #2e0d0d; border: 1px solid #7a2a2a; color: #ff7070; display: block; }
+.feedback-bar.info{ background: var(--bg4); border: 1px solid var(--border2); color: var(--text2); display: block; }
+
+.progress-row {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 1.2rem; font-size: 0.84rem; color: var(--text2);
+}
+.progress-track { flex: 1; height: 5px; background: var(--bg4); border-radius: 999px; overflow: hidden; }
+.progress-fill  { height: 100%; background: var(--podmiot); border-radius: 999px; transition: width 0.4s ease; }
+
+.custom-section {
+  background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: var(--radius-lg); padding: 1.4rem; margin-top: 2rem;
+}
+.custom-section h3 { font-size: 0.93rem; font-weight: 600; margin-bottom: 0.7rem; }
+.custom-row { display: flex; gap: 9px; flex-wrap: wrap; }
+.custom-input {
+  flex: 1; min-width: 200px;
+  background: var(--bg4); border: 1px solid var(--border2);
+  border-radius: var(--radius); color: var(--text);
+  font-size: 0.88rem; padding: 0.58rem 0.85rem; outline: none; transition: var(--tr);
+}
+.custom-input:focus { border-color: var(--podmiot); }
+
+.section-title {
+  font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.07em; color: var(--text3); margin-bottom: 0.9rem;
+}
+.divider { height: 1px; background: var(--border); margin: 1.75rem 0; }
+
+@media (max-width: 600px) {
+  .header { padding: 0.85rem 1rem; }
+  .main { padding: 1.1rem 0.85rem 3rem; }
+  .theory-grid { grid-template-columns: 1fr; }
+  .nav-btn { padding: 0.45rem 0.85rem; font-size: 0.8rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div>
+    <div class="header-title">📘 Składnia Polska</div>
+    <div class="header-sub">Lekcja 59 · Zdanie pojedyncze</div>
+  </div>
+  <div class="score-box">Punkty: <span class="pts" id="scoreDisplay">0</span></div>
+</header>
+
+<nav class="nav">
+  <button class="nav-btn active" onclick="switchPanel('teoria')">Teoria</button>
+  <button class="nav-btn" onclick="switchPanel('cwiczenia')">Ćwiczenia</button>
+</nav>
+
+<main class="main">
+
+<!-- =================== TEORIA =================== -->
+<section class="panel active" id="panel-teoria">
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--podmiot)"></div>Podmiot</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--orzeczenie)"></div>Orzeczenie</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--przydawka)"></div>Przydawka</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--dopelnienie)"></div>Dopełnienie</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--okolicznik)"></div>Okolicznik</div>
+  </div>
+
+  <p class="section-title">Części główne zdania</p>
+  <div class="theory-grid">
+    <div class="theory-card" style="border-top-color:var(--podmiot)">
+      <h3 style="color:var(--podmiot)">Podmiot</h3>
+      <p>Wykonawca czynności lub nosiciel cechy. Pyta: <strong>kto? co?</strong></p>
+      <div class="subtypes">
+        Rodzaje:<br>
+        <span>gramatyczny</span> – mianownik, zgodny z orzeczeniem<br>
+        <span>domyślny</span> – ukryty w końcówce czasownika<br>
+        <span>szeregowy</span> – kilka podmiotów połączonych<br>
+        <span>logiczny</span> – dopełniacz przy: przybywa/ubywa
+      </div>
+    </div>
+    <div class="theory-card" style="border-top-color:var(--orzeczenie)">
+      <h3 style="color:var(--orzeczenie)">Orzeczenie</h3>
+      <p>Czynność lub stan podmiotu.</p>
+      <div class="subtypes">
+        <span>czasownikowe</span> – sam czasownik<br>
+        <span>imienne</span> – łącznik + orzecznik<br>
+        Łączniki: <em>być, stać się, zostać, okazać się, zrodzić się</em>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-title">Określenia</p>
+  <div class="theory-grid">
+    <div class="theory-card" style="border-top-color:var(--przydawka)">
+      <h3 style="color:var(--przydawka)">Przydawka</h3>
+      <p>Każde określenie <strong>rzeczownika</strong>.</p>
+      <div class="subtypes"><span>przymiotna</span><span>rzeczowna</span><span>zaimkowa</span><span>liczebna</span></div>
+      <span class="bq">jaki? czyj? który? ile?</span>
+    </div>
+    <div class="theory-card" style="border-top-color:var(--dopelnienie)">
+      <h3 style="color:var(--dopelnienie)">Dopełnienie</h3>
+      <p>Określenie <strong>czasownika</strong>. Przypadki oprócz M. i W.</p>
+      <div class="subtypes"><span>bliższe</span><span>dalsze</span></div>
+      <span class="bq">kogo? czego? komu? czemu? kim? czym?</span>
+    </div>
+    <div class="theory-card" style="border-top-color:var(--okolicznik); grid-column:1/-1">
+      <h3 style="color:var(--okolicznik)">Okolicznik</h3>
+      <p>Określenie <strong>czasownika</strong> – okoliczności czynności.</p>
+      <div class="subtypes" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:3px;margin-top:7px">
+        <div><span>miejsca</span> <span class="bq">gdzie?</span></div>
+        <div><span>czasu</span> <span class="bq">kiedy?</span></div>
+        <div><span>sposobu</span> <span class="bq">jak?</span></div>
+        <div><span>celu</span> <span class="bq">po co?</span></div>
+        <div><span>przyczyny</span> <span class="bq">dlaczego?</span></div>
+        <div><span>warunku</span> <span class="bq">pod jakim warunkiem?</span></div>
+        <div><span>przyzwolenia</span> <span class="bq">mimo co?</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <p class="section-title">Przykłady zdań z oznaczeniem</p>
+  <div id="examplesContainer"></div>
+</section>
+
+<!-- =================== ĆWICZENIA =================== -->
+<section class="panel" id="panel-cwiczenia">
+  <div class="exercise-controls">
+    <div class="diff-group">
+      <button class="diff-btn active" onclick="setDiff('easy',this)">Łatwy</button>
+      <button class="diff-btn" onclick="setDiff('medium',this)">Średni</button>
+      <button class="diff-btn" onclick="setDiff('hard',this)">Trudny</button>
+    </div>
+    <button class="btn-primary" onclick="loadExercise()">Nowe zdanie ▶</button>
+    <button class="btn-secondary" onclick="checkExercise()">Sprawdź ✓</button>
+  </div>
+
+  <div class="progress-row">
+    <span id="progressLabel">0 / 0 poprawnych</span>
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+  </div>
+
+  <div class="exercise-box" id="exerciseBox">
+    <div class="ex-label">Zdanie do analizy — kliknij wyraz, wybierz rolę, potem rodzaj</div>
+    <div class="exercise-words" id="exerciseWords"></div>
+
+    <div class="picker-wrap">
+      <div class="picker-label" id="pickerLabel">↑ Kliknij wyraz, aby go zaznaczyć</div>
+      <div class="role-btns" id="rolePicker"></div>
+      <div class="subtype-area" id="subtypeArea">
+        <div class="sub-label" id="subLabel">Wybierz rodzaj:</div>
+        <div class="subtype-btns" id="subtypePicker"></div>
+      </div>
+    </div>
+
+    <div class="feedback-bar" id="feedbackBar"></div>
+  </div>
+
+  <div style="font-size:0.8rem;color:var(--text3);line-height:1.75">
+    Krok 1: kliknij wyraz &nbsp;→&nbsp; Krok 2: wybierz rolę (podmiot / orzeczenie…) &nbsp;→&nbsp; Krok 3: wybierz rodzaj (gramatyczny / czasownikowe…) &nbsp;→&nbsp; naciśnij „Sprawdź"
+  </div>
+
+  <div class="custom-section">
+    <h3>➕ Dodaj własne zdanie</h3>
+    <div class="custom-row">
+      <input class="custom-input" id="customInput" placeholder="Np. Ola czyta grubą książkę w parku.">
+      <button class="btn-primary" onclick="addCustomSentence()">Dodaj</button>
+    </div>
+    <div style="font-size:0.78rem;color:var(--text3);margin-top:7px">
+      Własne zdania trafiają do poziomu łatwego. Oznacz je samodzielnie w ćwiczeniu.
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+/* ================================================================
+   PODTYPY
+   ================================================================ */
+const SUBTYPES = {
+  podmiot:     ["gramatyczny","domyślny","szeregowy","logiczny"],
+  orzeczenie:  ["czasownikowe","imienne"],
+  przydawka:   ["przymiotna","rzeczowna","zaimkowa","liczebna"],
+  dopelnienie: ["bliższe","dalsze"],
+  okolicznik:  ["miejsca","czasu","sposobu","celu","przyczyny","warunku","przyzwolenia"]
+};
+
+const ROLE_LABELS = {
+  podmiot:"Podmiot", orzeczenie:"Orzeczenie",
+  przydawka:"Przydawka", dopelnienie:"Dopełnienie", okolicznik:"Okolicznik"
+};
+
+const ROLE_COLORS = {
+  podmiot:"var(--podmiot)", orzeczenie:"var(--orzeczenie)",
+  przydawka:"var(--przydawka)", dopelnienie:"var(--dopelnienie)", okolicznik:"var(--okolicznik)"
+};
+
+/* ================================================================
+   ZDANIA – 100+ z pełną analizą (rola + rodzaj każdego wyrazu)
+   ================================================================ */
+const SENTENCES = {
+
+/* ---------- ŁATWY (30 zdań) ---------- */
+easy: [
+  {text:"Janek biegnie.",words:[{t:"Janek",r:"podmiot",s:"gramatyczny"},{t:"biegnie.",r:"orzeczenie",s:"czasownikowe"}]},
+  {text:"Pies śpi.",words:[{t:"Pies",r:"podmiot",s:"gramatyczny"},{t:"śpi.",r:"orzeczenie",s:"czasownikowe"}]},
+  {text:"Mama gotuje.",words:[{t:"Mama",r:"podmiot",s:"gramatyczny"},{t:"gotuje.",r:"orzeczenie",s:"czasownikowe"}]},
+  {text:"Kot miauczy głośno.",words:[{t:"Kot",r:"podmiot",s:"gramatyczny"},{t:"miauczy",r:"orzeczenie",s:"czasownikowe"},{t:"głośno.",r:"okolicznik",s:"sposobu"}]},
+  {text:"Ola czyta książkę.",words:[{t:"Ola",r:"podmiot",s:"gramatyczny"},{t:"czyta",r:"orzeczenie",s:"czasownikowe"},{t:"książkę.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Ptak leci wysoko.",words:[{t:"Ptak",r:"podmiot",s:"gramatyczny"},{t:"leci",r:"orzeczenie",s:"czasownikowe"},{t:"wysoko.",r:"okolicznik",s:"miejsca"}]},
+  {text:"Asia śpiewa pięknie.",words:[{t:"Asia",r:"podmiot",s:"gramatyczny"},{t:"śpiewa",r:"orzeczenie",s:"czasownikowe"},{t:"pięknie.",r:"okolicznik",s:"sposobu"}]},
+  {text:"Słońce świeci.",words:[{t:"Słońce",r:"podmiot",s:"gramatyczny"},{t:"świeci.",r:"orzeczenie",s:"czasownikowe"}]},
+  {text:"Mama jest wesoła.",words:[{t:"Mama",r:"podmiot",s:"gramatyczny"},{t:"jest",r:"orzeczenie",s:"imienne"},{t:"wesoła.",r:"orzeczenie",s:"imienne"}]},
+  {text:"Pies jest duży.",words:[{t:"Pies",r:"podmiot",s:"gramatyczny"},{t:"jest",r:"orzeczenie",s:"imienne"},{t:"duży.",r:"orzeczenie",s:"imienne"}]},
+  {text:"Niebo jest niebieskie.",words:[{t:"Niebo",r:"podmiot",s:"gramatyczny"},{t:"jest",r:"orzeczenie",s:"imienne"},{t:"niebieskie.",r:"orzeczenie",s:"imienne"}]},
+  {text:"Kasia pije mleko.",words:[{t:"Kasia",r:"podmiot",s:"gramatyczny"},{t:"pije",r:"orzeczenie",s:"czasownikowe"},{t:"mleko.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Marek lubi sport.",words:[{t:"Marek",r:"podmiot",s:"gramatyczny"},{t:"lubi",r:"orzeczenie",s:"czasownikowe"},{t:"sport.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Ryba pływa.",words:[{t:"Ryba",r:"podmiot",s:"gramatyczny"},{t:"pływa.",r:"orzeczenie",s:"czasownikowe"}]},
+  {text:"Dziadek śpi długo.",words:[{t:"Dziadek",r:"podmiot",s:"gramatyczny"},{t:"śpi",r:"orzeczenie",s:"czasownikowe"},{t:"długo.",r:"okolicznik",s:"czasu"}]},
+  {text:"Babcia gotuje zupę.",words:[{t:"Babcia",r:"podmiot",s:"gramatyczny"},{t:"gotuje",r:"orzeczenie",s:"czasownikowe"},{t:"zupę.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Uczeń pisze zadanie.",words:[{t:"Uczeń",r:"podmiot",s:"gramatyczny"},{t:"pisze",r:"orzeczenie",s:"czasownikowe"},{t:"zadanie.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Chłopiec skacze radośnie.",words:[{t:"Chłopiec",r:"podmiot",s:"gramatyczny"},{t:"skacze",r:"orzeczenie",s:"czasownikowe"},{t:"radośnie.",r:"okolicznik",s:"sposobu"}]},
+  {text:"Dziewczynka rysuje.",words:[{t:"Dziewczynka",r:"podmiot",s:"gramatyczny"},{t:"rysuje.",r:"orzeczenie",s:"czasownikowe"}]},
+  {text:"Wiatr wieje mocno.",words:[{t:"Wiatr",r:"podmiot",s:"gramatyczny"},{t:"wieje",r:"orzeczenie",s:"czasownikowe"},{t:"mocno.",r:"okolicznik",s:"sposobu"}]},
+  {text:"Deszcz pada.",words:[{t:"Deszcz",r:"podmiot",s:"gramatyczny"},{t:"pada.",r:"orzeczenie",s:"czasownikowe"}]},
+  {text:"Biegam codziennie.",words:[{t:"Biegam",r:"orzeczenie",s:"czasownikowe"},{t:"codziennie.",r:"okolicznik",s:"czasu"}]},
+  {text:"Czytam książkę.",words:[{t:"Czytam",r:"orzeczenie",s:"czasownikowe"},{t:"książkę.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Siostra tańczy.",words:[{t:"Siostra",r:"podmiot",s:"gramatyczny"},{t:"tańczy.",r:"orzeczenie",s:"czasownikowe"}]},
+  {text:"Kot je rybę.",words:[{t:"Kot",r:"podmiot",s:"gramatyczny"},{t:"je",r:"orzeczenie",s:"czasownikowe"},{t:"rybę.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Pada śnieg.",words:[{t:"Pada",r:"orzeczenie",s:"czasownikowe"},{t:"śnieg.",r:"podmiot",s:"gramatyczny"}]},
+  {text:"Lew ryczy głośno.",words:[{t:"Lew",r:"podmiot",s:"gramatyczny"},{t:"ryczy",r:"orzeczenie",s:"czasownikowe"},{t:"głośno.",r:"okolicznik",s:"sposobu"}]},
+  {text:"Piszę list.",words:[{t:"Piszę",r:"orzeczenie",s:"czasownikowe"},{t:"list.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Nauczyciel mówi cicho.",words:[{t:"Nauczyciel",r:"podmiot",s:"gramatyczny"},{t:"mówi",r:"orzeczenie",s:"czasownikowe"},{t:"cicho.",r:"okolicznik",s:"sposobu"}]},
+  {text:"Brat gra w piłkę.",words:[{t:"Brat",r:"podmiot",s:"gramatyczny"},{t:"gra",r:"orzeczenie",s:"czasownikowe"},{t:"w",r:"okolicznik",s:"sposobu"},{t:"piłkę.",r:"dopelnienie",s:"bliższe"}]},
+],
+
+/* ---------- ŚREDNI (40 zdań) ---------- */
+medium: [
+  {text:"Mała Ola czyta grubą książkę.",words:[{t:"Mała",r:"przydawka",s:"przymiotna"},{t:"Ola",r:"podmiot",s:"gramatyczny"},{t:"czyta",r:"orzeczenie",s:"czasownikowe"},{t:"grubą",r:"przydawka",s:"przymiotna"},{t:"książkę.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Stary pies śpi na dywanie.",words:[{t:"Stary",r:"przydawka",s:"przymiotna"},{t:"pies",r:"podmiot",s:"gramatyczny"},{t:"śpi",r:"orzeczenie",s:"czasownikowe"},{t:"na",r:"okolicznik",s:"miejsca"},{t:"dywanie.",r:"okolicznik",s:"miejsca"}]},
+  {text:"Tomek jest bardzo zmęczony.",words:[{t:"Tomek",r:"podmiot",s:"gramatyczny"},{t:"jest",r:"orzeczenie",s:"imienne"},{t:"bardzo",r:"okolicznik",s:"sposobu"},{t:"zmęczony.",r:"orzeczenie",s:"imienne"}]},
+  {text:"Uczennica pisze wypracowanie starannie.",words:[{t:"Uczennica",r:"podmiot",s:"gramatyczny"},{t:"pisze",r:"orzeczenie",s:"czasownikowe"},{t:"wypracowanie",r:"dopelnienie",s:"bliższe"},{t:"starannie.",r:"okolicznik",s:"sposobu"}]},
+  {text:"Mama piecze ciasto dla gości.",words:[{t:"Mama",r:"podmiot",s:"gramatyczny"},{t:"piecze",r:"orzeczenie",s:"czasownikowe"},{t:"ciasto",r:"dopelnienie",s:"bliższe"},{t:"dla",r:"okolicznik",s:"celu"},{t:"gości.",r:"okolicznik",s:"celu"}]},
+  {text:"Uczniowie idą do szkoły rano.",words:[{t:"Uczniowie",r:"podmiot",s:"gramatyczny"},{t:"idą",r:"orzeczenie",s:"czasownikowe"},{t:"do",r:"okolicznik",s:"miejsca"},{t:"szkoły",r:"okolicznik",s:"miejsca"},{t:"rano.",r:"okolicznik",s:"czasu"}]},
+  {text:"Tata naprawia stary samochód.",words:[{t:"Tata",r:"podmiot",s:"gramatyczny"},{t:"naprawia",r:"orzeczenie",s:"czasownikowe"},{t:"stary",r:"przydawka",s:"przymiotna"},{t:"samochód.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Babcia opowiada ciekawą historię.",words:[{t:"Babcia",r:"podmiot",s:"gramatyczny"},{t:"opowiada",r:"orzeczenie",s:"czasownikowe"},{t:"ciekawą",r:"przydawka",s:"przymiotna"},{t:"historię.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Chłopiec biega po ogrodzie szybko.",words:[{t:"Chłopiec",r:"podmiot",s:"gramatyczny"},{t:"biega",r:"orzeczenie",s:"czasownikowe"},{t:"po",r:"okolicznik",s:"miejsca"},{t:"ogrodzie",r:"okolicznik",s:"miejsca"},{t:"szybko.",r:"okolicznik",s:"sposobu"}]},
+  {text:"Nauczycielka czyta uczniom bajkę.",words:[{t:"Nauczycielka",r:"podmiot",s:"gramatyczny"},{t:"czyta",r:"orzeczenie",s:"czasownikowe"},{t:"uczniom",r:"dopelnienie",s:"dalsze"},{t:"bajkę.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Kasia stała się sławna.",words:[{t:"Kasia",r:"podmiot",s:"gramatyczny"},{t:"stała",r:"orzeczenie",s:"imienne"},{t:"się",r:"orzeczenie",s:"imienne"},{t:"sławna.",r:"orzeczenie",s:"imienne"}]},
+  {text:"Dziadek idzie powoli do sklepu.",words:[{t:"Dziadek",r:"podmiot",s:"gramatyczny"},{t:"idzie",r:"orzeczenie",s:"czasownikowe"},{t:"powoli",r:"okolicznik",s:"sposobu"},{t:"do",r:"okolicznik",s:"miejsca"},{t:"sklepu.",r:"okolicznik",s:"miejsca"}]},
+  {text:"Trzy koty śpią na kanapie.",words:[{t:"Trzy",r:"przydawka",s:"liczebna"},{t:"koty",r:"podmiot",s:"gramatyczny"},{t:"śpią",r:"orzeczenie",s:"czasownikowe"},{t:"na",r:"okolicznik",s:"miejsca"},{t:"kanapie.",r:"okolicznik",s:"miejsca"}]},
+  {text:"Moja siostra gra na skrzypcach.",words:[{t:"Moja",r:"przydawka",s:"zaimkowa"},{t:"siostra",r:"podmiot",s:"gramatyczny"},{t:"gra",r:"orzeczenie",s:"czasownikowe"},{t:"na",r:"okolicznik",s:"sposobu"},{t:"skrzypcach.",r:"okolicznik",s:"sposobu"}]},
+  {text:"Ten uczeń okazał się zdolny.",words:[{t:"Ten",r:"przydawka",s:"zaimkowa"},{t:"uczeń",r:"podmiot",s:"gramatyczny"},{t:"okazał",r:"orzeczenie",s:"imienne"},{t:"się",r:"orzeczenie",s:"imienne"},{t:"zdolny.",r:"orzeczenie",s:"imienne"}]},
+  {text:"Mama kupiła mi nowe buty.",words:[{t:"Mama",r:"podmiot",s:"gramatyczny"},{t:"kupiła",r:"orzeczenie",s:"czasownikowe"},{t:"mi",r:"dopelnienie",s:"dalsze"},{t:"nowe",r:"przydawka",s:"przymiotna"},{t:"buty.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Wieczorem czytamy razem bajki.",words:[{t:"Wieczorem",r:"okolicznik",s:"czasu"},{t:"czytamy",r:"orzeczenie",s:"czasownikowe"},{t:"razem",r:"okolicznik",s:"sposobu"},{t:"bajki.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Stara kamienica stoi przy rynku.",words:[{t:"Stara",r:"przydawka",s:"przymiotna"},{t:"kamienica",r:"podmiot",s:"gramatyczny"},{t:"stoi",r:"orzeczenie",s:"czasownikowe"},{t:"przy",r:"okolicznik",s:"miejsca"},{t:"rynku.",r:"okolicznik",s:"miejsca"}]},
+  {text:"Zima jest bardzo mroźna.",words:[{t:"Zima",r:"podmiot",s:"gramatyczny"},{t:"jest",r:"orzeczenie",s:"imienne"},{t:"bardzo",r:"okolicznik",s:"sposobu"},{t:"mroźna.",r:"orzeczenie",s:"imienne"}]},
+  {text:"Nasze miasto leży nad rzeką.",words:[{t:"Nasze",r:"przydawka",s:"zaimkowa"},{t:"miasto",r:"podmiot",s:"gramatyczny"},{t:"leży",r:"orzeczenie",s:"czasownikowe"},{t:"nad",r:"okolicznik",s:"miejsca"},{t:"rzeką.",r:"okolicznik",s:"miejsca"}]},
+  {text:"Ojciec wrócił późno do domu.",words:[{t:"Ojciec",r:"podmiot",s:"gramatyczny"},{t:"wrócił",r:"orzeczenie",s:"czasownikowe"},{t:"późno",r:"okolicznik",s:"czasu"},{t:"do",r:"okolicznik",s:"miejsca"},{t:"domu.",r:"okolicznik",s:"miejsca"}]},
+  {text:"Nowa nauczycielka jest miła.",words:[{t:"Nowa",r:"przydawka",s:"przymiotna"},{t:"nauczycielka",r:"podmiot",s:"gramatyczny"},{t:"jest",r:"orzeczenie",s:"imienne"},{t:"miła.",r:"orzeczenie",s:"imienne"}]},
+  {text:"Babcia siedzi w fotelu.",words:[{t:"Babcia",r:"podmiot",s:"gramatyczny"},{t:"siedzi",r:"orzeczenie",s:"czasownikowe"},{t:"w",r:"okolicznik",s:"miejsca"},{t:"fotelu.",r:"okolicznik",s:"miejsca"}]},
+  {text:"Kwiaty rosną w ogrodzie pięknie.",words:[{t:"Kwiaty",r:"podmiot",s:"gramatyczny"},{t:"rosną",r:"orzeczenie",s:"czasownikowe"},{t:"w",r:"okolicznik",s:"miejsca"},{t:"ogrodzie",r:"okolicznik",s:"miejsca"},{t:"pięknie.",r:"okolicznik",s:"sposobu"}]},
+  {text:"Letni wieczór jest ciepły.",words:[{t:"Letni",r:"przydawka",s:"przymiotna"},{t:"wieczór",r:"podmiot",s:"gramatyczny"},{t:"jest",r:"orzeczenie",s:"imienne"},{t:"ciepły.",r:"orzeczenie",s:"imienne"}]},
+  {text:"Marek napisał list do kolegi.",words:[{t:"Marek",r:"podmiot",s:"gramatyczny"},{t:"napisał",r:"orzeczenie",s:"czasownikowe"},{t:"list",r:"dopelnienie",s:"bliższe"},{t:"do",r:"okolicznik",s:"celu"},{t:"kolegi.",r:"dopelnienie",s:"dalsze"}]},
+  {text:"Siostra i brat jedzą śniadanie.",words:[{t:"Siostra",r:"podmiot",s:"szeregowy"},{t:"i",r:"podmiot",s:"szeregowy"},{t:"brat",r:"podmiot",s:"szeregowy"},{t:"jedzą",r:"orzeczenie",s:"czasownikowe"},{t:"śniadanie.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Kolega Marka mieszka niedaleko.",words:[{t:"Kolega",r:"podmiot",s:"gramatyczny"},{t:"Marka",r:"przydawka",s:"rzeczowna"},{t:"mieszka",r:"orzeczenie",s:"czasownikowe"},{t:"niedaleko.",r:"okolicznik",s:"miejsca"}]},
+  {text:"Dzieci biegają po placu.",words:[{t:"Dzieci",r:"podmiot",s:"gramatyczny"},{t:"biegają",r:"orzeczenie",s:"czasownikowe"},{t:"po",r:"okolicznik",s:"miejsca"},{t:"placu.",r:"okolicznik",s:"miejsca"}]},
+  {text:"Brat pomaga mi w nauce.",words:[{t:"Brat",r:"podmiot",s:"gramatyczny"},{t:"pomaga",r:"orzeczenie",s:"czasownikowe"},{t:"mi",r:"dopelnienie",s:"dalsze"},{t:"w",r:"okolicznik",s:"celu"},{t:"nauce.",r:"okolicznik",s:"celu"}]},
+  {text:"Chłopiec pomógł sąsiadce z zakupami.",words:[{t:"Chłopiec",r:"podmiot",s:"gramatyczny"},{t:"pomógł",r:"orzeczenie",s:"czasownikowe"},{t:"sąsiadce",r:"dopelnienie",s:"dalsze"},{t:"z",r:"okolicznik",s:"celu"},{t:"zakupami.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Pójdę do kina jutro.",words:[{t:"Pójdę",r:"orzeczenie",s:"czasownikowe"},{t:"do",r:"okolicznik",s:"miejsca"},{t:"kina",r:"okolicznik",s:"miejsca"},{t:"jutro.",r:"okolicznik",s:"czasu"}]},
+  {text:"Wysoka wieża widoczna jest z daleka.",words:[{t:"Wysoka",r:"przydawka",s:"przymiotna"},{t:"wieża",r:"podmiot",s:"gramatyczny"},{t:"widoczna",r:"orzeczenie",s:"imienne"},{t:"jest",r:"orzeczenie",s:"imienne"},{t:"z",r:"okolicznik",s:"miejsca"},{t:"daleka.",r:"okolicznik",s:"miejsca"}]},
+  {text:"Pies szczeka na przechodniów głośno.",words:[{t:"Pies",r:"podmiot",s:"gramatyczny"},{t:"szczeka",r:"orzeczenie",s:"czasownikowe"},{t:"na",r:"okolicznik",s:"celu"},{t:"przechodniów",r:"dopelnienie",s:"bliższe"},{t:"głośno.",r:"okolicznik",s:"sposobu"}]},
+  {text:"Dzieci sąsiadów hałasowały do późna.",words:[{t:"Dzieci",r:"podmiot",s:"gramatyczny"},{t:"sąsiadów",r:"przydawka",s:"rzeczowna"},{t:"hałasowały",r:"orzeczenie",s:"czasownikowe"},{t:"do",r:"okolicznik",s:"czasu"},{t:"późna.",r:"okolicznik",s:"czasu"}]},
+  {text:"Mama i tata wyjechali w niedzielę.",words:[{t:"Mama",r:"podmiot",s:"szeregowy"},{t:"i",r:"podmiot",s:"szeregowy"},{t:"tata",r:"podmiot",s:"szeregowy"},{t:"wyjechali",r:"orzeczenie",s:"czasownikowe"},{t:"w",r:"okolicznik",s:"czasu"},{t:"niedzielę.",r:"okolicznik",s:"czasu"}]},
+  {text:"Nowy uczeń szybko zaprzyjaźnił się z klasą.",words:[{t:"Nowy",r:"przydawka",s:"przymiotna"},{t:"uczeń",r:"podmiot",s:"gramatyczny"},{t:"szybko",r:"okolicznik",s:"sposobu"},{t:"zaprzyjaźnił",r:"orzeczenie",s:"czasownikowe"},{t:"się",r:"dopelnienie",s:"bliższe"},{t:"z",r:"okolicznik",s:"sposobu"},{t:"klasą.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Wszystkie dzieci z klasy zdały test.",words:[{t:"Wszystkie",r:"przydawka",s:"zaimkowa"},{t:"dzieci",r:"podmiot",s:"gramatyczny"},{t:"z",r:"przydawka",s:"rzeczowna"},{t:"klasy",r:"przydawka",s:"rzeczowna"},{t:"zdały",r:"orzeczenie",s:"czasownikowe"},{t:"test.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Gorąca herbata stała na stole.",words:[{t:"Gorąca",r:"przydawka",s:"przymiotna"},{t:"herbata",r:"podmiot",s:"gramatyczny"},{t:"stała",r:"orzeczenie",s:"czasownikowe"},{t:"na",r:"okolicznik",s:"miejsca"},{t:"stole.",r:"okolicznik",s:"miejsca"}]},
+  {text:"Zimny wiatr wieje od strony gór.",words:[{t:"Zimny",r:"przydawka",s:"przymiotna"},{t:"wiatr",r:"podmiot",s:"gramatyczny"},{t:"wieje",r:"orzeczenie",s:"czasownikowe"},{t:"od",r:"okolicznik",s:"miejsca"},{t:"strony",r:"okolicznik",s:"miejsca"},{t:"gór.",r:"okolicznik",s:"miejsca"}]},
+],
+
+/* ---------- TRUDNY (35 zdań) ---------- */
+hard: [
+  {text:"Mimo zmęczenia drużyna wygrała mecz.",words:[{t:"Mimo",r:"okolicznik",s:"przyzwolenia"},{t:"zmęczenia",r:"okolicznik",s:"przyzwolenia"},{t:"drużyna",r:"podmiot",s:"gramatyczny"},{t:"wygrała",r:"orzeczenie",s:"czasownikowe"},{t:"mecz.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Z powodu deszczu uczniowie zostali w klasie.",words:[{t:"Z",r:"okolicznik",s:"przyczyny"},{t:"powodu",r:"okolicznik",s:"przyczyny"},{t:"deszczu",r:"okolicznik",s:"przyczyny"},{t:"uczniowie",r:"podmiot",s:"gramatyczny"},{t:"zostali",r:"orzeczenie",s:"czasownikowe"},{t:"w",r:"okolicznik",s:"miejsca"},{t:"klasie.",r:"okolicznik",s:"miejsca"}]},
+  {text:"Ubyło mu sił po długiej podróży.",words:[{t:"Ubyło",r:"orzeczenie",s:"czasownikowe"},{t:"mu",r:"podmiot",s:"logiczny"},{t:"sił",r:"dopelnienie",s:"bliższe"},{t:"po",r:"okolicznik",s:"czasu"},{t:"długiej",r:"przydawka",s:"przymiotna"},{t:"podróży.",r:"okolicznik",s:"czasu"}]},
+  {text:"Dzielna uczennica okazała się najlepsza.",words:[{t:"Dzielna",r:"przydawka",s:"przymiotna"},{t:"uczennica",r:"podmiot",s:"gramatyczny"},{t:"okazała",r:"orzeczenie",s:"imienne"},{t:"się",r:"orzeczenie",s:"imienne"},{t:"najlepsza.",r:"orzeczenie",s:"imienne"}]},
+  {text:"Przybyło nam nowych sił.",words:[{t:"Przybyło",r:"orzeczenie",s:"czasownikowe"},{t:"nam",r:"podmiot",s:"logiczny"},{t:"nowych",r:"przydawka",s:"przymiotna"},{t:"sił.",r:"podmiot",s:"logiczny"}]},
+  {text:"Stara chatka stoi samotnie na skraju lasu.",words:[{t:"Stara",r:"przydawka",s:"przymiotna"},{t:"chatka",r:"podmiot",s:"gramatyczny"},{t:"stoi",r:"orzeczenie",s:"czasownikowe"},{t:"samotnie",r:"okolicznik",s:"sposobu"},{t:"na",r:"okolicznik",s:"miejsca"},{t:"skraju",r:"okolicznik",s:"miejsca"},{t:"lasu.",r:"okolicznik",s:"miejsca"}]},
+  {text:"Chłopiec biegnie szybko żeby zdążyć.",words:[{t:"Chłopiec",r:"podmiot",s:"gramatyczny"},{t:"biegnie",r:"orzeczenie",s:"czasownikowe"},{t:"szybko",r:"okolicznik",s:"sposobu"},{t:"żeby",r:"okolicznik",s:"celu"},{t:"zdążyć.",r:"okolicznik",s:"celu"}]},
+  {text:"Mimo porażki zawodnik nie stracił ducha.",words:[{t:"Mimo",r:"okolicznik",s:"przyzwolenia"},{t:"porażki",r:"okolicznik",s:"przyzwolenia"},{t:"zawodnik",r:"podmiot",s:"gramatyczny"},{t:"nie",r:"okolicznik",s:"sposobu"},{t:"stracił",r:"orzeczenie",s:"czasownikowe"},{t:"ducha.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Z powodu burzy samolot wylądował na lotnisku.",words:[{t:"Z",r:"okolicznik",s:"przyczyny"},{t:"powodu",r:"okolicznik",s:"przyczyny"},{t:"burzy",r:"okolicznik",s:"przyczyny"},{t:"samolot",r:"podmiot",s:"gramatyczny"},{t:"wylądował",r:"orzeczenie",s:"czasownikowe"},{t:"na",r:"okolicznik",s:"miejsca"},{t:"lotnisku.",r:"okolicznik",s:"miejsca"}]},
+  {text:"Wytrwała praca ucznia przyniosła owoce.",words:[{t:"Wytrwała",r:"przydawka",s:"przymiotna"},{t:"praca",r:"podmiot",s:"gramatyczny"},{t:"ucznia",r:"przydawka",s:"rzeczowna"},{t:"przyniosła",r:"orzeczenie",s:"czasownikowe"},{t:"owoce.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Nauczycielka matematyki wyjaśniła trudne zadanie.",words:[{t:"Nauczycielka",r:"podmiot",s:"gramatyczny"},{t:"matematyki",r:"przydawka",s:"rzeczowna"},{t:"wyjaśniła",r:"orzeczenie",s:"czasownikowe"},{t:"trudne",r:"przydawka",s:"przymiotna"},{t:"zadanie.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Pięć jabłek leżało w koszu.",words:[{t:"Pięć",r:"podmiot",s:"logiczny"},{t:"jabłek",r:"podmiot",s:"logiczny"},{t:"leżało",r:"orzeczenie",s:"czasownikowe"},{t:"w",r:"okolicznik",s:"miejsca"},{t:"koszu.",r:"okolicznik",s:"miejsca"}]},
+  {text:"Wbrew pozorom zadanie było proste.",words:[{t:"Wbrew",r:"okolicznik",s:"przyzwolenia"},{t:"pozorom",r:"okolicznik",s:"przyzwolenia"},{t:"zadanie",r:"podmiot",s:"gramatyczny"},{t:"było",r:"orzeczenie",s:"imienne"},{t:"proste.",r:"orzeczenie",s:"imienne"}]},
+  {text:"Cierpliwy i wytrwały Janek zdał egzamin.",words:[{t:"Cierpliwy",r:"przydawka",s:"przymiotna"},{t:"i",r:"przydawka",s:"przymiotna"},{t:"wytrwały",r:"przydawka",s:"przymiotna"},{t:"Janek",r:"podmiot",s:"gramatyczny"},{t:"zdał",r:"orzeczenie",s:"czasownikowe"},{t:"egzamin.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Nawet zmęczony sportowiec ukończył maraton.",words:[{t:"Nawet",r:"okolicznik",s:"przyzwolenia"},{t:"zmęczony",r:"przydawka",s:"przymiotna"},{t:"sportowiec",r:"podmiot",s:"gramatyczny"},{t:"ukończył",r:"orzeczenie",s:"czasownikowe"},{t:"maraton.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Stary dąb rósł samotnie pośród łąki.",words:[{t:"Stary",r:"przydawka",s:"przymiotna"},{t:"dąb",r:"podmiot",s:"gramatyczny"},{t:"rósł",r:"orzeczenie",s:"czasownikowe"},{t:"samotnie",r:"okolicznik",s:"sposobu"},{t:"pośród",r:"okolicznik",s:"miejsca"},{t:"łąki.",r:"okolicznik",s:"miejsca"}]},
+  {text:"Mimo deszczu wyszedł bez parasola.",words:[{t:"Mimo",r:"okolicznik",s:"przyzwolenia"},{t:"deszczu",r:"okolicznik",s:"przyzwolenia"},{t:"wyszedł",r:"orzeczenie",s:"czasownikowe"},{t:"bez",r:"okolicznik",s:"sposobu"},{t:"parasola.",r:"okolicznik",s:"sposobu"}]},
+  {text:"Dla zdrowia warto ćwiczyć regularnie.",words:[{t:"Dla",r:"okolicznik",s:"celu"},{t:"zdrowia",r:"okolicznik",s:"celu"},{t:"warto",r:"orzeczenie",s:"czasownikowe"},{t:"ćwiczyć",r:"orzeczenie",s:"czasownikowe"},{t:"regularnie.",r:"okolicznik",s:"sposobu"}]},
+  {text:"Pod warunkiem dobrej pogody pójdziemy w góry.",words:[{t:"Pod",r:"okolicznik",s:"warunku"},{t:"warunkiem",r:"okolicznik",s:"warunku"},{t:"dobrej",r:"przydawka",s:"przymiotna"},{t:"pogody",r:"okolicznik",s:"warunku"},{t:"pójdziemy",r:"orzeczenie",s:"czasownikowe"},{t:"w",r:"okolicznik",s:"miejsca"},{t:"góry.",r:"okolicznik",s:"miejsca"}]},
+  {text:"Przez nieuwagę uczeń popełnił błąd.",words:[{t:"Przez",r:"okolicznik",s:"przyczyny"},{t:"nieuwagę",r:"okolicznik",s:"przyczyny"},{t:"uczeń",r:"podmiot",s:"gramatyczny"},{t:"popełnił",r:"orzeczenie",s:"czasownikowe"},{t:"błąd.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Nawet po latach pamiętał jej imię.",words:[{t:"Nawet",r:"okolicznik",s:"przyzwolenia"},{t:"po",r:"okolicznik",s:"czasu"},{t:"latach",r:"okolicznik",s:"czasu"},{t:"pamiętał",r:"orzeczenie",s:"czasownikowe"},{t:"jej",r:"przydawka",s:"zaimkowa"},{t:"imię.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Zbyt głośna muzyka przeszkadzała sąsiadom.",words:[{t:"Zbyt",r:"okolicznik",s:"sposobu"},{t:"głośna",r:"przydawka",s:"przymiotna"},{t:"muzyka",r:"podmiot",s:"gramatyczny"},{t:"przeszkadzała",r:"orzeczenie",s:"czasownikowe"},{t:"sąsiadom.",r:"dopelnienie",s:"dalsze"}]},
+  {text:"Kochana mama Tomka wróciła z zagranicy.",words:[{t:"Kochana",r:"przydawka",s:"przymiotna"},{t:"mama",r:"podmiot",s:"gramatyczny"},{t:"Tomka",r:"przydawka",s:"rzeczowna"},{t:"wróciła",r:"orzeczenie",s:"czasownikowe"},{t:"z",r:"okolicznik",s:"miejsca"},{t:"zagranicy.",r:"okolicznik",s:"miejsca"}]},
+  {text:"Wbrew zakazowi wyszedł późno w nocy.",words:[{t:"Wbrew",r:"okolicznik",s:"przyzwolenia"},{t:"zakazowi",r:"okolicznik",s:"przyzwolenia"},{t:"wyszedł",r:"orzeczenie",s:"czasownikowe"},{t:"późno",r:"okolicznik",s:"czasu"},{t:"w",r:"okolicznik",s:"czasu"},{t:"nocy.",r:"okolicznik",s:"czasu"}]},
+  {text:"Gdyby miał czas pomógłby ci.",words:[{t:"Gdyby",r:"okolicznik",s:"warunku"},{t:"miał",r:"orzeczenie",s:"czasownikowe"},{t:"czas",r:"dopelnienie",s:"bliższe"},{t:"pomógłby",r:"orzeczenie",s:"czasownikowe"},{t:"ci.",r:"dopelnienie",s:"dalsze"}]},
+  {text:"Wysokie drzewo zostało ścięte przez robotników.",words:[{t:"Wysokie",r:"przydawka",s:"przymiotna"},{t:"drzewo",r:"podmiot",s:"gramatyczny"},{t:"zostało",r:"orzeczenie",s:"imienne"},{t:"ścięte",r:"orzeczenie",s:"imienne"},{t:"przez",r:"okolicznik",s:"przyczyny"},{t:"robotników.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Zrobiłem to celowo żeby zwrócić uwagę.",words:[{t:"Zrobiłem",r:"orzeczenie",s:"czasownikowe"},{t:"to",r:"dopelnienie",s:"bliższe"},{t:"celowo",r:"okolicznik",s:"celu"},{t:"żeby",r:"okolicznik",s:"celu"},{t:"zwrócić",r:"okolicznik",s:"celu"},{t:"uwagę.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Dlaczego nie przyszedłeś na trening?",words:[{t:"Dlaczego",r:"okolicznik",s:"przyczyny"},{t:"nie",r:"okolicznik",s:"sposobu"},{t:"przyszedłeś",r:"orzeczenie",s:"czasownikowe"},{t:"na",r:"okolicznik",s:"miejsca"},{t:"trening?",r:"okolicznik",s:"miejsca"}]},
+  {text:"Wytrwały i cierpliwy uczeń osiągnął sukces.",words:[{t:"Wytrwały",r:"przydawka",s:"przymiotna"},{t:"i",r:"przydawka",s:"przymiotna"},{t:"cierpliwy",r:"przydawka",s:"przymiotna"},{t:"uczeń",r:"podmiot",s:"gramatyczny"},{t:"osiągnął",r:"orzeczenie",s:"czasownikowe"},{t:"sukces.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Przez lata pracował sumiennie dla rodziny.",words:[{t:"Przez",r:"okolicznik",s:"czasu"},{t:"lata",r:"okolicznik",s:"czasu"},{t:"pracował",r:"orzeczenie",s:"czasownikowe"},{t:"sumiennie",r:"okolicznik",s:"sposobu"},{t:"dla",r:"okolicznik",s:"celu"},{t:"rodziny.",r:"okolicznik",s:"celu"}]},
+  {text:"Stare miasto zostało odbudowane po wojnie.",words:[{t:"Stare",r:"przydawka",s:"przymiotna"},{t:"miasto",r:"podmiot",s:"gramatyczny"},{t:"zostało",r:"orzeczenie",s:"imienne"},{t:"odbudowane",r:"orzeczenie",s:"imienne"},{t:"po",r:"okolicznik",s:"czasu"},{t:"wojnie.",r:"okolicznik",s:"czasu"}]},
+  {text:"Mimo trudności nie poddał się.",words:[{t:"Mimo",r:"okolicznik",s:"przyzwolenia"},{t:"trudności",r:"okolicznik",s:"przyzwolenia"},{t:"nie",r:"okolicznik",s:"sposobu"},{t:"poddał",r:"orzeczenie",s:"czasownikowe"},{t:"się.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Nasz stary pies zaginął wczoraj po południu.",words:[{t:"Nasz",r:"przydawka",s:"zaimkowa"},{t:"stary",r:"przydawka",s:"przymiotna"},{t:"pies",r:"podmiot",s:"gramatyczny"},{t:"zaginął",r:"orzeczenie",s:"czasownikowe"},{t:"wczoraj",r:"okolicznik",s:"czasu"},{t:"po",r:"okolicznik",s:"czasu"},{t:"południu.",r:"okolicznik",s:"czasu"}]},
+  {text:"Każde dziecko zasługuje na miłość.",words:[{t:"Każde",r:"przydawka",s:"zaimkowa"},{t:"dziecko",r:"podmiot",s:"gramatyczny"},{t:"zasługuje",r:"orzeczenie",s:"czasownikowe"},{t:"na",r:"okolicznik",s:"celu"},{t:"miłość.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Dzięki wysiłkowi zdał najtrudniejszy egzamin.",words:[{t:"Dzięki",r:"okolicznik",s:"przyczyny"},{t:"wysiłkowi",r:"okolicznik",s:"przyczyny"},{t:"zdał",r:"orzeczenie",s:"czasownikowe"},{t:"najtrudniejszy",r:"przydawka",s:"przymiotna"},{t:"egzamin.",r:"dopelnienie",s:"bliższe"}]},
+  {text:"Mała dziewczynka sąsiadki zgubiła piłkę.",words:[{t:"Mała",r:"przydawka",s:"przymiotna"},{t:"dziewczynka",r:"podmiot",s:"gramatyczny"},{t:"sąsiadki",r:"przydawka",s:"rzeczowna"},{t:"zgubiła",r:"orzeczenie",s:"czasownikowe"},{t:"piłkę.",r:"dopelnienie",s:"bliższe"}]},
+]
+
+};
+
+/* ================================================================
+   STAN
+   ================================================================ */
+let score=0, currentDiff="easy", currentSentence=null;
+/* wordAssignments[i] = { r: rola, s: podtyp } */
+let wordAssignments={}, selectedWordIdx=null, selectedRole=null;
+let correctCount=0, totalAttempts=0;
+
+/* ================================================================
+   NAWIGACJA
+   ================================================================ */
+function switchPanel(name){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach(b=>{
+    if(b.getAttribute('onclick').includes(name)) b.classList.add('active');
+  });
+  if(name==='cwiczenia' && !currentSentence) loadExercise();
+}
+
+/* ================================================================
+   TEORIA
+   ================================================================ */
+function renderTheoryExamples(){
+  const ex=[SENTENCES.easy[0], SENTENCES.medium[0], SENTENCES.hard[0]];
+  document.getElementById('examplesContainer').innerHTML=ex.map(s=>{
+    const html=s.words.map(w=>{
+      const c=ROLE_COLORS[w.r];
+      return `<span class="word" style="background:${c}22;color:${c};border:1px solid ${c}44" title="${ROLE_LABELS[w.r]} · ${w.s}">${w.t}</span>`;
+    }).join(' ');
+    return `<div class="example-sentence"><div style="font-size:0.72rem;color:var(--text3);margin-bottom:3px">${s.text}</div>${html}</div>`;
+  }).join('');
+}
+
+/* ================================================================
+   ĆWICZENIA
+   ================================================================ */
+function setDiff(diff,btn){
+  currentDiff=diff;
+  document.querySelectorAll('.diff-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  loadExercise();
+}
+
+function loadExercise(){
+  const pool=SENTENCES[currentDiff];
+  currentSentence=pool[Math.floor(Math.random()*pool.length)];
+  wordAssignments={}; selectedWordIdx=null; selectedRole=null;
+  renderWords(); renderRolePicker(); hideSubtypes(); hideFeedback();
+  updatePickerLabel();
+}
+
+function renderWords(){
+  const c=document.getElementById('exerciseWords');
+  c.innerHTML=currentSentence.words.map((w,i)=>{
+    const a=wordAssignments[i];
+    const col=a?ROLE_COLORS[a.r]:null;
+    const selCls=selectedWordIdx===i?' sel':'';
+    const style=col?`background:${col}22;color:${col};border-color:${col}66`:'';
+    const rt=a?`<span class="role-tag">${ROLE_LABELS[a.r]}</span>`:'';
+    const st=a?`<span class="sub-tag">${a.s}</span>`:'';
+    return `<div class="ex-word${selCls}" id="ew-${i}" style="${style}" onclick="selectWord(${i})">${w.t}${rt}${st}</div>`;
+  }).join('');
+}
+
+function renderRolePicker(){
+  const c=document.getElementById('rolePicker');
+  const active=selectedWordIdx!==null;
+  c.innerHTML=Object.entries(ROLE_LABELS).map(([key,label])=>{
+    const col=ROLE_COLORS[key];
+    const opacity=active?'1':'0.3';
+    const ptr=active?'pointer':'default';
+    const selBorder=selectedRole===key?';box-shadow:0 0 0 2px rgba(255,255,255,0.45)':'';
+    return `<button class="role-btn"
+      style="background:${col}22;color:${col};border-color:${col}55;opacity:${opacity};cursor:${ptr}${selBorder}"
+      onclick="${active?`pickRole('${key}')`:'void(0)'}">${label}</button>`;
+  }).join('');
+}
+
+function updatePickerLabel(){
+  const lbl=document.getElementById('pickerLabel');
+  if(selectedWordIdx===null){
+    lbl.textContent='↑ Kliknij wyraz, aby go zaznaczyć';
+  } else {
+    const w=currentSentence.words[selectedWordIdx];
+    lbl.textContent=`Wyraz „${w.t}" zaznaczony – wybierz rolę:`;
+  }
+}
+
+function selectWord(idx){
+  selectedWordIdx=idx; selectedRole=null;
+  hideSubtypes(); renderWords(); renderRolePicker(); updatePickerLabel();
+}
+
+function pickRole(role){
+  if(selectedWordIdx===null) return;
+  selectedRole=role;
+  renderRolePicker(); // odśwież podświetlenie aktywnej roli
+  showSubtypes(role);
+}
+
+function showSubtypes(role){
+  const area=document.getElementById('subtypeArea');
+  const lbl=document.getElementById('subLabel');
+  const btns=document.getElementById('subtypePicker');
+  const col=ROLE_COLORS[role];
+  area.classList.add('visible');
+  lbl.textContent=`Rodzaj — ${ROLE_LABELS[role]}:`;
+  btns.innerHTML=SUBTYPES[role].map(s=>
+    `<button class="sub-btn" style="border-color:${col}44" onclick="assignSubtype('${s}')">${s}</button>`
+  ).join('');
+}
+function hideSubtypes(){
+  document.getElementById('subtypeArea').classList.remove('visible');
+  document.getElementById('subtypePicker').innerHTML='';
+  document.getElementById('subLabel').textContent='Wybierz rodzaj:';
+}
+
+function assignSubtype(sub){
+  if(selectedWordIdx===null||!selectedRole) return;
+  wordAssignments[selectedWordIdx]={r:selectedRole, s:sub};
+  selectedWordIdx=null; selectedRole=null;
+  hideSubtypes(); renderWords(); renderRolePicker(); hideFeedback();
+  updatePickerLabel();
+}
+
+/* ================================================================
+   SPRAWDZANIE
+   ================================================================ */
+function checkExercise(){
+  if(!currentSentence) return;
+  const words=currentSentence.words;
+  let missing=[], roleErr=[], subErr=[];
+
+  words.forEach((w,i)=>{
+    if(w.custom) return; // własne zdanie – nie sprawdzaj
+    const a=wordAssignments[i];
+    if(!a){ missing.push(w.t); return; }
+    if(a.r!==w.r) roleErr.push(`„${w.t}": rola powinna być <b>${ROLE_LABELS[w.r]}</b> (Ty: ${ROLE_LABELS[a.r]})`);
+    else if(a.s!==w.s) subErr.push(`„${w.t}": rodzaj powinien być <b>${w.s}</b> (Ty: ${a.s})`);
+  });
+
+  if(missing.length){ showFeedback('err',`Nie wszystkie wyrazy oznaczone! Brakuje: ${missing.join(', ')}`); return; }
+
+  totalAttempts++;
+  if(roleErr.length===0 && subErr.length===0){
+    correctCount++;
+    const pts=currentDiff==='easy'?1:currentDiff==='medium'?2:3;
+    score+=pts; updateScore(); updateProgress();
+    showFeedback('ok',`✓ Bezbłędnie! +${pts} ${pts===1?'punkt':'punkty'} 🎉`);
+    words.forEach((_,i)=>{ const el=document.getElementById('ew-'+i); if(el){el.classList.add('correct');setTimeout(()=>el.classList.remove('correct'),400);} });
+  } else {
+    updateProgress();
+    let msg='';
+    if(roleErr.length) msg+='Błędne role:<br>'+roleErr.join('<br>')+'<br>';
+    if(subErr.length) msg+='Błędne rodzaje:<br>'+subErr.join('<br>');
+    showFeedback('err','✗ '+msg);
+    words.forEach((w,i)=>{
+      const a=wordAssignments[i];
+      if(a&&(a.r!==w.r||a.s!==w.s)){ const el=document.getElementById('ew-'+i); if(el){el.classList.add('wrong');setTimeout(()=>el.classList.remove('wrong'),400);} }
+    });
+  }
+}
+
+function showFeedback(t,m){ const b=document.getElementById('feedbackBar'); b.className='feedback-bar '+t; b.innerHTML=m; }
+function hideFeedback()    { const b=document.getElementById('feedbackBar'); b.className='feedback-bar'; b.innerHTML=''; }
+function updateScore(){ document.getElementById('scoreDisplay').textContent=score; }
+function updateProgress(){
+  const pct=totalAttempts?Math.round(correctCount/totalAttempts*100):0;
+  document.getElementById('progressLabel').textContent=`${correctCount} / ${totalAttempts} poprawnych`;
+  document.getElementById('progressFill').style.width=pct+'%';
+}
+
+/* ================================================================
+   WŁASNE ZDANIE
+   ================================================================ */
+function addCustomSentence(){
+  const inp=document.getElementById('customInput');
+  const txt=inp.value.trim();
+  if(!txt){ showFeedback('info','Wpisz zdanie przed dodaniem.'); return; }
+  const words=txt.split(/\s+/).map(t=>({t,r:null,s:null,custom:true}));
+  SENTENCES.easy.push({text:txt,words,custom:true});
+  inp.value='';
+  currentSentence=SENTENCES.easy[SENTENCES.easy.length-1];
+  wordAssignments={}; selectedWordIdx=null; selectedRole=null;
+  renderWords(); renderRolePicker(); hideSubtypes();
+  updatePickerLabel();
+  showFeedback('info',`Dodano: „${txt}". Oznacz wyrazy – własne zdania nie są sprawdzane automatycznie.`);
+}
+
+/* ================================================================
+   INIT
+   ================================================================ */
+document.addEventListener('DOMContentLoaded',()=>{ renderTheoryExamples(); });
+</script>
+</body>
+</html>
