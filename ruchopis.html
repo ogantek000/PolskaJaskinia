@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fizyka – Opis Ruchu</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --bg2: #161b26;
+    --bg3: #1e2535;
+    --card: #1a2133;
+    --border: #2a3550;
+    --accent: #00d4ff;
+    --accent2: #00ff9f;
+    --accent3: #ff6b6b;
+    --text: #e8eaf0;
+    --muted: #8892a4;
+    --formula-bg: #0d1a2e;
+    --formula-border: #00d4ff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 16px; line-height: 1.6; min-height: 100vh; }
+
+  header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; align-items: center; gap: 1rem; }
+  header h1 { font-size: 1.4rem; font-weight: 600; color: var(--accent); letter-spacing: 0.5px; }
+  header span { color: var(--muted); font-size: 0.9rem; }
+
+  nav { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; gap: 0; }
+  .tab-btn { background: none; border: none; color: var(--muted); font-size: 1rem; padding: 1rem 1.5rem; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; font-family: inherit; }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .tab-content { display: none; padding: 2rem; max-width: 1100px; margin: 0 auto; }
+  .tab-content.active { display: block; }
+
+  .section-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; transition: border-color 0.2s, transform 0.2s; }
+  .card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .card h2 { font-size: 1.1rem; font-weight: 600; color: var(--accent); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem; }
+  .card h3 { font-size: 0.95rem; font-weight: 600; color: var(--accent2); margin: 1rem 0 0.5rem; }
+  .card p { color: var(--muted); font-size: 0.92rem; margin-bottom: 0.5rem; }
+
+  .formula-box { background: var(--formula-bg); border: 1px solid var(--formula-border); border-radius: 10px; padding: 1rem 1.25rem; margin: 0.75rem 0; }
+  .formula-box .formula { font-size: 1.3rem; font-weight: 700; color: var(--accent); font-family: 'Courier New', monospace; letter-spacing: 1px; }
+  .formula-box .desc { font-size: 0.8rem; color: var(--muted); margin-top: 0.4rem; }
+
+  .example-box { background: #1a2e1a; border: 1px solid #2a5a2a; border-radius: 8px; padding: 0.75rem 1rem; margin-top: 0.75rem; }
+  .example-box .label { font-size: 0.75rem; color: var(--accent2); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .example-box p { color: #b8d4b8; font-size: 0.88rem; margin-top: 0.25rem; }
+
+  details { margin-top: 0.75rem; }
+  summary { cursor: pointer; color: var(--accent); font-size: 0.88rem; font-weight: 500; padding: 0.4rem 0; list-style: none; display: flex; align-items: center; gap: 0.4rem; }
+  summary::before { content: '▶'; font-size: 0.7rem; transition: transform 0.2s; }
+  details[open] summary::before { transform: rotate(90deg); }
+  details p { color: var(--muted); font-size: 0.85rem; padding: 0.5rem 0 0 1rem; }
+
+  .badge { display: inline-block; background: #1a2e3e; color: var(--accent); border: 1px solid var(--accent); border-radius: 20px; font-size: 0.75rem; padding: 0.2rem 0.7rem; margin: 0.2rem; }
+  .badge.green { background: #1a2e1a; color: var(--accent2); border-color: var(--accent2); }
+  .badge.red { background: #2e1a1a; color: var(--accent3); border-color: var(--accent3); }
+
+  .motion-types { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; }
+  .motion-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; }
+  .motion-card .title { color: var(--accent2); font-weight: 600; font-size: 0.95rem; margin-bottom: 0.5rem; }
+  .motion-card p { font-size: 0.85rem; color: var(--muted); }
+
+  .chart-demo { background: var(--bg3); border: 1px solid var(--border); border-radius: 10px; padding: 1rem; margin-top: 1rem; }
+  .chart-demo h3 { color: var(--accent); margin-bottom: 0.75rem; font-size: 0.95rem; }
+
+  .section-title { font-size: 1.3rem; font-weight: 600; color: var(--text); margin-bottom: 1.25rem; padding-bottom: 0.5rem; border-bottom: 2px solid var(--border); }
+  .section-title span { color: var(--accent); }
+
+  .convert-table { width: 100%; border-collapse: collapse; margin-top: 0.75rem; }
+  .convert-table th { background: var(--bg3); color: var(--accent); font-size: 0.8rem; padding: 0.5rem 0.75rem; text-align: left; border: 1px solid var(--border); }
+  .convert-table td { border: 1px solid var(--border); padding: 0.5rem 0.75rem; font-size: 0.85rem; color: var(--text); }
+  .convert-table tr:nth-child(even) td { background: var(--bg3); }
+
+  .exercise-nav { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .cat-btn { background: var(--bg3); border: 1px solid var(--border); color: var(--muted); padding: 0.5rem 1rem; border-radius: 20px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; font-family: inherit; }
+  .cat-btn:hover { border-color: var(--accent); color: var(--text); }
+  .cat-btn.active { background: var(--accent); color: #000; border-color: var(--accent); font-weight: 600; }
+
+  .quiz-section { display: none; }
+  .quiz-section.active { display: block; }
+
+  .question-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.5rem; margin-bottom: 1.25rem; }
+  .question-card .q-num { color: var(--muted); font-size: 0.8rem; margin-bottom: 0.5rem; }
+  .question-card .q-text { font-size: 1rem; color: var(--text); margin-bottom: 1rem; font-weight: 500; }
+
+  .options { display: flex; flex-direction: column; gap: 0.5rem; }
+  .option { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 0.65rem 1rem; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; color: var(--text); }
+  .option:hover:not(.disabled) { border-color: var(--accent); }
+  .option.correct { background: #1a3a1a; border-color: var(--accent2); color: var(--accent2); }
+  .option.wrong { background: #3a1a1a; border-color: var(--accent3); color: var(--accent3); }
+  .option.disabled { cursor: default; }
+
+  .answer-input { display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; }
+  .answer-input input { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem 1rem; color: var(--text); font-size: 0.95rem; font-family: inherit; width: 180px; outline: none; transition: border-color 0.2s; }
+  .answer-input input:focus { border-color: var(--accent); }
+
+  .btn { background: var(--accent); color: #000; border: none; border-radius: 8px; padding: 0.6rem 1.25rem; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: all 0.2s; font-family: inherit; }
+  .btn:hover { opacity: 0.85; transform: translateY(-1px); }
+  .btn.secondary { background: var(--bg3); color: var(--text); border: 1px solid var(--border); }
+  .btn.secondary:hover { border-color: var(--accent); }
+  .btn.danger { background: var(--accent3); }
+
+  .feedback { display: none; margin-top: 0.75rem; padding: 0.65rem 1rem; border-radius: 8px; font-size: 0.88rem; }
+  .feedback.correct { background: #1a3a1a; color: var(--accent2); border: 1px solid #2a5a2a; display: block; }
+  .feedback.wrong { background: #3a1a1a; color: var(--accent3); border: 1px solid #5a2a2a; display: block; }
+
+  .score-bar { background: var(--bg3); border-radius: 20px; height: 8px; margin-bottom: 1.25rem; overflow: hidden; }
+  .score-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); border-radius: 20px; transition: width 0.5s; }
+  .score-info { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; }
+  .score-info span { font-size: 0.88rem; color: var(--muted); }
+  .score-info .pts { color: var(--accent2); font-weight: 600; font-size: 1rem; }
+
+  .generator-card { background: var(--card); border: 2px solid var(--accent); border-radius: 14px; padding: 1.5rem; margin-bottom: 1.5rem; }
+  .generator-card h3 { color: var(--accent); margin-bottom: 1rem; }
+  .gen-output { background: var(--bg3); border-radius: 10px; padding: 1rem; margin: 1rem 0; min-height: 60px; font-size: 0.95rem; }
+  .gen-output strong { color: var(--accent); }
+
+  .textarea-answer { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 0.75rem; color: var(--text); font-size: 0.9rem; font-family: inherit; width: 100%; resize: vertical; min-height: 80px; outline: none; margin-bottom: 0.5rem; transition: border-color 0.2s; }
+  .textarea-answer:focus { border-color: var(--accent); }
+
+  .hint-text { color: var(--muted); font-size: 0.82rem; font-style: italic; margin-top: 0.4rem; }
+
+  canvas { display: block; max-width: 100%; }
+
+  .tag { display: inline-block; background: #1e2a3e; color: #7ab8dd; font-size: 0.75rem; padding: 0.15rem 0.5rem; border-radius: 4px; margin-right: 0.3rem; }
+
+  .reset-area { text-align: center; padding: 1rem 0; }
+
+  @media (max-width: 600px) {
+    .tab-content { padding: 1rem; }
+    header { padding: 0.75rem 1rem; }
+    nav { padding: 0 0.5rem; }
+    .tab-btn { padding: 0.75rem 1rem; font-size: 0.9rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>⚛ Fizyka – Opis Ruchu</h1>
+    <span>Klasa 7–8 | Mechanika</span>
+  </div>
+</header>
+
+<nav>
+  <button class="tab-btn active" onclick="showTab('teoria')">📖 Teoria</button>
+  <button class="tab-btn" onclick="showTab('cwiczenia')">✏️ Ćwiczenia</button>
+</nav>
+
+<div id="teoria" class="tab-content active">
+
+  <p class="section-title"><span>Teoria</span> – Opis Ruchu</p>
+
+  <div class="section-grid">
+    <div class="card">
+      <h2>⚡ Przeliczanie jednostek</h2>
+      <p>Prędkość można wyrażać w metrach na sekundę (m/s) lub kilometrach na godzinę (km/h). To dwie najczęstsze jednostki w fizyce.</p>
+      <div class="formula-box">
+        <div class="formula">v [km/h] = v [m/s] × 3,6</div>
+        <div class="desc">km/h → m/s: dziel przez 3,6</div>
+      </div>
+      <div class="formula-box">
+        <div class="formula">v [m/s] = v [km/h] ÷ 3,6</div>
+        <div class="desc">m/s → km/h: mnóż przez 3,6</div>
+      </div>
+      <div class="example-box">
+        <div class="label">Przykład</div>
+        <p>72 km/h = 72 ÷ 3,6 = <strong style="color:var(--accent2)">20 m/s</strong></p>
+        <p>15 m/s = 15 × 3,6 = <strong style="color:var(--accent2)">54 km/h</strong></p>
+      </div>
+      <table class="convert-table" style="margin-top:1rem">
+        <tr><th>km/h</th><th>m/s</th></tr>
+        <tr><td>36</td><td>10</td></tr>
+        <tr><td>54</td><td>15</td></tr>
+        <tr><td>72</td><td>20</td></tr>
+        <tr><td>90</td><td>25</td></tr>
+        <tr><td>108</td><td>30</td></tr>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>🌀 Względność ruchu</h2>
+      <p>Ruch jest <strong style="color:var(--accent)">względny</strong> – zależy od wybranego układu odniesienia (ciała, względem którego opisujemy ruch).</p>
+      <div class="example-box">
+        <div class="label">Przykład – Autobus</div>
+        <p>Pasażer siedzący w autobusie:</p>
+        <p>• Względem Ziemi → <span class="badge">porusza się</span></p>
+        <p>• Względem kierowcy → <span class="badge green">spoczywa</span></p>
+        <p>• Względem innego autobusu jadącego tak samo → <span class="badge green">spoczywa</span></p>
+      </div>
+      <details>
+        <summary>Dlaczego ruch jest względny?</summary>
+        <p>Nie ma absolutnego układu odniesienia. Zawsze mówimy: ciało porusza się <em>względem czegoś</em>. Jeśli nie podano ciała odniesienia – przyjmujemy, że to Ziemia.</p>
+      </details>
+      <div class="example-box" style="margin-top:0.75rem">
+        <div class="label">Wskazówka</div>
+        <p>Pytając „czy ciało się porusza?" – zawsze ustal WZGLĘDEM CZEGO!</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-title" style="margin-top:1.5rem"><span>Rodzaje</span> Ruchu</p>
+  <div class="motion-types">
+    <div class="motion-card">
+      <div class="title">🟦 Jednostajny prostoliniowy</div>
+      <p>Stała prędkość, prosta droga. Brak przyspieszenia.</p>
+      <div class="formula-box" style="margin-top:0.75rem">
+        <div class="formula">s = v · t</div>
+        <div class="desc">s – droga [m], v – prędkość [m/s], t – czas [s]</div>
+      </div>
+      <div class="example-box"><div class="label">Przykład</div><p>Tramwaj 8 m/s przez 10 s → s = 8 × 10 = <strong style="color:var(--accent2)">80 m</strong></p></div>
+    </div>
+    <div class="motion-card">
+      <div class="title">🟨 Jednostajnie przyspieszony</div>
+      <p>Prędkość rośnie równomiernie. Przyspieszenie stałe i dodatnie.</p>
+      <div class="formula-box" style="margin-top:0.75rem">
+        <div class="formula">v = v₀ + a · t</div>
+        <div class="desc">a – przyspieszenie [m/s²]</div>
+      </div>
+      <div class="formula-box">
+        <div class="formula">s = v₀·t + ½·a·t²</div>
+        <div class="desc">Droga przy startcie z v₀</div>
+      </div>
+      <details>
+        <summary>Wzór na przyspieszenie</summary>
+        <p>a = (v – v₀) / t &nbsp;|&nbsp; Jednostka: m/s²</p>
+      </details>
+    </div>
+    <div class="motion-card">
+      <div class="title">🟥 Jednostajnie opóźniony</div>
+      <p>Prędkość maleje równomiernie. Przyspieszenie ujemne (opóźnienie).</p>
+      <div class="formula-box" style="margin-top:0.75rem">
+        <div class="formula">v = v₀ − a · t</div>
+        <div class="desc">a – wartość opóźnienia [m/s²]</div>
+      </div>
+      <div class="example-box"><div class="label">Przykład</div><p>Hamowanie z 20 m/s z opóźnieniem 4 m/s² → zatrzymanie po t = 20/4 = <strong style="color:var(--accent2)">5 s</strong></p></div>
+    </div>
+    <div class="motion-card">
+      <div class="title">⚪ Ruch zmienny</div>
+      <p>Prędkość zmienia się nieregularnie. Może być okresowo stała, rosnąca lub malejąca.</p>
+      <div class="example-box" style="margin-top:0.75rem"><div class="label">Przykład</div><p>Jazda samochodem w mieście: przyspieszanie → stała prędkość → hamowanie → postój.</p></div>
+    </div>
+  </div>
+
+  <p class="section-title" style="margin-top:1.5rem"><span>Wykresy</span> Ruchu</p>
+  <div class="section-grid">
+    <div class="card">
+      <h2>📈 Wykres s(t) – droga od czasu</h2>
+      <p>Pokazuje jak zmienia się droga w czasie.</p>
+      <ul style="color:var(--muted); font-size:0.88rem; padding-left:1.25rem; margin:0.5rem 0;">
+        <li>Linia prosta rosnąca → ruch jednostajny</li>
+        <li>Krzywa rosnąca → ruch przyspieszony</li>
+        <li>Linia pozioma → postój</li>
+      </ul>
+      <canvas id="chartST" width="320" height="180"></canvas>
+      <div class="hint-text">Niebieska – jednostajny | Zielona – przyspieszony</div>
+    </div>
+    <div class="card">
+      <h2>📉 Wykres v(t) – prędkość od czasu</h2>
+      <p>Pokazuje jak zmienia się prędkość w czasie.</p>
+      <ul style="color:var(--muted); font-size:0.88rem; padding-left:1.25rem; margin:0.5rem 0;">
+        <li>Linia pozioma → ruch jednostajny (stała v)</li>
+        <li>Linia rosnąca → ruch przyspieszony</li>
+        <li>Linia opadająca → ruch opóźniony</li>
+        <li>Pole pod wykresem = droga!</li>
+      </ul>
+      <canvas id="chartVT" width="320" height="180"></canvas>
+      <div class="hint-text">Pole pod wykresem = przebyta droga [m]</div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:0">
+    <h2>📋 Wszystkie wzory – ściągawka</h2>
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:0.75rem; margin-top:0.5rem">
+      <div class="formula-box"><div class="formula">s = v · t</div><div class="desc">droga – ruch jednostajny</div></div>
+      <div class="formula-box"><div class="formula">v = s / t</div><div class="desc">prędkość średnia</div></div>
+      <div class="formula-box"><div class="formula">a = Δv / t</div><div class="desc">przyspieszenie</div></div>
+      <div class="formula-box"><div class="formula">v = v₀ + a·t</div><div class="desc">prędkość – ruch przyspieszony</div></div>
+      <div class="formula-box"><div class="formula">s = v₀·t + ½·a·t²</div><div class="desc">droga – ruch przyspieszony</div></div>
+      <div class="formula-box"><div class="formula">v [km/h] = v [m/s] × 3,6</div><div class="desc">przelicznik jednostek</div></div>
+    </div>
+  </div>
+
+</div>
+
+<div id="cwiczenia" class="tab-content">
+
+  <div class="score-info">
+    <span>Postęp: <span id="answered">0</span> / <span id="total-q">0</span> pytań</span>
+    <span class="pts">🏆 <span id="score">0</span> pkt</span>
+  </div>
+  <div class="score-bar"><div class="score-fill" id="progress-fill" style="width:0%"></div></div>
+
+  <div class="exercise-nav">
+    <button class="cat-btn active" onclick="showCat('przeliczanie')">🔢 Przeliczanie jednostek</button>
+    <button class="cat-btn" onclick="showCat('wzglednosc')">🌀 Względność ruchu</button>
+    <button class="cat-btn" onclick="showCat('obliczenia')">📐 Obliczenia ze wzorów</button>
+    <button class="cat-btn" onclick="showCat('ruchy')">🏃 Rodzaje ruchu</button>
+    <button class="cat-btn" onclick="showCat('wykresy')">📊 Wykresy</button>
+  </div>
+
+  <div id="cat-przeliczanie" class="quiz-section active"></div>
+  <div id="cat-wzglednosc" class="quiz-section"></div>
+  <div id="cat-obliczenia" class="quiz-section"></div>
+  <div id="cat-ruchy" class="quiz-section"></div>
+  <div id="cat-wykresy" class="quiz-section"></div>
+
+  <div class="reset-area">
+    <button class="btn danger" onclick="resetAll()">🔄 Restart quizu</button>
+  </div>
+
+</div>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function showCat(id) {
+  document.querySelectorAll('.quiz-section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('cat-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+let score = 0;
+let answered = 0;
+let totalQ = 0;
+
+function updateScore(gained) {
+  score += gained;
+  answered++;
+  document.getElementById('score').textContent = score;
+  document.getElementById('answered').textContent = answered;
+  const pct = Math.round((answered / totalQ) * 100);
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+function resetAll() {
+  score = 0; answered = 0;
+  document.getElementById('score').textContent = 0;
+  document.getElementById('answered').textContent = 0;
+  document.getElementById('progress-fill').style.width = '0%';
+  buildQuestions();
+}
+
+const questions = {
+  przeliczanie: [
+    { type: 'input', text: 'Przelicz 72 km/h na m/s. Podaj wynik liczbowy.', answer: '20', unit: 'm/s', hint: 'Dziel przez 3,6' },
+    { type: 'input', text: 'Przelicz 36 km/h na m/s.', answer: '10', unit: 'm/s', hint: 'Dziel przez 3,6' },
+    { type: 'input', text: 'Przelicz 15 m/s na km/h.', answer: '54', unit: 'km/h', hint: 'Mnóż przez 3,6' },
+    { type: 'input', text: 'Przelicz 25 m/s na km/h.', answer: '90', unit: 'km/h', hint: 'Mnóż przez 3,6' },
+    { type: 'abc', text: 'Samochód jedzie z prędkością 108 km/h. Ile to m/s?', options: ['25 m/s', '30 m/s', '40 m/s', '20 m/s'], correct: 1 },
+    { type: 'abc', text: '5 m/s to ile km/h?', options: ['50 km/h', '5 km/h', '18 km/h', '25 km/h'], correct: 2 },
+    { type: 'input', text: 'Pociąg jedzie 200 km/h. Ile to m/s? (zaokrąglij do 2 miejsc po przecinku)', answer: '55.56', unit: 'm/s', hint: 'Dziel przez 3,6' },
+    { type: 'abc', text: 'Prędkość 54 km/h to:', options: ['10 m/s', '15 m/s', '20 m/s', '5 m/s'], correct: 1 },
+    { type: 'generator', label: 'generator' }
+  ],
+  wzglednosc: [
+    { type: 'abc', text: 'Pasażer siedzi w jadącym autobusie. Względem kierowcy pasażer:', options: ['porusza się do przodu', 'spoczywa', 'porusza się do tyłu', 'przyspiesza'], correct: 1 },
+    { type: 'abc', text: 'Ten sam pasażer – względem Ziemi:', options: ['spoczywa', 'porusza się z prędkością autobusu', 'porusza się z połową prędkości', 'nie da się określić'], correct: 1 },
+    { type: 'abc', text: 'Dwa pociągi jadą obok siebie z tą samą prędkością. Pasażer pociągu A patrzy na pociąg B – wydaje mu się, że pociąg B:', options: ['jedzie szybciej', 'spoczywa', 'jedzie wolniej', 'jedzie w tył'], correct: 1 },
+    { type: 'open', text: 'Wyjaśnij własnymi słowami, co to znaczy, że ruch jest względny. Podaj przykład z życia codziennego.', hint: 'Pomyśl o podróży pociągiem lub autobusem' },
+    { type: 'abc', text: 'Piłka leży na siedzeniu jadącego autobusu. Względem siedzenia piłka:', options: ['porusza się do przodu', 'spoczywa', 'obraca się', 'opada'], correct: 1 },
+    { type: 'abc', text: 'Układ odniesienia to:', options: ['ciało o dużej masie', 'ciało, względem którego opisujemy ruch', 'ciało w spoczynku', 'Ziemia'], correct: 1 },
+    { type: 'open', text: 'Samochód A jedzie 60 km/h na wschód, samochód B jedzie 60 km/h na zachód. Jak wygląda ruch A względem B?', hint: 'Zsumuj prędkości – mają przeciwne kierunki' }
+  ],
+  obliczenia: [
+    { type: 'input', text: 'Tramwaj jedzie z prędkością 8 m/s przez 10 s. Jaką drogę przebył (m)?', answer: '80', unit: 'm', hint: 'Wzór: s = v · t' },
+    { type: 'input', text: 'Rower jedzie 5 m/s przez 60 s. Ile metrów przejechał?', answer: '300', unit: 'm', hint: 'Wzór: s = v · t' },
+    { type: 'input', text: 'Samochód przyspiesza z 0 do 15 m/s w czasie 5 s. Oblicz przyspieszenie (m/s²).', answer: '3', unit: 'm/s²', hint: 'Wzór: a = Δv / t' },
+    { type: 'input', text: 'Samochód przyspiesza z 0 do 54 km/h w 5 s. Oblicz przyspieszenie (m/s²). (54 km/h = 15 m/s)', answer: '3', unit: 'm/s²', hint: 'a = (15 - 0) / 5 = 3 m/s²' },
+    { type: 'input', text: 'Ciało porusza się z przyspieszeniem 2 m/s². Po jakim czasie osiągnie prędkość 10 m/s? (start z v₀=0)', answer: '5', unit: 's', hint: 'Wzór: t = v / a' },
+    { type: 'abc', text: 'Samochód hamuje z 20 m/s z opóźnieniem 4 m/s². Po jakim czasie się zatrzyma?', options: ['8 s', '5 s', '4 s', '10 s'], correct: 1 },
+    { type: 'input', text: 'Ciało startuje z v₀=0 i ma przyspieszenie 3 m/s². Jaką prędkość osiągnie po 4 s?', answer: '12', unit: 'm/s', hint: 'Wzór: v = v₀ + a·t = 0 + 3·4' },
+    { type: 'input', text: 'Pociąg jedzie 100 km w 2 h. Jaka jest jego średnia prędkość (km/h)?', answer: '50', unit: 'km/h', hint: 'Wzór: v = s / t' },
+    { type: 'abc', text: 'Ciało ma przyspieszenie 5 m/s² i startuje z v₀=0. Po 3 s jego prędkość wynosi:', options: ['10 m/s', '15 m/s', '25 m/s', '8 m/s'], correct: 1 }
+  ],
+  ruchy: [
+    { type: 'abc', text: 'Auto jedzie autostradą z prędkością ciągle 130 km/h. To ruch:', options: ['jednostajnie przyspieszony', 'jednostajny prostoliniowy', 'jednostajnie opóźniony', 'zmienny'], correct: 1 },
+    { type: 'abc', text: 'Kamień spada swobodnie (pomijamy opory). To ruch:', options: ['jednostajny', 'jednostajnie opóźniony', 'jednostajnie przyspieszony', 'zmienny nieregularny'], correct: 2 },
+    { type: 'abc', text: 'Auto hamuje równomiernie. To ruch:', options: ['jednostajny', 'jednostajnie przyspieszony', 'jednostajnie opóźniony', 'prostoliniowy jednostajny'], correct: 2 },
+    { type: 'open', text: 'Opisz własnymi słowami różnicę między ruchem jednostajnie przyspieszonym a ruchem jednostajnie opóźnionym. Co je łączy?', hint: 'Pomyśl o kierunku przyspieszenia' },
+    { type: 'abc', text: 'Na wykresie v(t) widzimy linię poziomą. Jaki to ruch?', options: ['jednostajnie przyspieszony', 'jednostajnie opóźniony', 'jednostajny prostoliniowy', 'zmienny'], correct: 2 },
+    { type: 'abc', text: 'Na wykresie s(t) widzimy parabolę rosnącą. Jaki to ruch?', options: ['jednostajny', 'jednostajnie opóźniony', 'jednostajnie przyspieszony', 'postój'], correct: 2 },
+    { type: 'abc', text: 'Które z poniższych NIE jest przykładem ruchu jednostajnego?', options: ['tramwaj na prostym odcinku', 'planeta na kołowej orbicie (stała szybkość)', 'samochód przyspieszający na światłach', 'winda jadąca stałą prędkością'], correct: 2 }
+  ],
+  wykresy: [
+    { type: 'abc', text: 'Na wykresie v(t): linia prosta rosnąca od (0,0) do (5s, 20m/s). Przyspieszenie wynosi:', options: ['5 m/s²', '4 m/s²', '20 m/s²', '2,5 m/s²'], correct: 1 },
+    { type: 'abc', text: 'Na wykresie v(t) w przedziale 0–5 s prędkość wynosi stałe 10 m/s. Jaka droga została przebyta?', options: ['10 m', '50 m', '2 m', '5 m'], correct: 1 },
+    { type: 'abc', text: 'Wykres v(t) pokazuje: 0→3s przyspieszenie, 3→7s stała v=6 m/s, 7→10s hamowanie do 0. Jaka droga w 3→7s?', options: ['6 m', '18 m', '24 m', '12 m'], correct: 2 },
+    { type: 'abc', text: 'Na wykresie s(t) widzimy poziomy odcinek. Co robi ciało?', options: ['porusza się z stałą prędkością', 'przyspiesza', 'spoczywa', 'hamuje'], correct: 2 },
+    { type: 'open', text: 'Opisz ruch ciała, którego wykres v(t) wygląda tak: 0→4s rośnie od 0 do 8 m/s, 4→8s jest stały (8 m/s), 8→10s maleje do 0. Oblicz całkowitą drogę.', hint: 'Podziel na 3 figury geometryczne: trójkąt + prostokąt + trójkąt' },
+    { type: 'abc', text: 'Pole pod wykresem v(t) oznacza:', options: ['przyspieszenie', 'przebyty czas', 'przebyty dystans', 'siłę wypadkową'], correct: 2 },
+    { type: 'abc', text: 'Nachylenie wykresu v(t) (tangens kąta) oznacza:', options: ['prędkość', 'drogę', 'przyspieszenie', 'czas'], correct: 2 },
+    { type: 'open', text: 'Narysuj (opisowo) wykres v(t) dla samochodu, który: 5 s przyspiesza od 0 do 20 m/s, potem 10 s jedzie stałą prędkością, potem 4 s hamuje do zatrzymania.', hint: 'Opisz kształt wykresu w każdym przedziale' }
+  ]
+};
+
+function buildQuestions() {
+  totalQ = 0;
+
+  for (const [cat, qs] of Object.entries(questions)) {
+    const container = document.getElementById('cat-' + cat);
+    container.innerHTML = '';
+
+    if (cat === 'przeliczanie') {
+      container.appendChild(buildGenerator());
+    }
+
+    qs.forEach((q, i) => {
+      if (q.type === 'generator') return;
+      totalQ++;
+      container.appendChild(buildQuestion(q, cat + '_' + i));
+    });
+  }
+
+  document.getElementById('total-q').textContent = totalQ;
+}
+
+function buildGenerator() {
+  const div = document.createElement('div');
+  div.className = 'generator-card';
+  div.innerHTML = `
+    <h3>⚡ Generator losowych zadań – przeliczanie jednostek</h3>
+    <p style="color:var(--muted); font-size:0.88rem; margin-bottom:0.75rem">Klikaj „Nowe zadanie" aby ćwiczyć przeliczanie jednostek!</p>
+    <button class="btn" onclick="generateConvert()">🎲 Nowe zadanie</button>
+    <div class="gen-output" id="gen-task">Kliknij przycisk, aby wygenerować zadanie...</div>
+    <div class="answer-input">
+      <input type="number" id="gen-input" placeholder="Twoja odpowiedź" step="0.01">
+      <button class="btn" onclick="checkGenerate()">Sprawdź</button>
+    </div>
+    <div class="feedback" id="gen-feedback"></div>
+  `;
+  return div;
+}
+
+let genAnswer = null, genUnit = '';
+
+function generateConvert() {
+  const vals = [10,15,20,25,30,36,45,50,72,90,100,108,120,144,180,200,250];
+  const v = vals[Math.floor(Math.random() * vals.length)];
+  const toKmh = Math.random() > 0.5;
+  document.getElementById('gen-feedback').className = 'feedback';
+  document.getElementById('gen-input').value = '';
+  if (toKmh) {
+    genAnswer = +(v * 3.6).toFixed(2);
+    genUnit = 'km/h';
+    document.getElementById('gen-task').innerHTML = `Przelicz <strong>${v} m/s</strong> na km/h`;
+  } else {
+    genAnswer = +(v / 3.6).toFixed(2);
+    genUnit = 'm/s';
+    document.getElementById('gen-task').innerHTML = `Przelicz <strong>${v} km/h</strong> na m/s`;
+  }
+}
+
+function checkGenerate() {
+  const val = parseFloat(document.getElementById('gen-input').value);
+  const fb = document.getElementById('gen-feedback');
+  if (isNaN(val)) { fb.textContent = 'Podaj liczbę!'; fb.className = 'feedback wrong'; return; }
+  if (Math.abs(val - genAnswer) < 0.1) {
+    fb.textContent = `✅ Poprawnie! Wynik: ${genAnswer} ${genUnit}`;
+    fb.className = 'feedback correct';
+  } else {
+    fb.textContent = `❌ Błąd. Poprawna odpowiedź: ${genAnswer} ${genUnit}`;
+    fb.className = 'feedback wrong';
+  }
+}
+
+function buildQuestion(q, id) {
+  const card = document.createElement('div');
+  card.className = 'question-card';
+  card.dataset.answered = '0';
+
+  let inner = `<div class="q-num">Zadanie</div><div class="q-text">${q.text}</div>`;
+
+  if (q.type === 'abc') {
+    inner += `<div class="options" id="opts_${id}">`;
+    q.options.forEach((opt, oi) => {
+      inner += `<div class="option" id="opt_${id}_${oi}" onclick="checkAbc('${id}',${oi},${q.correct})">${String.fromCharCode(65+oi)}) ${opt}</div>`;
+    });
+    inner += `</div>`;
+  } else if (q.type === 'input') {
+    inner += `<div class="answer-input">
+      <input type="number" id="inp_${id}" placeholder="Wpisz wynik" step="0.01" ${q.unit ? `title="${q.unit}"` : ''}>
+      ${q.unit ? `<span style="color:var(--muted); font-size:0.9rem">${q.unit}</span>` : ''}
+      <button class="btn" onclick="checkInput('${id}','${q.answer}')">✔ Sprawdź</button>
+    </div>`;
+    if (q.hint) inner += `<details><summary>Podpowiedź</summary><p>${q.hint}</p></details>`;
+  } else if (q.type === 'open') {
+    inner += `<textarea class="textarea-answer" id="inp_${id}" placeholder="Wpisz swoją odpowiedź..."></textarea>
+    <button class="btn secondary" onclick="checkOpen('${id}')">✔ Zapisz odpowiedź</button>`;
+    if (q.hint) inner += `<p class="hint-text">💡 Wskazówka: ${q.hint}</p>`;
+  }
+
+  inner += `<div class="feedback" id="fb_${id}"></div>`;
+  card.innerHTML = inner;
+  return card;
+}
+
+function checkAbc(id, chosen, correct) {
+  const card = document.querySelector(`#opt_${id}_0`).closest('.question-card');
+  if (card.dataset.answered === '1') return;
+  card.dataset.answered = '1';
+
+  const allOpts = document.querySelectorAll(`[id^="opt_${id}_"]`);
+  allOpts.forEach(o => o.classList.add('disabled'));
+
+  const chosenEl = document.getElementById(`opt_${id}_${chosen}`);
+  const correctEl = document.getElementById(`opt_${id}_${correct}`);
+
+  const fb = document.getElementById('fb_' + id);
+  if (chosen === correct) {
+    chosenEl.classList.add('correct');
+    fb.textContent = '✅ Świetnie! Poprawna odpowiedź!';
+    fb.className = 'feedback correct';
+    updateScore(1);
+  } else {
+    chosenEl.classList.add('wrong');
+    correctEl.classList.add('correct');
+    const correctText = correctEl.textContent;
+    fb.textContent = `❌ Błąd. Poprawna odpowiedź: ${correctText}`;
+    fb.className = 'feedback wrong';
+    updateScore(0);
+  }
+}
+
+function checkInput(id, correct) {
+  const card = document.getElementById('inp_' + id).closest('.question-card');
+  if (card.dataset.answered === '1') return;
+  const val = parseFloat(document.getElementById('inp_' + id).value);
+  const fb = document.getElementById('fb_' + id);
+  card.dataset.answered = '1';
+  document.getElementById('inp_' + id).disabled = true;
+
+  if (isNaN(val)) { fb.textContent = 'Podaj liczbę!'; fb.className = 'feedback wrong'; card.dataset.answered = '0'; return; }
+
+  const correctNum = parseFloat(correct);
+  if (Math.abs(val - correctNum) < 0.05) {
+    fb.textContent = `✅ Poprawnie! Wynik: ${correct}`;
+    fb.className = 'feedback correct';
+    updateScore(1);
+  } else {
+    fb.textContent = `❌ Błąd. Poprawna odpowiedź: ${correct}`;
+    fb.className = 'feedback wrong';
+    updateScore(0);
+  }
+}
+
+function checkOpen(id) {
+  const card = document.getElementById('inp_' + id).closest('.question-card');
+  if (card.dataset.answered === '1') return;
+  const val = document.getElementById('inp_' + id).value.trim();
+  const fb = document.getElementById('fb_' + id);
+  if (!val) { fb.textContent = 'Wpisz swoją odpowiedź!'; fb.className = 'feedback wrong'; return; }
+  card.dataset.answered = '1';
+  document.getElementById('inp_' + id).disabled = true;
+  fb.textContent = '✅ Odpowiedź zapisana. Sprawdź z notatkami lub zapytaj nauczyciela!';
+  fb.className = 'feedback correct';
+  updateScore(1);
+}
+
+function drawChartST() {
+  const canvas = document.getElementById('chartST');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0,0,W,H);
+
+  ctx.fillStyle = '#161b26';
+  ctx.fillRect(0,0,W,H);
+
+  const pad = 35;
+  ctx.strokeStyle = '#2a3550';
+  ctx.lineWidth = 1;
+  for (let i = 1; i <= 4; i++) {
+    const y = pad + (H - 2*pad) * (1 - i/4);
+    ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(W-pad, y); ctx.stroke();
+    const x = pad + (W - 2*pad) * i/5;
+    ctx.beginPath(); ctx.moveTo(x, pad); ctx.lineTo(x, H-pad); ctx.stroke();
+  }
+
+  ctx.strokeStyle = '#2a3550';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(pad,pad); ctx.lineTo(pad,H-pad); ctx.lineTo(W-pad,H-pad); ctx.stroke();
+
+  ctx.fillStyle = '#8892a4';
+  ctx.font = '10px sans-serif';
+  ctx.fillText('s [m]', 2, pad-2);
+  ctx.fillText('t [s]', W-pad+4, H-pad+4);
+
+  ctx.strokeStyle = '#00d4ff';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(pad, H-pad);
+  ctx.lineTo(W-pad, pad + (H-2*pad)*0.2);
+  ctx.stroke();
+
+  ctx.strokeStyle = '#00ff9f';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(pad, H-pad);
+  const steps = 60;
+  for (let i = 1; i <= steps; i++) {
+    const t = i / steps;
+    const x = pad + t * (W - 2*pad);
+    const s = t * t;
+    const y = H - pad - s * (H - 2*pad) * 0.85;
+    ctx.lineTo(x, y);
+  }
+  ctx.stroke();
+}
+
+function drawChartVT() {
+  const canvas = document.getElementById('chartVT');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0,0,W,H);
+
+  ctx.fillStyle = '#161b26';
+  ctx.fillRect(0,0,W,H);
+
+  const pad = 35;
+  ctx.strokeStyle = '#2a3550';
+  ctx.lineWidth = 1;
+  for (let i = 1; i <= 4; i++) {
+    const y = pad + (H - 2*pad) * (1 - i/4);
+    ctx.beginPath(); ctx.moveTo(pad, y); ctx.lineTo(W-pad, y); ctx.stroke();
+  }
+
+  ctx.strokeStyle = '#2a3550';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(pad,pad); ctx.lineTo(pad,H-pad); ctx.lineTo(W-pad,H-pad); ctx.stroke();
+
+  ctx.fillStyle = '#8892a4';
+  ctx.font = '10px sans-serif';
+  ctx.fillText('v [m/s]', 2, pad-2);
+  ctx.fillText('t [s]', W-pad+4, H-pad+4);
+
+  const totalW = W - 2*pad;
+  const seg1 = totalW * 0.35;
+  const seg2 = totalW * 0.35;
+  const seg3 = totalW * 0.3;
+  const topY = pad + (H-2*pad)*0.1;
+  const botY = H - pad;
+
+  ctx.fillStyle = 'rgba(0,212,255,0.08)';
+  ctx.beginPath();
+  ctx.moveTo(pad, botY);
+  ctx.lineTo(pad + seg1, topY);
+  ctx.lineTo(pad + seg1, botY);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.fillStyle = 'rgba(0,212,255,0.08)';
+  ctx.fillRect(pad + seg1, topY, seg2, H - 2*pad - (H-2*pad)*0.1);
+
+  ctx.fillStyle = 'rgba(255,107,107,0.08)';
+  ctx.beginPath();
+  ctx.moveTo(pad + seg1 + seg2, topY);
+  ctx.lineTo(pad + seg1 + seg2 + seg3, botY);
+  ctx.lineTo(pad + seg1 + seg2, botY);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.strokeStyle = '#00d4ff';
+  ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(pad, botY);
+  ctx.lineTo(pad + seg1, topY);
+  ctx.lineTo(pad + seg1 + seg2, topY);
+  ctx.lineTo(pad + seg1 + seg2 + seg3, botY);
+  ctx.stroke();
+
+  ctx.fillStyle = '#8892a4';
+  ctx.font = '9px sans-serif';
+  ctx.fillText('przysp.', pad + 4, botY - 10);
+  ctx.fillText('stałe v', pad + seg1 + 6, topY + 14);
+  ctx.fillText('hamow.', pad + seg1 + seg2 + 4, botY - 10);
+}
+
+buildQuestions();
+setTimeout(() => { drawChartST(); drawChartVT(); }, 100);
+</script>
+</body>
+</html>
