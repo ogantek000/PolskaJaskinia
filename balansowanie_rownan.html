@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Balansowanie Równań Chemicznych</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0d1117; --surface: #161b22; --surface2: #1c2230;
+    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.14);
+    --text: #e8edf3; --muted: #7a8899;
+    --accent: #4fc3f7; --accent-dim: rgba(79,195,247,0.12);
+    --green: #56d364; --green-dim: rgba(86,211,100,0.12);
+    --red: #f87171; --red-dim: rgba(248,113,113,0.1);
+    --amber: #fbbf24; --amber-dim: rgba(251,191,36,0.1);
+  }
+  body { background: var(--bg); color: var(--text); font-family: 'Outfit', sans-serif; min-height: 100vh; overflow-x: hidden; }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(79,195,247,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(79,195,247,0.03) 1px, transparent 1px);
+    background-size: 48px 48px; pointer-events: none; z-index: 0;
+  }
+  .blob { position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; opacity: 0.35; }
+  .blob-1 { width: 500px; height: 500px; background: #1a3a5c; top: -150px; left: -100px; }
+  .blob-2 { width: 400px; height: 400px; background: #0d3320; bottom: -100px; right: -80px; }
+  .container { position: relative; z-index: 1; max-width: 820px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+
+  header { text-align: center; padding: 3.5rem 0 2rem; animation: fadeDown 0.7s ease both; }
+  .header-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); background: var(--accent-dim); border: 1px solid rgba(79,195,247,0.2); padding: 5px 14px; border-radius: 99px; margin-bottom: 1.2rem; }
+  h1 { font-family: 'DM Serif Display', serif; font-size: clamp(2.2rem, 5vw, 3.2rem); line-height: 1.1; margin-bottom: 0.7rem; letter-spacing: -0.02em; }
+  h1 em { font-style: italic; color: var(--accent); }
+  .subtitle { font-size: 1rem; color: var(--muted); font-weight: 300; max-width: 500px; margin: 0 auto; line-height: 1.6; }
+
+  .stats-bar { display: flex; gap: 10px; justify-content: center; margin: 1.5rem 0 1.8rem; animation: fadeUp 0.7s 0.1s ease both; flex-wrap: wrap; }
+  .stat { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 10px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; min-width: 90px; }
+  .stat-value { font-size: 1.5rem; font-weight: 600; color: var(--text); font-family: 'DM Mono', monospace; }
+  .stat-label { font-size: 10px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
+
+  .difficulty-bar { display: flex; gap: 8px; justify-content: center; margin-bottom: 1.5rem; animation: fadeUp 0.7s 0.12s ease both; flex-wrap: wrap; }
+  .diff-btn { padding: 7px 18px; border-radius: 99px; border: 1px solid var(--border2); background: var(--surface); color: var(--muted); font-size: 13px; font-weight: 500; cursor: pointer; font-family: 'Outfit', sans-serif; transition: all 0.15s; }
+  .diff-btn:hover { color: var(--text); border-color: rgba(255,255,255,0.25); }
+  .diff-btn.active { background: var(--accent-dim); border-color: var(--accent); color: var(--accent); }
+
+  .section-title { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+
+  .queue-row { display: flex; gap: 8px; margin-bottom: 1.5rem; overflow-x: auto; padding-bottom: 4px; animation: fadeUp 0.7s 0.15s ease both; scrollbar-width: none; }
+  .queue-row::-webkit-scrollbar { display: none; }
+  .q-card { flex-shrink: 0; padding: 10px 14px; min-width: 140px; max-width: 180px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; cursor: pointer; transition: all 0.15s; position: relative; overflow: hidden; }
+  .q-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, var(--accent-dim), transparent); opacity: 0; transition: opacity 0.2s; }
+  .q-card:hover { border-color: var(--border2); transform: translateY(-1px); }
+  .q-card:hover::before { opacity: 1; }
+  .q-card.active { border-color: var(--accent); background: var(--accent-dim); }
+  .q-card.active::before { opacity: 1; }
+  .q-card.done { border-color: rgba(86,211,100,0.4); background: var(--green-dim); }
+  .q-card.done .qc-num { color: var(--green); }
+  .qc-num { font-size: 11px; font-weight: 600; color: var(--muted); margin-bottom: 2px; font-family: 'DM Mono', monospace; }
+  .qc-formula { font-size: 12px; color: var(--text); font-family: 'DM Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .q-card.active .qc-num { color: var(--accent); }
+  .q-card.active .qc-formula { color: rgba(79,195,247,0.8); }
+
+  .eq-board { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; margin-bottom: 1.4rem; animation: fadeUp 0.7s 0.2s ease both; position: relative; overflow: hidden; }
+  .eq-board::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.4; }
+
+  .eq-meta { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.2rem; }
+  .eq-name { font-size: 13px; color: var(--muted); font-weight: 400; }
+  .eq-num-badge { font-size: 12px; font-family: 'DM Mono', monospace; color: var(--accent); background: var(--accent-dim); padding: 3px 10px; border-radius: 99px; border: 1px solid rgba(79,195,247,0.2); }
+
+  .eq-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 1rem; min-height: 60px; }
+  .compound-group { display: flex; align-items: center; gap: 6px; }
+  .coeff-input { width: 52px; height: 48px; text-align: center; font-size: 1.3rem; font-family: 'DM Mono', monospace; font-weight: 500; background: var(--surface2); border: 1px solid var(--border2); border-radius: 10px; color: var(--text); outline: none; transition: border-color 0.2s, box-shadow 0.2s, background 0.2s; -moz-appearance: textfield; }
+  .coeff-input::-webkit-outer-spin-button, .coeff-input::-webkit-inner-spin-button { -webkit-appearance: none; }
+  .coeff-input::placeholder { color: var(--muted); font-size: 1.1rem; }
+  .coeff-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79,195,247,0.15); }
+  .coeff-input.correct { border-color: var(--green); background: var(--green-dim); color: var(--green); box-shadow: 0 0 0 3px rgba(86,211,100,0.1); }
+  .coeff-input.wrong { border-color: var(--red); background: var(--red-dim); color: var(--red); box-shadow: 0 0 0 3px rgba(248,113,113,0.1); }
+  .compound-label { font-size: 1.3rem; font-family: 'DM Mono', monospace; font-weight: 500; color: var(--text); }
+  .compound-label sub { font-size: 0.72em; }
+  .op-symbol { font-size: 1.4rem; color: var(--muted); font-weight: 300; user-select: none; }
+  .arrow-symbol { font-size: 1.5rem; color: var(--accent); padding: 0 8px; user-select: none; }
+
+  .feedback-box { margin-top: 1rem; padding: 11px 16px; border-radius: 10px; font-size: 14px; line-height: 1.5; display: none; }
+  .feedback-box.show { display: block; animation: slideIn 0.25s ease; }
+  .feedback-box.win { background: var(--green-dim); border: 1px solid rgba(86,211,100,0.3); color: var(--green); }
+  .feedback-box.hint { background: var(--amber-dim); border: 1px solid rgba(251,191,36,0.25); color: var(--amber); }
+
+  .controls { display: flex; gap: 10px; flex-wrap: wrap; animation: fadeUp 0.7s 0.25s ease both; margin-bottom: 1.2rem; }
+  .btn { display: inline-flex; align-items: center; gap: 7px; padding: 11px 20px; font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 500; border-radius: 10px; border: 1px solid var(--border2); cursor: pointer; background: var(--surface); color: var(--text); transition: all 0.15s; letter-spacing: 0.01em; }
+  .btn:hover { background: var(--surface2); border-color: rgba(255,255,255,0.2); transform: translateY(-1px); }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary { background: var(--accent); color: #0a1628; border-color: var(--accent); font-weight: 600; }
+  .btn-primary:hover { background: #81d4fa; border-color: #81d4fa; }
+  .btn-next { background: var(--green-dim); border-color: rgba(86,211,100,0.4); color: var(--green); }
+  .btn-next:hover { background: rgba(86,211,100,0.2); }
+  .btn-ghost { color: var(--muted); }
+  .btn-ghost:hover { color: var(--text); }
+  .btn-icon { width: 17px; height: 17px; display: inline-block; flex-shrink: 0; }
+
+  .tip-row { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 1.5rem; padding-top: 1.2rem; border-top: 1px solid var(--border); animation: fadeUp 0.7s 0.3s ease both; }
+  .tip { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; color: var(--muted); flex: 1; min-width: 180px; }
+  .tip-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); margin-top: 5px; flex-shrink: 0; }
+
+  .confetti-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 999; overflow: hidden; }
+  .confetti-piece { position: absolute; animation: confettiFall linear forwards; top: -10px; }
+
+  @keyframes fadeDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes confettiFall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+  @keyframes pop { 0% { transform: scale(1); } 40% { transform: scale(1.12); } 100% { transform: scale(1); } }
+  .stat-value.pop { animation: pop 0.35s ease; }
+
+  @media (max-width: 540px) {
+    .coeff-input { width: 44px; height: 44px; font-size: 1.1rem; }
+    .compound-label { font-size: 1.1rem; }
+    .btn { padding: 10px 14px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="confetti-container" id="confetti"></div>
+
+<div class="container">
+  <header>
+    <div class="header-tag">
+      <svg width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="currentColor" opacity="0.6"/><circle cx="5" cy="5" r="2" fill="currentColor"/></svg>
+      Losowe równania · Ogromna baza
+    </div>
+    <h1>Balansowanie<br><em>równań chemicznych</em></h1>
+    <p class="subtitle">Każde zadanie losowane z bazy ponad 70 reakcji. Wybierz poziom trudności i ćwicz bez końca.</p>
+  </header>
+
+  <div class="stats-bar">
+    <div class="stat"><span class="stat-value" id="stat-correct">0</span><span class="stat-label">Poprawne</span></div>
+    <div class="stat"><span class="stat-value" id="stat-attempts">0</span><span class="stat-label">Próby</span></div>
+    <div class="stat"><span class="stat-value" id="stat-pct">—</span><span class="stat-label">Skuteczność</span></div>
+    <div class="stat"><span class="stat-value" id="stat-streak">0</span><span class="stat-label">Seria 🔥</span></div>
+  </div>
+
+  <div class="difficulty-bar">
+    <button class="diff-btn active" onclick="setDiff(this,'easy')">Łatwy</button>
+    <button class="diff-btn" onclick="setDiff(this,'medium')">Średni</button>
+    <button class="diff-btn" onclick="setDiff(this,'hard')">Trudny</button>
+    <button class="diff-btn" onclick="setDiff(this,'all')">Wszystkie</button>
+  </div>
+
+  <p class="section-title">Kolejka zadań — kliknij żeby przejść</p>
+  <div class="queue-row" id="queue-row"></div>
+
+  <div class="eq-board">
+    <div class="eq-meta">
+      <span class="eq-name" id="eq-name">—</span>
+      <span class="eq-num-badge" id="eq-num">#1 / 8</span>
+    </div>
+    <div class="eq-row" id="eq-row"></div>
+    <div class="feedback-box" id="feedback"></div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-primary" onclick="checkAnswer()">
+      <svg class="btn-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l4 4 8-8"/></svg>
+      Sprawdź
+    </button>
+    <button class="btn btn-next" onclick="nextReaction()">
+      <svg class="btn-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9h8M10 5l4 4-4 4"/></svg>
+      Następne
+    </button>
+    <button class="btn" onclick="showAnswer()">
+      <svg class="btn-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 9s3-6 8-6 8 6 8 6-3 6-8 6-8-6-8-6z"/><circle cx="9" cy="9" r="2.5"/></svg>
+      Odpowiedź
+    </button>
+    <button class="btn btn-ghost" onclick="resetInputs()">
+      <svg class="btn-icon" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9a6 6 0 1 1 1.5 4"/><path d="M3 13V9H7"/></svg>
+      Wyczyść
+    </button>
+  </div>
+
+  <div class="tip-row">
+    <div class="tip"><div class="tip-dot"></div>Zacznij od pierwiastka, który pojawia się w tylko jednym związku po każdej stronie.</div>
+    <div class="tip"><div class="tip-dot"></div>Tlen i wodór bilansuj na końcu — są najczęstsze.</div>
+    <div class="tip"><div class="tip-dot"></div>Enter = Sprawdź, strzałka → = Następne zadanie.</div>
+  </div>
+</div>
+
+<script>
+const TEMPLATES = [
+  {d:'easy',n:'Spalanie wodoru',r:[{l:'H2',a:{H:2}},{l:'O2',a:{O:2}}],p:[{l:'H2O',a:{H:2,O:1}}],ans:[2,1,2]},
+  {d:'easy',n:'Rozkład wody',r:[{l:'H2O',a:{H:2,O:1}}],p:[{l:'H2',a:{H:2}},{l:'O2',a:{O:2}}],ans:[2,2,1]},
+  {d:'easy',n:'Żelazo + siarka',r:[{l:'Fe',a:{Fe:1}},{l:'S',a:{S:1}}],p:[{l:'FeS',a:{Fe:1,S:1}}],ans:[1,1,1]},
+  {d:'easy',n:'Synteza NaCl',r:[{l:'Na',a:{Na:1}},{l:'Cl2',a:{Cl:2}}],p:[{l:'NaCl',a:{Na:1,Cl:1}}],ans:[2,1,2]},
+  {d:'easy',n:'Spalanie węgla do CO2',r:[{l:'C',a:{C:1}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}}],ans:[1,1,1]},
+  {d:'easy',n:'Spalanie węgla do CO',r:[{l:'C',a:{C:1}},{l:'O2',a:{O:2}}],p:[{l:'CO',a:{C:1,O:1}}],ans:[2,1,2]},
+  {d:'easy',n:'Wapń + tlen',r:[{l:'Ca',a:{Ca:1}},{l:'O2',a:{O:2}}],p:[{l:'CaO',a:{Ca:1,O:1}}],ans:[2,1,2]},
+  {d:'easy',n:'Magnez + tlen',r:[{l:'Mg',a:{Mg:1}},{l:'O2',a:{O:2}}],p:[{l:'MgO',a:{Mg:1,O:1}}],ans:[2,1,2]},
+  {d:'easy',n:'Sód + tlen',r:[{l:'Na',a:{Na:1}},{l:'O2',a:{O:2}}],p:[{l:'Na2O',a:{Na:2,O:1}}],ans:[4,1,2]},
+  {d:'easy',n:'Potas + tlen',r:[{l:'K',a:{K:1}},{l:'O2',a:{O:2}}],p:[{l:'K2O',a:{K:2,O:1}}],ans:[4,1,2]},
+  {d:'easy',n:'Aluminium + tlen',r:[{l:'Al',a:{Al:1}},{l:'O2',a:{O:2}}],p:[{l:'Al2O3',a:{Al:2,O:3}}],ans:[4,3,2]},
+  {d:'easy',n:'Żelazo + tlen (FeO)',r:[{l:'Fe',a:{Fe:1}},{l:'O2',a:{O:2}}],p:[{l:'FeO',a:{Fe:1,O:1}}],ans:[2,1,2]},
+  {d:'easy',n:'Żelazo + tlen (Fe2O3)',r:[{l:'Fe',a:{Fe:1}},{l:'O2',a:{O:2}}],p:[{l:'Fe2O3',a:{Fe:2,O:3}}],ans:[4,3,2]},
+  {d:'easy',n:'Miedź + tlen',r:[{l:'Cu',a:{Cu:1}},{l:'O2',a:{O:2}}],p:[{l:'CuO',a:{Cu:1,O:1}}],ans:[2,1,2]},
+  {d:'easy',n:'Cynk + tlen',r:[{l:'Zn',a:{Zn:1}},{l:'O2',a:{O:2}}],p:[{l:'ZnO',a:{Zn:1,O:1}}],ans:[2,1,2]},
+  {d:'easy',n:'Siarka + tlen (SO2)',r:[{l:'S',a:{S:1}},{l:'O2',a:{O:2}}],p:[{l:'SO2',a:{S:1,O:2}}],ans:[1,1,1]},
+  {d:'easy',n:'Siarka + tlen (SO3)',r:[{l:'S',a:{S:1}},{l:'O2',a:{O:2}}],p:[{l:'SO3',a:{S:1,O:3}}],ans:[2,3,2]},
+  {d:'easy',n:'Synteza amoniaku',r:[{l:'N2',a:{N:2}},{l:'H2',a:{H:2}}],p:[{l:'NH3',a:{N:1,H:3}}],ans:[1,3,2]},
+  {d:'easy',n:'Azot + tlen (NO)',r:[{l:'N2',a:{N:2}},{l:'O2',a:{O:2}}],p:[{l:'NO',a:{N:1,O:1}}],ans:[1,1,2]},
+  {d:'easy',n:'Rozkład tlenku rtęci',r:[{l:'HgO',a:{Hg:1,O:1}}],p:[{l:'Hg',a:{Hg:1}},{l:'O2',a:{O:2}}],ans:[2,2,1]},
+  {d:'easy',n:'Synteza HCl',r:[{l:'H2',a:{H:2}},{l:'Cl2',a:{Cl:2}}],p:[{l:'HCl',a:{H:1,Cl:1}}],ans:[1,1,2]},
+  {d:'easy',n:'Synteza HBr',r:[{l:'H2',a:{H:2}},{l:'Br2',a:{Br:2}}],p:[{l:'HBr',a:{H:1,Br:1}}],ans:[1,1,2]},
+  {d:'easy',n:'Lit + tlen',r:[{l:'Li',a:{Li:1}},{l:'O2',a:{O:2}}],p:[{l:'Li2O',a:{Li:2,O:1}}],ans:[4,1,2]},
+  {d:'easy',n:'Krzem + tlen',r:[{l:'Si',a:{Si:1}},{l:'O2',a:{O:2}}],p:[{l:'SiO2',a:{Si:1,O:2}}],ans:[1,1,1]},
+  {d:'easy',n:'Bor + tlen',r:[{l:'B',a:{B:1}},{l:'O2',a:{O:2}}],p:[{l:'B2O3',a:{B:2,O:3}}],ans:[4,3,2]},
+  {d:'easy',n:'Srebro + siarka',r:[{l:'Ag',a:{Ag:1}},{l:'S',a:{S:1}}],p:[{l:'Ag2S',a:{Ag:2,S:1}}],ans:[2,1,1]},
+  {d:'easy',n:'Miedź + siarka',r:[{l:'Cu',a:{Cu:1}},{l:'S',a:{S:1}}],p:[{l:'CuS',a:{Cu:1,S:1}}],ans:[1,1,1]},
+  {d:'easy',n:'Fosfor + tlen',r:[{l:'P4',a:{P:4}},{l:'O2',a:{O:2}}],p:[{l:'P4O10',a:{P:4,O:10}}],ans:[1,5,1]},
+  {d:'easy',n:'Mangan + tlen',r:[{l:'Mn',a:{Mn:1}},{l:'O2',a:{O:2}}],p:[{l:'MnO2',a:{Mn:1,O:2}}],ans:[1,1,1]},
+  {d:'medium',n:'Spalanie metanu',r:[{l:'CH4',a:{C:1,H:4}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[1,2,1,2]},
+  {d:'medium',n:'Spalanie etanu',r:[{l:'C2H6',a:{C:2,H:6}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[2,7,4,6]},
+  {d:'medium',n:'Spalanie propanu',r:[{l:'C3H8',a:{C:3,H:8}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[1,5,3,4]},
+  {d:'medium',n:'Spalanie butanu',r:[{l:'C4H10',a:{C:4,H:10}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[2,13,8,10]},
+  {d:'medium',n:'Spalanie acetylenu',r:[{l:'C2H2',a:{C:2,H:2}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[2,5,4,2]},
+  {d:'medium',n:'Spalanie etenu',r:[{l:'C2H4',a:{C:2,H:4}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[1,3,2,2]},
+  {d:'medium',n:'Spalanie metanolu',r:[{l:'CH3OH',a:{C:1,H:4,O:1}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[2,3,2,4]},
+  {d:'medium',n:'Spalanie etanolu',r:[{l:'C2H5OH',a:{C:2,H:6,O:1}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[1,3,2,3]},
+  {d:'medium',n:'Rozkład nadtlenku wodoru',r:[{l:'H2O2',a:{H:2,O:2}}],p:[{l:'H2O',a:{H:2,O:1}},{l:'O2',a:{O:2}}],ans:[2,2,1]},
+  {d:'medium',n:'Fe + kwas solny',r:[{l:'Fe',a:{Fe:1}},{l:'HCl',a:{H:1,Cl:1}}],p:[{l:'FeCl2',a:{Fe:1,Cl:2}},{l:'H2',a:{H:2}}],ans:[1,2,1,1]},
+  {d:'medium',n:'Cynk + kwas siarkowy',r:[{l:'Zn',a:{Zn:1}},{l:'H2SO4',a:{H:2,S:1,O:4}}],p:[{l:'ZnSO4',a:{Zn:1,S:1,O:4}},{l:'H2',a:{H:2}}],ans:[1,1,1,1]},
+  {d:'medium',n:'Glin + kwas solny',r:[{l:'Al',a:{Al:1}},{l:'HCl',a:{H:1,Cl:1}}],p:[{l:'AlCl3',a:{Al:1,Cl:3}},{l:'H2',a:{H:2}}],ans:[2,6,2,3]},
+  {d:'medium',n:'Sód + woda',r:[{l:'Na',a:{Na:1}},{l:'H2O',a:{H:2,O:1}}],p:[{l:'NaOH',a:{Na:1,O:1,H:1}},{l:'H2',a:{H:2}}],ans:[2,2,2,1]},
+  {d:'medium',n:'Wapń + woda',r:[{l:'Ca',a:{Ca:1}},{l:'H2O',a:{H:2,O:1}}],p:[{l:'Ca(OH)2',a:{Ca:1,O:2,H:2}},{l:'H2',a:{H:2}}],ans:[1,2,1,1]},
+  {d:'medium',n:'Spalanie siarkowodoru',r:[{l:'H2S',a:{H:2,S:1}},{l:'O2',a:{O:2}}],p:[{l:'SO2',a:{S:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[2,3,2,2]},
+  {d:'medium',n:'SO2 → SO3',r:[{l:'SO2',a:{S:1,O:2}},{l:'O2',a:{O:2}}],p:[{l:'SO3',a:{S:1,O:3}}],ans:[2,1,2]},
+  {d:'medium',n:'Redukcja Fe2O3 przez CO',r:[{l:'Fe2O3',a:{Fe:2,O:3}},{l:'CO',a:{C:1,O:1}}],p:[{l:'Fe',a:{Fe:1}},{l:'CO2',a:{C:1,O:2}}],ans:[1,3,2,3]},
+  {d:'medium',n:'Rozkład CaCO3',r:[{l:'CaCO3',a:{Ca:1,C:1,O:3}}],p:[{l:'CaO',a:{Ca:1,O:1}},{l:'CO2',a:{C:1,O:2}}],ans:[1,1,1]},
+  {d:'medium',n:'CaO + woda',r:[{l:'CaO',a:{Ca:1,O:1}},{l:'H2O',a:{H:2,O:1}}],p:[{l:'Ca(OH)2',a:{Ca:1,O:2,H:2}}],ans:[1,1,1]},
+  {d:'medium',n:'SO3 + woda',r:[{l:'SO3',a:{S:1,O:3}},{l:'H2O',a:{H:2,O:1}}],p:[{l:'H2SO4',a:{H:2,S:1,O:4}}],ans:[1,1,1]},
+  {d:'medium',n:'NO + tlen',r:[{l:'NO',a:{N:1,O:1}},{l:'O2',a:{O:2}}],p:[{l:'NO2',a:{N:1,O:2}}],ans:[2,1,2]},
+  {d:'medium',n:'Spalanie pirytu',r:[{l:'FeS2',a:{Fe:1,S:2}},{l:'O2',a:{O:2}}],p:[{l:'Fe2O3',a:{Fe:2,O:3}},{l:'SO2',a:{S:1,O:2}}],ans:[4,11,2,8]},
+  {d:'medium',n:'Mg + kwas solny',r:[{l:'Mg',a:{Mg:1}},{l:'HCl',a:{H:1,Cl:1}}],p:[{l:'MgCl2',a:{Mg:1,Cl:2}},{l:'H2',a:{H:2}}],ans:[1,2,1,1]},
+  {d:'medium',n:'Cu + azotan srebra',r:[{l:'Cu',a:{Cu:1}},{l:'AgNO3',a:{Ag:1,N:1,O:3}}],p:[{l:'Cu(NO3)2',a:{Cu:1,N:2,O:6}},{l:'Ag',a:{Ag:1}}],ans:[1,2,1,2]},
+  {d:'medium',n:'Termit (Al + Fe2O3)',r:[{l:'Al',a:{Al:1}},{l:'Fe2O3',a:{Fe:2,O:3}}],p:[{l:'Al2O3',a:{Al:2,O:3}},{l:'Fe',a:{Fe:1}}],ans:[2,1,1,2]},
+  {d:'medium',n:'NH3 + HCl',r:[{l:'NH3',a:{N:1,H:3}},{l:'HCl',a:{H:1,Cl:1}}],p:[{l:'NH4Cl',a:{N:1,H:4,Cl:1}}],ans:[1,1,1]},
+  {d:'medium',n:'Spalanie benzenu',r:[{l:'C6H6',a:{C:6,H:6}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[2,15,12,6]},
+  {d:'medium',n:'Spalanie toluenu',r:[{l:'C7H8',a:{C:7,H:8}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[1,9,7,4]},
+  {d:'medium',n:'Rozkład NH4NO3',r:[{l:'NH4NO3',a:{N:2,H:4,O:3}}],p:[{l:'N2O',a:{N:2,O:1}},{l:'H2O',a:{H:2,O:1}}],ans:[1,1,2]},
+  {d:'medium',n:'FeCl3 + NaOH',r:[{l:'FeCl3',a:{Fe:1,Cl:3}},{l:'NaOH',a:{Na:1,O:1,H:1}}],p:[{l:'Fe(OH)3',a:{Fe:1,O:3,H:3}},{l:'NaCl',a:{Na:1,Cl:1}}],ans:[1,3,1,3]},
+  {d:'medium',n:'Rozkład KMnO4',r:[{l:'KMnO4',a:{K:1,Mn:1,O:4}}],p:[{l:'K2MnO4',a:{K:2,Mn:1,O:4}},{l:'MnO2',a:{Mn:1,O:2}},{l:'O2',a:{O:2}}],ans:[2,1,1,1]},
+  {d:'medium',n:'Spalanie acetonu',r:[{l:'C3H6O',a:{C:3,H:6,O:1}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[1,4,3,3]},
+  {d:'hard',n:'Spalanie cykloheksanu',r:[{l:'C6H12',a:{C:6,H:12}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[1,9,6,6]},
+  {d:'hard',n:'Spalanie heptanu',r:[{l:'C7H16',a:{C:7,H:16}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[1,11,7,8]},
+  {d:'hard',n:'Spalanie oktanu',r:[{l:'C8H18',a:{C:8,H:18}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[2,25,16,18]},
+  {d:'hard',n:'Utlenianie amoniaku (Ostwald)',r:[{l:'NH3',a:{N:1,H:3}},{l:'O2',a:{O:2}}],p:[{l:'NO',a:{N:1,O:1}},{l:'H2O',a:{H:2,O:1}}],ans:[4,5,4,6]},
+  {d:'hard',n:'KMnO4 + HCl',r:[{l:'KMnO4',a:{K:1,Mn:1,O:4}},{l:'HCl',a:{H:1,Cl:1}}],p:[{l:'KCl',a:{K:1,Cl:1}},{l:'MnCl2',a:{Mn:1,Cl:2}},{l:'H2O',a:{H:2,O:1}},{l:'Cl2',a:{Cl:2}}],ans:[2,16,2,2,8,5]},
+  {d:'hard',n:'Spalanie gliceryny',r:[{l:'C3H8O3',a:{C:3,H:8,O:3}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[2,7,6,8]},
+  {d:'hard',n:'Redukcja Fe3O4 przez CO',r:[{l:'Fe3O4',a:{Fe:3,O:4}},{l:'CO',a:{C:1,O:1}}],p:[{l:'Fe',a:{Fe:1}},{l:'CO2',a:{C:1,O:2}}],ans:[1,4,3,4]},
+  {d:'hard',n:'Na2O2 + woda',r:[{l:'Na2O2',a:{Na:2,O:2}},{l:'H2O',a:{H:2,O:1}}],p:[{l:'NaOH',a:{Na:1,O:1,H:1}},{l:'O2',a:{O:2}}],ans:[2,2,4,1]},
+  {d:'hard',n:'Spalanie glukozy',r:[{l:'C6H12O6',a:{C:6,H:12,O:6}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[1,6,6,6]},
+  {d:'hard',n:'Fermentacja alkoholowa',r:[{l:'C6H12O6',a:{C:6,H:12,O:6}}],p:[{l:'C2H5OH',a:{C:2,H:6,O:1}},{l:'CO2',a:{C:1,O:2}}],ans:[1,2,2]},
+  {d:'hard',n:'Redukcja Cr2O3 przez Al',r:[{l:'Cr2O3',a:{Cr:2,O:3}},{l:'Al',a:{Al:1}}],p:[{l:'Al2O3',a:{Al:2,O:3}},{l:'Cr',a:{Cr:1}}],ans:[1,2,1,2]},
+  {d:'hard',n:'Spalanie naftalenu',r:[{l:'C10H8',a:{C:10,H:8}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[1,12,10,4]},
+  {d:'hard',n:'Cu + HNO3 stęż.',r:[{l:'Cu',a:{Cu:1}},{l:'HNO3',a:{H:1,N:1,O:3}}],p:[{l:'Cu(NO3)2',a:{Cu:1,N:2,O:6}},{l:'NO2',a:{N:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[1,4,1,2,2]},
+  {d:'hard',n:'Cu + HNO3 rozc.',r:[{l:'Cu',a:{Cu:1}},{l:'HNO3',a:{H:1,N:1,O:3}}],p:[{l:'Cu(NO3)2',a:{Cu:1,N:2,O:6}},{l:'NO',a:{N:1,O:1}},{l:'H2O',a:{H:2,O:1}}],ans:[3,8,3,2,4]},
+  {d:'hard',n:'Spalanie disiarczku węgla',r:[{l:'CS2',a:{C:1,S:2}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'SO2',a:{S:1,O:2}}],ans:[1,3,1,2]},
+  {d:'hard',n:'Rozkład KNO3',r:[{l:'KNO3',a:{K:1,N:1,O:3}}],p:[{l:'KNO2',a:{K:1,N:1,O:2}},{l:'O2',a:{O:2}}],ans:[2,2,1]},
+  {d:'hard',n:'CuO + CO',r:[{l:'CuO',a:{Cu:1,O:1}},{l:'CO',a:{C:1,O:1}}],p:[{l:'Cu',a:{Cu:1}},{l:'CO2',a:{C:1,O:2}}],ans:[1,1,1,1]},
+  {d:'hard',n:'Spalanie kwasu octowego',r:[{l:'CH3COOH',a:{C:2,H:4,O:2}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[1,2,2,2]},
+  {d:'hard',n:'Spalanie kwasu mrówkowego',r:[{l:'HCOOH',a:{H:2,C:1,O:2}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[1,1,1,1]},
+  {d:'hard',n:'Spalanie pentanu',r:[{l:'C5H12',a:{C:5,H:12}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[1,8,5,6]},
+  {d:'hard',n:'K2Cr2O7 + HCl',r:[{l:'K2Cr2O7',a:{K:2,Cr:2,O:7}},{l:'HCl',a:{H:1,Cl:1}}],p:[{l:'KCl',a:{K:1,Cl:1}},{l:'CrCl3',a:{Cr:1,Cl:3}},{l:'H2O',a:{H:2,O:1}},{l:'Cl2',a:{Cl:2}}],ans:[1,14,2,2,7,3]},
+  {d:'hard',n:'Spalanie heksanu',r:[{l:'C6H14',a:{C:6,H:14}},{l:'O2',a:{O:2}}],p:[{l:'CO2',a:{C:1,O:2}},{l:'H2O',a:{H:2,O:1}}],ans:[2,19,12,14]},
+];
+
+const QUEUE_SIZE = 8;
+let difficulty = 'easy';
+let queue = [];
+let currentIdx = 0;
+let correctCount = 0;
+let attemptCount = 0;
+let streak = 0;
+let solvedSet = new Set();
+
+function filtered() {
+  return difficulty === 'all' ? TEMPLATES : TEMPLATES.filter(t => t.d === difficulty);
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildQueue() {
+  const pool = shuffle(filtered());
+  queue = pool.slice(0, QUEUE_SIZE);
+  let i = 0;
+  while (queue.length < QUEUE_SIZE) { queue.push(pool[i++ % pool.length]); }
+  currentIdx = 0;
+  solvedSet = new Set();
+}
+
+function setDiff(btn, d) {
+  difficulty = d;
+  document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildQueue();
+  renderQueue();
+  renderEquation();
+}
+
+function fmt(label) {
+  return label
+    .replace(/\(([^)]+)\)(\d+)/g, '($1)<sub>$2</sub>')
+    .replace(/([A-Z][a-z]?)(\d+)/g, '$1<sub>$2</sub>');
+}
+
+function renderQueue() {
+  const row = document.getElementById('queue-row');
+  row.innerHTML = queue.map((t, i) => {
+    const done = solvedSet.has(i);
+    const active = i === currentIdx;
+    const raw = t.r.map(x=>x.l).join('+') + '→' + t.p.map(x=>x.l).join('+');
+    return `<div class="q-card ${active?'active':done?'done':''}" onclick="jumpTo(${i})">
+      <div class="qc-num">${done ? '✓ ' + (i+1) : '#' + (i+1)}</div>
+      <div class="qc-formula">${raw}</div>
+    </div>`;
+  }).join('');
+  const active = row.querySelector('.q-card.active');
+  if (active) active.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+}
+
+function jumpTo(i) { currentIdx = i; renderQueue(); renderEquation(); }
+
+function renderEquation() {
+  const t = queue[currentIdx];
+  document.getElementById('eq-name').textContent = t.n;
+  document.getElementById('eq-num').textContent = `#${currentIdx+1} / ${QUEUE_SIZE}`;
+  let html = '', idx = 0;
+  t.r.forEach((c, i) => {
+    if (i > 0) html += `<span class="op-symbol">+</span>`;
+    html += `<div class="compound-group"><input class="coeff-input" id="c${idx}" type="number" min="1" max="30" placeholder="?" oninput="clearColors()"><span class="compound-label">${fmt(c.l)}</span></div>`;
+    idx++;
+  });
+  html += `<span class="arrow-symbol">→</span>`;
+  t.p.forEach((c, i) => {
+    if (i > 0) html += `<span class="op-symbol">+</span>`;
+    html += `<div class="compound-group"><input class="coeff-input" id="c${idx}" type="number" min="1" max="30" placeholder="?" oninput="clearColors()"><span class="compound-label">${fmt(c.l)}</span></div>`;
+    idx++;
+  });
+  document.getElementById('eq-row').innerHTML = html;
+  hideFeedback();
+  document.getElementById('c0')?.focus();
+}
+
+function getCoeffs() {
+  const t = queue[currentIdx];
+  const n = t.r.length + t.p.length;
+  return Array.from({length:n}, (_,i) => parseInt(document.getElementById('c'+i)?.value)||0);
+}
+
+function countAtoms(t, coeffs) {
+  const L = {}, R = {};
+  let idx = 0;
+  t.r.forEach(c => { const k=coeffs[idx++]; Object.entries(c.a).forEach(([a,n])=>{ L[a]=(L[a]||0)+k*n; }); });
+  t.p.forEach(c => { const k=coeffs[idx++]; Object.entries(c.a).forEach(([a,n])=>{ R[a]=(R[a]||0)+k*n; }); });
+  return {L,R};
+}
+
+function clearColors() {
+  document.querySelectorAll('.coeff-input').forEach(i=>i.classList.remove('correct','wrong'));
+  hideFeedback();
+}
+
+function checkAnswer() {
+  const t = queue[currentIdx];
+  const coeffs = getCoeffs();
+  if (coeffs.some(c=>c<=0)) { showFeedback('Uzupełnij wszystkie pola — każdy współczynnik ≥ 1.', 'hint'); return; }
+  attemptCount++;
+  const {L,R} = countAtoms(t, coeffs);
+  const atoms = [...new Set([...Object.keys(L),...Object.keys(R)])];
+  const balanced = atoms.every(a=>L[a]===R[a]);
+  document.querySelectorAll('.coeff-input').forEach((inp,i)=>{ inp.classList.remove('correct','wrong'); inp.classList.add(coeffs[i]===t.ans[i]?'correct':'wrong'); });
+  if (balanced) {
+    correctCount++; streak++;
+    solvedSet.add(currentIdx);
+    updateStats(); renderQueue();
+    const msgs = ['🎉 Brawo! Perfekcyjnie zbilansowane!','✅ Idealnie! Atomy się zgadzają.','🔥 Doskonale! Tak trzymaj!','⚗️ Świetna robota!','💯 Perfekcja! Lecimy dalej.'];
+    showFeedback(msgs[Math.floor(Math.random()*msgs.length)], 'win');
+    spawnConfetti();
+    if (solvedSet.size >= QUEUE_SIZE) {
+      setTimeout(() => { buildQueue(); renderQueue(); renderEquation(); showFeedback('🏆 Seria ukończona! Nowe losowanie...','win'); }, 1800);
+    }
+  } else {
+    streak = 0; updateStats();
+    showFeedback('Nie zgadza się. Spróbuj jeszcze raz!', 'hint');
+  }
+}
+
+function nextReaction() {
+  if (solvedSet.size >= QUEUE_SIZE) { buildQueue(); renderQueue(); renderEquation(); return; }
+  let next = (currentIdx + 1) % QUEUE_SIZE;
+  for (let i = 0; i < QUEUE_SIZE; i++) {
+    const idx = (currentIdx + 1 + i) % QUEUE_SIZE;
+    if (!solvedSet.has(idx)) { next = idx; break; }
+  }
+  currentIdx = next; renderQueue(); renderEquation();
+}
+
+function showAnswer() {
+  const t = queue[currentIdx];
+  t.ans.forEach((v,i)=>{ const inp=document.getElementById('c'+i); if(inp){inp.value=v;inp.classList.remove('wrong');inp.classList.add('correct');} });
+  showFeedback('Oto poprawna odpowiedź. Przeanalizuj ją zanim przejdziesz dalej.','hint');
+}
+
+function resetInputs() {
+  document.querySelectorAll('.coeff-input').forEach(i=>{i.value='';i.classList.remove('correct','wrong');});
+  hideFeedback();
+}
+
+function showFeedback(msg, type) {
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback-box show ' + type;
+  fb.innerHTML = msg;
+}
+
+function hideFeedback() { document.getElementById('feedback').className = 'feedback-box'; }
+
+function updateStats() {
+  anim('stat-correct', correctCount);
+  anim('stat-attempts', attemptCount);
+  anim('stat-streak', streak);
+  const el = document.getElementById('stat-pct');
+  el.textContent = attemptCount > 0 ? Math.round(correctCount/attemptCount*100)+'%' : '—';
+}
+
+function anim(id, val) {
+  const el = document.getElementById(id);
+  el.textContent = val;
+  el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+}
+
+function spawnConfetti() {
+  const c = document.getElementById('confetti');
+  c.innerHTML = '';
+  const cols = ['#4fc3f7','#56d364','#fbbf24','#f87171','#c084fc','#fb923c'];
+  for (let i = 0; i < 55; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-piece';
+    p.style.cssText = `left:${Math.random()*100}%;background:${cols[Math.floor(Math.random()*cols.length)]};width:${4+Math.random()*8}px;height:${4+Math.random()*8}px;border-radius:${Math.random()>.5?'50%':'2px'};animation-duration:${1.5+Math.random()*2}s;animation-delay:${Math.random()*.4}s;`;
+    c.appendChild(p);
+    setTimeout(()=>p.remove(), 4000);
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') checkAnswer();
+  if (e.key === 'ArrowRight') { e.preventDefault(); nextReaction(); }
+});
+
+buildQueue();
+renderQueue();
+renderEquation();
+</script>
+</body>
+</html>
