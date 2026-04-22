@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Latarnik — Henryk Sienkiewicz</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1611;
+    --ink-soft: #4a4540;
+    --ink-muted: #8a837a;
+    --paper: #f7f4ef;
+    --paper-warm: #ede9e2;
+    --paper-card: #faf8f5;
+    --gold: #b8924a;
+    --gold-light: #e8d5b0;
+    --sea: #2c5f6e;
+    --sea-light: #d4e8ed;
+    --border: rgba(26,22,17,0.1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    line-height: 1.6;
+  }
+
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 100%, rgba(44,95,110,0.4) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .header-label {
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 0.75rem;
+    opacity: 0.8;
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 8vw, 5.5rem);
+    font-weight: 400;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  header h1 em { font-style: italic; color: var(--gold-light); }
+  .header-author {
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(247,244,239,0.55);
+  }
+  .header-divider {
+    width: 40px; height: 1px;
+    background: var(--gold);
+    margin: 1.5rem auto 0;
+    opacity: 0.6;
+  }
+
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--paper-card);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+  }
+  nav button {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    padding: 1rem 1.5rem;
+    border: none;
+    background: none;
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: color 0.2s;
+    position: relative;
+  }
+  nav button::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 50%; right: 50%;
+    height: 2px;
+    background: var(--gold);
+    transition: left 0.25s, right 0.25s;
+  }
+  nav button.active { color: var(--ink); }
+  nav button.active::after { left: 1rem; right: 1rem; }
+
+  main { max-width: 760px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+
+  .section { display: none; animation: fadeUp 0.35s ease both; }
+  .section.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-intro { margin-bottom: 2.5rem; }
+  .section-intro h2 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 0.5rem; }
+  .section-intro p { font-size: 14px; color: var(--ink-muted); }
+
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 7px; top: 6px; bottom: 6px;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--gold) 0%, var(--border) 100%);
+  }
+  .tl-item { position: relative; margin-bottom: 2rem; padding-left: 1.25rem; }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -1.75rem; top: 6px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 2px solid var(--gold);
+  }
+  .tl-num { font-size: 10px; font-weight: 500; text-transform: uppercase; color: var(--gold); margin-bottom: 4px; }
+  .tl-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 6px; }
+  .tl-body { font-size: 14px; color: var(--ink-soft); }
+
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+  .card {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.5rem;
+  }
+  .card-tag { font-size: 10px; font-weight: 500; text-transform: uppercase; color: var(--gold); margin-bottom: 0.75rem; }
+  .card h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 0.75rem; }
+
+  .motyw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 520px) { .motyw-grid { grid-template-columns: 1fr; } }
+  .motyw-card { background: var(--paper-card); border: 1px solid var(--border); border-radius: 6px; padding: 1.25rem; }
+  .motyw-card.featured { grid-column: 1 / -1; background: var(--ink); color: var(--paper); }
+  .motyw-card.featured h3 { color: var(--gold-light); }
+  .motyw-card.featured p { color: rgba(247,244,239,0.65); }
+
+  .quote-block { border-left: 3px solid var(--gold); padding: 1rem 1.25rem; margin: 2rem 0; background: var(--paper-warm); border-radius: 0 6px 6px 0; }
+  .quote-block blockquote { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.05rem; margin-bottom: 0.5rem; }
+  .quote-block cite { font-size: 12px; color: var(--ink-muted); font-style: normal; }
+
+  .quiz-progress { display: flex; align-items: center; gap: 12px; margin-bottom: 2rem; }
+  .progress-bar { flex: 1; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--gold); width: 0%; transition: width 0.4s ease; }
+  .progress-text { font-size: 12px; color: var(--ink-muted); min-width: 50px; text-align: right; }
+
+  .quiz-card { background: var(--paper-card); border: 1px solid var(--border); border-radius: 8px; padding: 2rem; }
+  .quiz-q { font-family: 'Playfair Display', serif; font-size: 1.15rem; margin-bottom: 1.5rem; }
+  .opts { display: flex; flex-direction: column; gap: 10px; }
+  .opt {
+    width: 100%; text-align: left; padding: 0.85rem 1.1rem;
+    font-family: 'DM Sans', sans-serif; font-size: 14px;
+    background: var(--paper); border: 1px solid var(--border);
+    border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 10px;
+  }
+  .opt-letter {
+    width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0;
+  }
+  .opt.correct { background: #f0f7f0; border-color: #6aaa6a; }
+  .opt.wrong { background: #fdf0f0; border-color: #cc7070; }
+  .feedback-box { margin-top: 1.25rem; padding: 0.9rem 1.1rem; border-radius: 6px; font-size: 13.5px; }
+  .feedback-box.ok { background: #f0f7f0; color: #2d6a2d; border: 1px solid #c0dfc0; }
+  .feedback-box.bad { background: #fdf0f0; color: #8b2a2a; border: 1px solid #e0c0c0; }
+
+  .quiz-next {
+    margin-top: 1.5rem; padding: 0.75rem 1.75rem;
+    color: var(--paper); background: var(--ink);
+    border: none; border-radius: 6px; cursor: pointer;
+  }
+  .score-screen { text-align: center; padding: 3rem 2rem; }
+  .score-big { font-family: 'Playfair Display', serif; font-size: 5rem; color: var(--gold); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-label">Opracowanie lektury</div>
+  <h1><em>Latarnik</em></h1>
+  <div class="header-author">Henryk Sienkiewicz</div>
+  <div class="header-divider"></div>
+</header>
+
+<nav>
+  <button class="active" onclick="show('streszczenie', this)">Streszczenie</button>
+  <button onclick="show('postaci', this)">Postacie</button>
+  <button onclick="show('motywy', this)">Motywy</button>
+  <button onclick="show('quiz', this)">Quiz</button>
+</nav>
+
+<main>
+  <section id="streszczenie" class="section active">
+    <div class="section-intro">
+      <h2>Plan wydarzeń</h2>
+      <p>Chronologiczny przebieg akcji opowiadania</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-num">Wstęp</div>
+        <div class="tl-title">Zaginięcie latarnika</div>
+        <div class="tl-body">Falconbridge szuka następcy dla zaginionego latarnika w Aspinwall.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-num">Punkt zwrotny</div>
+        <div class="tl-title">Paczka z książkami</div>
+        <div class="tl-body">Skawiński otrzymuje "Pana Tadeusza", co budzi w nim uśpiony patriotyzm.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="postaci" class="section">
+    <div class="section-intro">
+      <h2>Bohaterowie</h2>
+      <p>Kluczowe postacie dramatu</p>
+    </div>
+    <div class="cards">
+      <div class="card">
+        <div class="card-tag">Główny bohater</div>
+        <h3>Skawiński</h3>
+        <p>Polski emigrant, żołnierz, tułacz szukający spokoju.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="motywy" class="section">
+    <div class="section-intro">
+      <h2>Motywy</h2>
+      <p>Główne tematy utworu</p>
+    </div>
+    <div class="motyw-grid">
+      <div class="motyw-card featured">
+        <h3>Tułaczka i nostalgia</h3>
+        <p>Los polskiego emigranta, który nie może znaleźć swojego miejsca na ziemi.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="quiz" class="section">
+    <div class="section-intro">
+      <h2>Sprawdź wiedzę</h2>
+      <p>10 pytań o lekturę</p>
+    </div>
+    <div class="quiz-progress">
+      <div class="progress-bar"><div class="progress-fill" id="pbar"></div></div>
+      <div class="progress-text" id="ptext">0 / 10</div>
+    </div>
+    <div id="quiz-box"></div>
+  </section>
+</main>
+
+<script>
+const qs = [
+  { q: "Jak nazywa się główny bohater?", opts: ["Jan Skwarczyński", "Skawiński", "Falconbridge", "Johns"], ans: 1, exp: "Głównym bohaterem jest Skawiński." },
+  { q: "Gdzie toczy się akcja?", opts: ["Nowy Jork", "Buenos Aires", "Aspinwall", "Londyn"], ans: 2, exp: "Akcja toczy się w Aspinwall." },
+  { q: "Kto zatrudnił Skawińskiego?", opts: ["Johns", "Falconbridge", "Sienkiewicz", "Mickiewicz"], ans: 1, exp: "Konsul Falconbridge przyjął go do pracy." },
+  { q: "W ilu wojnach (łącznie) brał udział?", opts: ["2", "3", "5", "1"], ans: 2, exp: "Skawiński brał udział w 5 wojnach." },
+  { q: "Dlaczego stracił pracę?", opts: ["Zasnął przez lekturę", "Ukradł łódź", "Został ranny", "Odszedł sam"], ans: 0, exp: "Zaczytał się w 'Panu Tadeuszu' i nie zapalił latarni." },
+  { q: "Jaką książkę otrzymał?", opts: ["Biblię", "Kordiana", "Pana Tadeusza", "Potop"], ans: 2, exp: "Otrzymał epopeję Mickiewicza." },
+  { q: "Kto przysłał książki?", opts: ["Rodzina", "Towarzystwo w NY", "Rząd polski", "Johns"], ans: 1, exp: "Książki przysłało Polskie Towarzystwo w Nowym Jorku." },
+  { q: "Jak zaczyna się inwokacja?", opts: ["Litwo, ojczyzno moja", "Młodości, ty nad poziomy", "Oddajcie mi Polskę", "Gdzie Bursztynowy świerzop"], ans: 0, exp: "Zaczyna się od słów: 'Litwo, ojczyzno moja...'." },
+  { q: "Co symbolizuje latarnia?", opts: ["Pieniądze", "Azyl i spokój", "Więzienie", "Niebezpieczeństwo"], ans: 1, exp: "Latarnia była dla niego portem i upragnionym spokojem." },
+  { q: "Gdzie wyrusza na końcu?", opts: ["Do Polski", "Do Nowego Jorku", "Zostaje w wieży", "Do Panamy"], ans: 1, exp: "Wyrusza statkiem do Nowego Jorku, niosąc ze sobą książkę." }
+];
+
+let cur = 0, score = 0;
+
+function show(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (id === 'quiz') { cur = 0; score = 0; renderQ(); }
+}
+
+function renderQ() {
+  const box = document.getElementById('quiz-box');
+  const pct = (cur / qs.length) * 100;
+  document.getElementById('pbar').style.width = pct + '%';
+  document.getElementById('ptext').textContent = cur + ' / ' + qs.length;
+
+  if (cur >= qs.length) {
+    box.innerHTML = `<div class='quiz-card score-screen'>
+      <div class='score-big'>${score}/${qs.length}</div>
+      <button class='quiz-next' onclick='cur=0;score=0;renderQ()'>Zacznij od nowa</button>
+    </div>`;
+    return;
+  }
+
+  const q = qs[cur];
+  box.innerHTML = `<div class='quiz-card'>
+    <div class='quiz-q'>${q.q}</div>
+    <div class='opts'>${q.opts.map((o, i) => `<button class='opt' onclick='pick(${i})'><span class='opt-letter'>${"ABCD"[i]}</span>${o}</button>`).join('')}</div>
+    <div id='fb'></div>
+    <div id='nxt' style='display:none'><button class='quiz-next' onclick='cur++;renderQ()'>Dalej →</button></div>
+  </div>`;
+}
+
+function pick(i) {
+  const q = qs[cur];
+  document.querySelectorAll('.opt').forEach(b => b.disabled = true);
+  const fb = document.getElementById('fb');
+  if (i === q.ans) {
+    score++;
+    fb.innerHTML = `<div class='feedback-box ok'>Poprawnie! ${q.exp}</div>`;
+  } else {
+    fb.innerHTML = `<div class='feedback-box bad'>Błąd. ${q.exp}</div>`;
+  }
+  document.getElementById('nxt').style.display = 'block';
+}
+
+renderQ();
+</script>
+</body>
+</html>
