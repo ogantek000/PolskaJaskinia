@@ -563,10 +563,10 @@
 </header>
 
 <nav class="tabs">
-  <button class="tab-btn active" onclick="switchTab('teoria')">
+  <button class="tab-btn active" id="tab-teoria" onclick="switchTab('teoria', this)">
     <span class="tab-icon">📖</span>Teoria
   </button>
-  <button class="tab-btn" onclick="switchTab('quiz')">
+  <button class="tab-btn" id="tab-quiz" onclick="switchTab('quiz', this)">
     <span class="tab-icon">✏️</span>Ćwiczenia / Quiz
   </button>
 </nav>
@@ -839,124 +839,124 @@
 <script>
 const questions = [
   {
-    q: "Kto był twórcą koncepcji federacyjnej granic Polski?",
-    opts: ["Roman Dmowski", "Józef Piłsudski", "Ignacy Paderewski", "Wojciech Korfanty"],
+    q: "Kto byl tworcy koncepcji federacyjnej granic Polski?",
+    opts: ["Roman Dmowski", "Jozef Pilsudski", "Ignacy Paderewski", "Wojciech Korfanty"],
     ans: 1,
-    exp: "Józef Piłsudski pragnął stworzyć blok państw na wschodzie (Litwa, Białoruś, Ukraina) tworzących federację z Polską, co miało osłabić Rosję."
+    exp: "Jozef Pilsudski pragnal stworzyc blok panstw na wschodzie (Litwa, Bialorus, Ukraina) tworzacych federacje z Polska, co mialo oslabiuc Rosje."
   },
   {
-    q: "Na czym polegała koncepcja inkorporacyjna Romana Dmowskiego?",
-    opts: ["Stworzenie federacji z Ukrainą i Litwą", "Włączenie do Polski tylko ziem z polską większością i polonizacja mniejszości", "Powrót do granic z 1772 r.", "Oddanie kresów Rosji"],
+    q: "Na czym polegala koncepcja inkorporacyjna Romana Dmowskiego?",
+    opts: ["Stworzenie federacji z Ukraina i Litwa", "Wlaczenie do Polski tylko ziem z polska wiekszoscia i polonizacja mniejszosci", "Powrot do granic z 1772 r.", "Oddanie kresow Rosji"],
     ans: 1,
-    exp: "Dmowski chciał państwa narodowego. Białorusini i Ukraińcy mieszkający na ziemiach polskich mieli zostać poddani polonizacji."
+    exp: "Dmowski chcial panstwa narodowego. Bialorusini i Ukraincy mieszkajacy na ziemiach polskich mieli zostac poddani polonizacji."
   },
   {
-    q: "Kim były Orlęta Lwowskie?",
-    opts: ["Oddział kawaleryjski Piłsudskiego", "Uczniowie polskich szkół walczący o Lwów w 1918 r.", "Austriaccy żołnierze broniący Lwowa", "Harcerze z Krakowa"],
+    q: "Kim byly Orleta Lwowskie?",
+    opts: ["Oddzia\u0142 kawaleryjski Pi\u0142sudskiego", "Uczniowie polskich szk\u00f3\u0142 walcz\u0105cy o Lw\u00f3w w 1918 r.", "Austriaccy \u017co\u0142nierze broni\u0105cy Lwowa", "Harcerze z Krakowa"],
     ans: 1,
-    exp: "Orlęta Lwowskie to uczniowie polskich szkół, którzy stanęli do walki o Lwów w listopadzie 1918 r. Najmłodszy miał zaledwie 9 lat."
+    exp: "Orle\u0301ta Lwowskie to uczniowie polskich szko\u0142, kto\u0301rzy stane\u0301li do walki o Lwo\u0301w w listopadzie 1918 r. Najm\u0142odszy mia\u0142 zaledwie 9 lat."
   },
   {
-    q: "Kiedy wybuchło powstanie wielkopolskie?",
-    opts: ["Sierpień 1919", "Grudzień 1918", "Listopad 1918", "Marzec 1921"],
+    q: "Kiedy wybuch\u0142o powstanie wielkopolskie?",
+    opts: ["Sierpie\u0144 1919", "Grudzie\u0144 1918", "Listopad 1918", "Marzec 1921"],
     ans: 1,
-    exp: "Powstanie wybuchło 27 grudnia 1918 r. w Poznaniu po przyjeździe Ignacego Paderewskiego, gdy Niemcy zaczęli zrywać polskie flagi."
+    exp: "Powstanie wybuch\u0142o 27 grudnia 1918 r. w Poznaniu po przyje\u017adzie Ignacego Paderewskiego, gdy Niemcy zacze\u0301li zywa\u0107 polskie flagi."
   },
   {
-    q: "Jakie postanowienie traktatu wersalskiego dotyczyło Gdańska?",
-    opts: ["Gdańsk przypadł Polsce w całości", "Gdańsk przyznano Niemcom", "Gdańsk ogłoszono wolnym miastem — nie należącym do żadnego państwa", "Gdańsk przypadł Czechosłowacji"],
+    q: "Jakie postanowienie traktatu wersalskiego dotyczy\u0142o Gda\u0144ska?",
+    opts: ["Gda\u0144sk przypadl Polsce w ca\u0142o\u015bci", "Gda\u0144sk przyznano Niemcom", "Gda\u0144sk og\u0142oszono wolnym miastem \u2014 nie nale\u017c\u0105cym do \u017cadnego pa\u0144stwa", "Gda\u0144sk przypadl Czechos\u0142owacji"],
     ans: 2,
-    exp: "Polska uzyskała Pomorze Gdańskie, ale bez samego Gdańska, który ogłoszono Wolnym Miastem — formalnie pod nadzorem Ligi Narodów."
+    exp: "Polska uzyska\u0142a Pomorze Gda\u0144skie, ale bez samego Gda\u0144ska, kt\u00f3ry og\u0142oszono Wolnym Miastem \u2014 formalnie pod nadzorem Ligi Narod\u00f3w."
   },
   {
-    q: "Jakie były wyniki plebiscytu na Górnym Śląsku w 1921 r.?",
-    opts: ["707 tys. za Polską, 479 tys. za Niemcami", "707 tys. za Niemcami, 479 tys. za Polską", "Wyniki były równe — 600 tys. : 600 tys.", "Plebiscyt wygrała Polska"],
+    q: "Jakie by\u0142y wyniki plebiscytu na G\u00f3rnym \u015bl\u0105sku w 1921 r.?",
+    opts: ["707 tys. za Polsk\u0105, 479 tys. za Niemcami", "707 tys. za Niemcami, 479 tys. za Polsk\u0105", "Wyniki by\u0142y r\u00f3wne \u2014 600 tys. : 600 tys.", "Plebiscyt wygra\u0142a Polska"],
     ans: 1,
-    exp: "W marcu 1921 r. 707 tys. głosów oddano za przynależnością do Niemiec, a 479 tys. za Polską. Niemcy mogli głosować nawet nieresydenci (urodzeń na Śląsku)."
+    exp: "W marcu 1921 r. 707 tys. g\u0142os\u00f3w oddano za przynale\u017cno\u015bci\u0105 do Niemiec, a 479 tys. za Polsk\u0105. Niemcy mogli g\u0142osowa\u0107 nawet nierezydenci urodzeni na \u015bl\u0105sku."
   },
   {
-    q: "Kto był dyktatorem III powstania śląskiego?",
-    opts: ["Józef Piłsudski", "Roman Dmowski", "Wojciech Korfanty", "Ignacy Paderewski"],
+    q: "Kto by\u0142 dyktatorem III powstania \u015bl\u0105skiego?",
+    opts: ["J\u00f3zef Pi\u0142sudski", "Roman Dmowski", "Wojciech Korfanty", "Ignacy Paderewski"],
     ans: 2,
-    exp: "Wojciech Korfanty był dyktatorem III powstania śląskiego (2/3 maja – koniec czerwca 1921 r.). Po podziale Śląska Polska dostała mniejszą część terytorialnie, ale z większością przemysłu."
+    exp: "Wojciech Korfanty by\u0142 dyktatorem III powstania \u015bl\u0105skiego (2/3 maja \u2013 koniec czerwca 1921 r.). Po podziale \u015bl\u0105ska Polska dosta\u0142a mniejsz\u0105 cze\u015b\u0107 terytorialnie, ale z wi\u0119kszo\u015bci\u0105 przemys\u0142u."
   },
   {
-    q: "Dlaczego Polska przegrała plebiscyt na Warmii i Mazurach?",
-    opts: ["Polska zbojkotowała plebiscyt", "Niemcy przekonywali mieszkańców, że Polska zaraz upadnie; za Polską opowiedziało się tylko ~3,3%", "Polska nie miała prawa brać udziału w plebiscycie", "Wygrała Litwa"],
+    q: "Dlaczego Polska przegra\u0142a plebiscyt na Warmii i Mazurach?",
+    opts: ["Polska zbojkotowa\u0142a plebiscyt", "Niemcy przekonywali mieszka\u0144c\u00f3w, \u017ce Polska zaraz upadnie; za Polsk\u0105 opowiedzia\u0142o si\u0119 tylko ~3,3%", "Polska nie mia\u0142a prawa bra\u0107 udzia\u0142u w plebiscycie", "Wygra\u0142a Litwa"],
     ans: 1,
-    exp: "Niemcy przekonywali uczestników o „sezonowym" charakterze państwa polskiego (zbliżała się Armia Czerwona). Za przynależnością do Polski opowiedziało się ok. 3,3% głosujących."
+    exp: "Niemcy przekonywali uczestnik\u00f3w o sezonowym charakterze pa\u0144stwa polskiego \u2014 zbli\u017ca\u0142a si\u0119 Armia Czerwona. Za przynale\u017cno\u015bci\u0105 do Polski opowiedzia\u0142o si\u0119 ok. 3,3% g\u0142osuj\u0105cych."
   },
   {
-    q: "Kiedy Wojska czeskie zajęły Zaolzie?",
-    opts: ["Grudzień 1918", "Styczeń 1919", "Lipiec 1920", "Marzec 1921"],
+    q: "Kiedy wojska czeskie zaj\u0119\u0142y Zaolzie?",
+    opts: ["Grudzie\u0144 1918", "Stycze\u0144 1919", "Lipiec 1920", "Marzec 1921"],
     ans: 1,
-    exp: "Czechosłowacja zajęła Zaolzie w styczniu 1919 r., gdy Polska była zajęta walkami na Ukrainie. Rada Ambasadorów przyznała Zaolzie Czechosłowacji w lipcu 1920 r."
+    exp: "Czechos\u0142owacja zaj\u0119\u0142a Zaolzie w styczniu 1919 r., gdy Polska by\u0142a zaj\u0119ta walkami na Ukrainie. Rada Ambasador\u00f3w przyzna\u0142a Zaolzie Czechos\u0142owacji w lipcu 1920 r."
   },
   {
-    q: "W jakim celu Piłsudski wstrzymał polską ofensywę jesienią 1919 r.?",
-    opts: ["Chciał zawrzeć pokój z bolszewikami", "Uważał \"białą\" Rosję za groźniejszego wroga i nie chciał jej osłabiać", "Armia polska była zbyt słaba", "Na rozkaz Ligi Narodów"],
+    q: "W jakim celu Pi\u0142sudski wstrzyma\u0142 polsk\u0105 ofensyw\u0119 jesieni\u0105 1919 r.?",
+    opts: ["Chcia\u0142 zawrze\u0107 pok\u00f3j z bolszewikami", "Uwa\u017ca\u0142 bia\u0142\u0105 Rosj\u0119 za gro\u017aniejszego wroga i nie chcia\u0142 jej os\u0142abia\u0107", "Armia polska by\u0142a zbyt s\u0142aba", "Na rozkaz Ligi Narod\u00f3w"],
     ans: 1,
-    exp: "Piłsudski za groźniejszą dla Polski uważał dawną „białą" Rosję, dlatego nie chciał dopuścić do jej odrodzenia. Wstrzymał ofensywę, co pozwoliło bolszewikom rozgromić armię „białych"."
+    exp: "Pi\u0142sudski za gro\u017aniejsz\u0105 dla Polski uwa\u017ca\u0142 dawn\u0105 bia\u0142\u0105 Rosj\u0119, dlatego nie chcia\u0142 dopu\u015bci\u0107 do jej odrodzenia. Wstrzyma\u0142 ofensyw\u0119, co pozwoli\u0142o bolszewikom rozgromi\u0107 armi\u0119 bia\u0142ych."
   },
   {
-    q: "Z kim Piłsudski zawarł sojusz w kwietniu 1920 r.?",
-    opts: ["Z Leninem", "Z Symonem Petlurą — dowódcą wojsk ukraińskich", "Z gen. Denikinem", "Z rządem litewskim"],
+    q: "Z kim Pi\u0142sudski zawar\u0142 sojusz w kwietniu 1920 r.?",
+    opts: ["Z Leninem", "Z Symonem Petlur\u0105 \u2014 dow\u00f3dc\u0105 wojsk ukrai\u0144skich", "Z gen. Denikinem", "Z rz\u0105dem litewskim"],
     ans: 1,
-    exp: "W kwietniu 1920 r. Piłsudski zawarł sojusz z Symonem Petlurą. Polska uznała niepodległość Ukrainy, a ta zrzekła się Galicji Wschodniej. Razem ruszyli na Kijów."
+    exp: "W kwietniu 1920 r. Pi\u0142sudski zawar\u0142 sojusz z Symonem Petlur\u0105. Polska uzna\u0142a niepodleg\u0142o\u015b\u0107 Ukrainy, a ta zrzek\u0142a si\u0119 Galicji Wschodniej. Razem ruszyli na Kij\u00f3w."
   },
   {
-    q: "Kiedy Polacy zajęli Kijów?",
-    opts: ["Kwiecień 1919", "Maj 1920", "Lipiec 1920", "Marzec 1921"],
+    q: "Kiedy Polacy zaj\u0119li Kij\u00f3w?",
+    opts: ["Kwiecie\u0144 1919", "Maj 1920", "Lipiec 1920", "Marzec 1921"],
     ans: 1,
-    exp: "Na początku maja 1920 r. polscy żołnierze zajęli Kijów. Nie napotkali oporu Armii Czerwonej — pierwszy polski patrol wjechał do miasta tramwajem."
+    exp: "Na pocz\u0105tku maja 1920 r. polscy \u017co\u0142nierze zaj\u0119li Kij\u00f3w. Nie napotkali oporu Armii Czerwonej \u2014 pierwszy polski patrol wjecha\u0142 do miasta tramwajem."
   },
   {
-    q: "Kto był jednym z twórców komitetu rewolucyjnego w Białymstoku w 1920 r.?",
-    opts: ["Leon Trocki", "Feliks Dzierżyński", "Michaił Tuchaczewski", "Grigorij Zinowiew"],
+    q: "Kto by\u0142 jednym z tw\u00f3rc\u00f3w komitetu rewolucyjnego w Bia\u0142ymstoku w 1920 r.?",
+    opts: ["Leon Trocki", "Feliks Dzier\u017cy\u0144ski", "Micha\u0142 Tuchaczewski", "Grigorij Zinowiew"],
     ans: 1,
-    exp: "Feliks Dzierżyński — zrusyfikowany Polak i organizator czerwonego terroru — był jednym z twórców Białostockiego Komitetu Rewolucyjnego."
+    exp: "Feliks Dzier\u017cy\u0144ski \u2014 zrusyfikowany Polak i organizator czerwonego terroru \u2014 by\u0142 jednym z tw\u00f3rc\u00f3w Bia\u0142ostockiego Komitetu Rewolucyjnego."
   },
   {
-    q: "Kiedy powołano Radę Obrony Państwa?",
+    q: "Kiedy powo\u0142ano Rad\u0119 Obrony Pa\u0144stwa?",
     opts: ["13 sierpnia 1920 r.", "1 lipca 1920 r.", "6 sierpnia 1920 r.", "Marzec 1921 r."],
     ans: 1,
-    exp: "1 lipca 1920 r. politycy różnych partii utworzyli Radę Obrony Państwa kierowaną przez Piłsudskiego w obliczu zagrożenia ze strony Armii Czerwonej."
+    exp: "1 lipca 1920 r. politycy r\u00f3\u017cnych partii utworzyli Rad\u0119 Obrony Pa\u0144stwa kierowan\u0105 przez Pi\u0142sudskiego w obliczu zagro\u017cenia ze strony Armii Czerwonej."
   },
   {
-    q: "Kiedy dokładnie trwała Bitwa Warszawska?",
-    opts: ["1–7 sierpnia 1920 r.", "13–16 sierpnia 1920 r.", "16–20 sierpnia 1920 r.", "6–13 sierpnia 1920 r."],
+    q: "Kiedy dok\u0142adnie trwa\u0142a Bitwa Warszawska?",
+    opts: ["1\u20137 sierpnia 1920 r.", "13\u201316 sierpnia 1920 r.", "16\u201320 sierpnia 1920 r.", "6\u201313 sierpnia 1920 r."],
     ans: 1,
-    exp: "Bitwa Warszawska trwała od 13 do 16 sierpnia 1920 r. 16 sierpnia ruszyła polska kontrofensywa znad Wieprza, która rozgromiła Armię Czerwoną."
+    exp: "Bitwa Warszawska trwa\u0142a od 13 do 16 sierpnia 1920 r. 16 sierpnia ruszy\u0142a polska kontrofensywa znad Wieprza, kt\u00f3ra rozgromi\u0142a Armi\u0119 Czerwon\u0105."
   },
   {
-    q: "Dlaczego Bitwę Warszawską nazywa się \"Cudem nad Wisłą\"?",
-    opts: ["Polacy walczyli bez broni", "Zwycięstwo było nieoczekiwane i uratowało Europę przed rewolucją komunistyczną", "Nad Wisłą pojawiło się religijne zjawisko", "Rzeka Wisła zmieniła bieg i uratowała Polskę"],
+    q: "Dlaczego Bitw\u0119 Warszawsk\u0105 nazywa si\u0119 Cudem nad Wis\u0142\u0105?",
+    opts: ["Polacy walczyli bez broni", "Zwyci\u0119stwo by\u0142o nieoczekiwane i uratowa\u0142o Europ\u0119 przed rewolucj\u0105 komunistyczn\u0105", "Nad Wis\u0142\u0105 pojawi\u0142o si\u0119 religijne zjawisko", "Rzeka Wis\u0142a zmieni\u0142a bieg i uratowa\u0142a Polsk\u0119"],
     ans: 1,
-    exp: "Bitwę Warszawską uważa się za 18. decydującą bitwę w dziejach świata. Powstrzymała „czerwony marsz" bolszewików na zachód i uniemożliwiła połączenie Armii Czerwonej z Niemcami."
+    exp: "Bitw\u0119 Warszawsk\u0105 uwa\u017ca si\u0119 za 18. decyduj\u0105c\u0105 bitw\u0119 w dziejach \u015bwiata. Powstrzyama\u0142a marsz bolszewik\u00f3w na zach\u00f3d i uniemo\u017cliwi\u0142a po\u0142\u0105czenie Armii Czerwonej z Niemcami."
   },
   {
-    q: "Co postanowił pokój ryski (marzec 1921)?",
-    opts: ["Polska odzyska Kijów i Lwów", "Granica wschodnia dzieliła Białoruś i Ukrainę; Rosja miała oddać dobra kulturalne; koniec koncepcji federacyjnej", "Polska wchodzi do sojuszu z ZSRR", "Rosja uznała granicę z 1772 r."],
+    q: "Co postanowi\u0142 pok\u00f3j ryski (marzec 1921)?",
+    opts: ["Polska odzyska Kij\u00f3w i Lw\u00f3w", "Granica wschodnia dzieli\u0142a Bia\u0142oru\u015b i Ukrain\u0119; Rosja mia\u0142a odda\u0107 dobra kulturalne; koniec koncepcji federacyjnej", "Polska wchodzi do sojuszu z ZSRR", "Rosja uzna\u0142a granic\u0119 z 1772 r."],
     ans: 1,
-    exp: "Pokój ryski ustalił wschodnią granicę Polski, dzieląc Białoruś i Ukrainę na część polską i radziecką. Rosja miała zwrócić dobra kulturalne zabrane od 1772 r. Był to upadek koncepcji federacyjnej Piłsudskiego."
+    exp: "Pok\u00f3j ryski ustali\u0142 wschodni\u0105 granic\u0119 Polski, dz\u0105l\u0105c Bia\u0142oru\u015b i Ukrain\u0119 na cze\u015b\u0107 polsk\u0105 i radzieck\u0105. Rosja mia\u0142a zwr\u00f3ci\u0107 dobra kulturalne. By\u0142 to upadek koncepcji federacyjnej Pi\u0142sudskiego."
   },
   {
-    q: "W jaki sposób Polska przyłączyła Wileńszczyznę?",
-    opts: ["Na mocy traktatu wersalskiego", "Gen. Żeligowski przeprowadził „bunt" i zajął Wilno (X 1920) → Litwa Środkowa → przyłączenie do Polski (1922)", "W wyniku referendum ludności", "Litwa dobrowolnie oddała Wilno"],
+    q: "W jaki spos\u00f3b Polska przy\u0142\u0105czy\u0142a Wile\u0144szczyzn\u0119?",
+    opts: ["Na mocy traktatu wersalskiego", "Gen. \u017beligowski przeprowadzi\u0142 pozorny bunt i zaj\u0105\u0142 Wilno (X 1920), powsta\u0142a Litwa \u015arodkowa, przy\u0142\u0105czona do Polski w 1922 r.", "W wyniku referendum ludno\u015bci", "Litwa dobrowolnie odda\u0142a Wilno"],
     ans: 1,
-    exp: "W październiku 1920 r. gen. Żeligowski zorganizował pozorny „bunt" i zajął Wileńszczyznę, tworząc Litwę Środkową. W 1922 r. jej sejm głosował za połączeniem z Polską."
+    exp: "W pa\u017adzierniiku 1920 r. gen. \u017beligowski zorganizowa\u0142 pozorny bunt i zaj\u0105\u0142 Wile\u0144szczyzn\u0119, tworz\u0105c Litw\u0119 \u015arodk\u00f3w. W 1922 r. jej sejm g\u0142osowa\u0142 za po\u0142\u0105czeniem z Polsk\u0105."
   },
   {
-    q: "Które z poniższych zdań opisuje wynik podziału Górnego Śląska po III powstaniu?",
-    opts: ["Polska dostała większą część terytorialną z przemysłem", "Polska dostała mniejszą część terenu, ale z większością górnośląskiego przemysłu", "Cały Śląsk przypadł Niemcom", "Śląsk stał się wolnym miastem jak Gdańsk"],
+    q: "Kt\u00f3re z poni\u017cszych zda\u0144 opisuje wynik podzia\u0142u G\u00f3rnego \u015bl\u0105ska po III powstaniu?",
+    opts: ["Polska dosta\u0142a wi\u0119ksz\u0105 cze\u015b\u0107 terytorialn\u0105 z przemys\u0142em", "Polska dosta\u0142a mniejsz\u0105 cze\u015b\u0107 terenu, ale z wi\u0119kszo\u015bci\u0105 g\u00f3rno\u015bl\u0105skiego przemys\u0142u", "Ca\u0142y \u015bl\u0105sk przypadl Niemcom", "\u015bl\u0105sk sta\u0142 si\u0119 wolnym miastem jak Gda\u0144sk"],
     ans: 1,
-    exp: "Polska uzyskała mniejszą część obszaru plebiscytowego, lecz właśnie tam koncentrowała się większość górnośląskiego przemysłu (kopalnie, stalownie, wielkie piece). Niemcy uzyskali obszary rolnicze."
+    exp: "Polska uzyska\u0142a mniejsz\u0105 cze\u015b\u0107 obszaru plebiscytowego, lecz w\u0142a\u015bnie tam koncentrowa\u0142a si\u0119 wi\u0119kszo\u015b\u0107 g\u00f3rno\u015bl\u0105skiego przemys\u0142u (kopalnie, stalownie, wielkie piece). Niemcy uzyskali obszary rolnicze."
   },
   {
-    q: "Kiedy Rada Ambasadorów zatwierdziła wschodnią granicę Polski?",
+    q: "Kiedy Rada Ambasador\u00f3w zatwierdzi\u0142a wschodni\u0105 granic\u0119 Polski?",
     opts: ["1921 r.", "1922 r.", "1923 r.", "1926 r."],
     ans: 2,
-    exp: "Decyzja Rady Ambasadorów z 1923 r. zamknęła proces kształtowania się polskich granic (1918–1923). Zakończyła też proces przyłączania Wileńszczyzny do Polski."
+    exp: "Decyzja Rady Ambasador\u00f3w z 1923 r. zamkne\u0301\u0142a proces kszta\u0142towania si\u0119 polskich granic (1918\u20131923). Zako\u0144czy\u0142a te\u017c proces przy\u0142\u0105czania Wile\u0144szczyzny do Polski."
   }
 ];
 
@@ -974,27 +974,27 @@ function buildQuiz() {
     const letters = ['A','B','C','D'];
     const card = document.createElement('div');
     card.className = 'question-card';
-    card.id = `q-${qi}`;
+    card.id = 'q-' + qi;
 
     const header = document.createElement('div');
     header.className = 'question-header';
-    header.innerHTML = `<div class="q-num">${qi+1}</div><div class="q-text">${q.q}</div>`;
+    header.innerHTML = '<div class="q-num">' + (qi+1) + '</div><div class="q-text">' + q.q + '</div>';
 
     const options = document.createElement('div');
     options.className = 'options-list';
     q.opts.forEach((opt, oi) => {
       const btn = document.createElement('button');
       btn.className = 'option-btn';
-      btn.id = `btn-${qi}-${oi}`;
-      btn.innerHTML = `<span class="option-letter">${letters[oi]}</span>${opt}`;
+      btn.id = 'btn-' + qi + '-' + oi;
+      btn.innerHTML = '<span class="option-letter">' + letters[oi] + '</span>' + opt;
       btn.onclick = () => selectAnswer(qi, oi);
       options.appendChild(btn);
     });
 
     const exp = document.createElement('div');
     exp.className = 'explanation';
-    exp.id = `exp-${qi}`;
-    exp.innerHTML = `<strong>Wyjaśnienie:</strong> ${q.exp}`;
+    exp.id = 'exp-' + qi;
+    exp.innerHTML = '<strong>Wyja\u015bnienie:</strong> ' + q.exp;
 
     card.appendChild(header);
     card.appendChild(options);
@@ -1012,33 +1012,28 @@ function selectAnswer(qi, oi) {
   const isCorrect = (oi === q.ans);
   if (isCorrect) correctCount++;
 
-  // Style options
   q.opts.forEach((_, i) => {
-    const btn = document.getElementById(`btn-${qi}-${i}`);
+    const btn = document.getElementById('btn-' + qi + '-' + i);
     btn.disabled = true;
     if (i === q.ans) btn.classList.add('correct-ans');
     else if (i === oi && !isCorrect) btn.classList.add('wrong-ans');
   });
 
-  // Show explanation
-  document.getElementById(`exp-${qi}`).classList.add('visible');
+  document.getElementById('exp-' + qi).classList.add('visible');
 
-  // Mark card
-  const card = document.getElementById(`q-${qi}`);
+  const card = document.getElementById('q-' + qi);
   card.classList.add(isCorrect ? 'correct' : 'wrong');
 
-  // Update stats
   document.getElementById('answered-count').textContent = answeredCount;
   document.getElementById('correct-count').textContent = correctCount;
 
-  // Show result bar when all answered
   if (answeredCount === questions.length) {
     const bar = document.getElementById('result-bar');
     bar.classList.add('visible');
     document.getElementById('final-score').textContent = correctCount;
     const pct = Math.round(correctCount / questions.length * 100);
-    let comment = pct >= 90 ? '🏆 Doskonały wynik!' : pct >= 70 ? '👍 Bardzo dobrze!' : pct >= 50 ? '📚 Powtórz materiał' : '❗ Koniecznie powtórz notatki';
-    document.getElementById('result-comment').textContent = `${pct}% — ${comment}`;
+    let comment = pct >= 90 ? '\ud83c\udfc6 Doskona\u0142y wynik!' : pct >= 70 ? '\ud83d\udc4d Bardzo dobrze!' : pct >= 50 ? '\ud83d\udcda Powt\u00f3rz materia\u0142' : '\u2757 Koniecznie powt\u00f3rz notatki';
+    document.getElementById('result-comment').textContent = pct + '% \u2014 ' + comment;
   }
 }
 
@@ -1052,11 +1047,11 @@ function resetQuiz() {
   window.scrollTo({top: document.getElementById('panel-quiz').offsetTop - 60, behavior: 'smooth'});
 }
 
-function switchTab(tab) {
+function switchTab(tab, btn) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
   document.getElementById('panel-' + tab).classList.add('active');
-  event.currentTarget.classList.add('active');
+  btn.classList.add('active');
 }
 
 buildQuiz();
