@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Historia — Walka o granice & Wojna polsko-radziecka</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #1a1208;
+    --bg2: #221a0e;
+    --card: #2a200f;
+    --border: #6b4c1e;
+    --gold: #d4a843;
+    --gold2: #f0c060;
+    --red: #c0392b;
+    --red2: #e74c3c;
+    --cream: #f5ead0;
+    --text: #e8d5b0;
+    --muted: #9a8060;
+    --accent: #8b6914;
+    --highlight: #3d2a06;
+    --correct: #2ecc71;
+    --wrong: #e74c3c;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    background-image: 
+      radial-gradient(ellipse at 20% 0%, #3d1a0080 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 100%, #1a0d0080 0%, transparent 50%);
+  }
+
+  header {
+    background: linear-gradient(135deg, #0d0800 0%, #2d1a05 50%, #0d0800 100%);
+    border-bottom: 2px solid var(--gold);
+    padding: 2rem 2rem 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      rgba(212,168,67,0.03) 10px,
+      rgba(212,168,67,0.03) 11px
+    );
+  }
+
+  .header-subtitle {
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    opacity: 0.8;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 4vw, 2.8rem);
+    font-weight: 900;
+    color: var(--cream);
+    line-height: 1.1;
+    position: relative;
+  }
+
+  h1 span { color: var(--gold); }
+
+  .chapters-badge {
+    display: inline-flex;
+    gap: 0.5rem;
+    margin-top: 0.8rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .chapters-badge span {
+    background: var(--highlight);
+    border: 1px solid var(--border);
+    padding: 0.2rem 0.6rem;
+    border-radius: 3px;
+    color: var(--gold);
+  }
+
+  /* TABS */
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    padding: 1.5rem 1rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg);
+    border-bottom: 2px solid var(--border);
+  }
+
+  .tab-btn {
+    background: transparent;
+    border: none;
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 0.8rem 2.5rem;
+    border-bottom: 3px solid transparent;
+    transition: all 0.25s;
+    letter-spacing: 0.03em;
+    position: relative;
+    bottom: -2px;
+  }
+
+  .tab-btn:hover { color: var(--gold); }
+
+  .tab-btn.active {
+    color: var(--gold);
+    border-bottom: 3px solid var(--gold);
+    background: linear-gradient(to bottom, transparent, rgba(212,168,67,0.06));
+  }
+
+  .tab-icon { margin-right: 0.4rem; font-size: 1.1rem; }
+
+  /* CONTENT PANELS */
+  .panel { display: none; padding: 2rem max(1rem, calc(50vw - 480px)); max-width: 100%; }
+  .panel.active { display: block; }
+
+  /* TEORIA */
+  .chapter {
+    margin-bottom: 2.5rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--card);
+  }
+
+  .chapter-header {
+    background: linear-gradient(135deg, var(--accent), #5a3d0a);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .chapter-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--gold2);
+    line-height: 1;
+    opacity: 0.9;
+  }
+
+  .chapter-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--cream);
+  }
+
+  .chapter-body { padding: 1.5rem; }
+
+  /* Timeline */
+  .timeline {
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .tl-item {
+    flex: 0 0 auto;
+    min-width: 100px;
+    padding: 0.5rem 0.8rem;
+    border-left: 2px solid var(--gold);
+    position: relative;
+  }
+
+  .tl-item:first-child { border-left: none; }
+
+  .tl-year {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 0.3rem;
+  }
+
+  .tl-event {
+    font-size: 0.72rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* Section headings */
+  .section {
+    margin-bottom: 1.5rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--gold2);
+    border-left: 3px solid var(--gold);
+    padding-left: 0.8rem;
+    margin-bottom: 0.8rem;
+  }
+
+  p {
+    line-height: 1.75;
+    font-size: 0.95rem;
+    color: var(--text);
+    margin-bottom: 0.7rem;
+  }
+
+  strong, b { color: var(--cream); font-weight: 600; }
+
+  .key-term {
+    background: var(--highlight);
+    color: var(--gold2);
+    padding: 0.1rem 0.3rem;
+    border-radius: 3px;
+    font-weight: 600;
+    font-style: normal;
+  }
+
+  /* Summary box */
+  .summary-box {
+    background: #1a1005;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--gold);
+    border-radius: 6px;
+    padding: 1.2rem;
+    margin-top: 1rem;
+  }
+
+  .summary-box h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+  }
+
+  .summary-box ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .summary-box li {
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: var(--text);
+    padding: 0.3rem 0 0.3rem 1.2rem;
+    position: relative;
+    border-bottom: 1px solid rgba(107,76,30,0.3);
+  }
+
+  .summary-box li:last-child { border-bottom: none; }
+
+  .summary-box li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-size: 0.7rem;
+    top: 0.45rem;
+  }
+
+  .summary-box li strong { color: var(--gold2); }
+
+  /* Conception cards */
+  .concepts-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  @media (max-width: 600px) { .concepts-grid { grid-template-columns: 1fr; } }
+
+  .concept-card {
+    background: #1f1508;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+  }
+
+  .concept-card h4 {
+    font-family: 'Playfair Display', serif;
+    color: var(--gold2);
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  .concept-card p { font-size: 0.85rem; margin: 0; }
+
+  /* Uprisings table */
+  .uprising-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .uprising-table th {
+    background: var(--accent);
+    color: var(--cream);
+    padding: 0.5rem 0.8rem;
+    text-align: left;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+  }
+
+  .uprising-table td {
+    padding: 0.5rem 0.8rem;
+    border-bottom: 1px solid rgba(107,76,30,0.4);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  .uprising-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+
+  /* QUIZ PANEL */
+  .quiz-intro {
+    text-align: center;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .quiz-intro h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+
+  .quiz-intro p { font-size: 0.9rem; color: var(--muted); margin: 0; }
+
+  .quiz-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 1rem;
+    font-size: 0.85rem;
+  }
+
+  .stat { color: var(--muted); }
+  .stat strong { color: var(--gold); font-family: 'Playfair Display', serif; font-size: 1.2rem; display: block; }
+
+  .questions-list { display: flex; flex-direction: column; gap: 1.5rem; }
+
+  .question-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.3s;
+  }
+
+  .question-card.correct { border-color: var(--correct); }
+  .question-card.wrong { border-color: var(--wrong); }
+
+  .question-header {
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, #1f1508, #2a1d0a);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  .q-num {
+    background: var(--accent);
+    color: var(--gold2);
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .q-text {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--cream);
+    font-weight: 400;
+  }
+
+  .options-list {
+    padding: 1rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .option-btn {
+    background: #1a1005;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 0.6rem 1rem;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.88rem;
+    color: var(--text);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .option-btn:hover:not(:disabled) {
+    background: var(--highlight);
+    border-color: var(--gold);
+    color: var(--cream);
+  }
+
+  .option-btn:disabled { cursor: default; }
+
+  .option-btn.correct-ans {
+    background: rgba(46,204,113,0.15);
+    border-color: var(--correct);
+    color: #a8ffcc;
+  }
+
+  .option-btn.wrong-ans {
+    background: rgba(231,76,60,0.15);
+    border-color: var(--wrong);
+    color: #ffb0a8;
+  }
+
+  .option-letter {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--gold2);
+    font-size: 0.75rem;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .correct-ans .option-letter { background: var(--correct); color: #fff; }
+  .wrong-ans .option-letter { background: var(--wrong); color: #fff; }
+
+  .explanation {
+    padding: 0.8rem 1.5rem;
+    background: rgba(212,168,67,0.07);
+    border-top: 1px solid var(--border);
+    font-size: 0.83rem;
+    color: var(--muted);
+    line-height: 1.6;
+    display: none;
+  }
+
+  .explanation.visible { display: block; }
+  .explanation strong { color: var(--gold2); }
+
+  /* Result bar */
+  #result-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(135deg, #0d0800, #1a1005);
+    border-top: 2px solid var(--gold);
+    padding: 0.8rem 1.5rem;
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 200;
+  }
+
+  #result-bar.visible { display: flex; }
+
+  .result-text { font-family: 'Playfair Display', serif; color: var(--cream); font-size: 1rem; }
+  .result-score { font-size: 1.5rem; font-weight: 900; color: var(--gold); }
+
+  .reset-btn {
+    background: var(--accent);
+    border: 1px solid var(--gold);
+    color: var(--gold2);
+    padding: 0.5rem 1.2rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    transition: all 0.2s;
+  }
+
+  .reset-btn:hover { background: var(--gold); color: #000; }
+
+  /* War events table */
+  .war-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.82rem;
+    margin-bottom: 1rem;
+  }
+
+  .war-table th {
+    background: var(--red);
+    color: #fff;
+    padding: 0.5rem 0.8rem;
+    text-align: left;
+    font-family: 'Playfair Display', serif;
+  }
+
+  .war-table td {
+    padding: 0.5rem 0.8rem;
+    border-bottom: 1px solid rgba(107,76,30,0.4);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  .war-table tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+  .war-table .date-cell { color: var(--gold2); font-weight: 600; white-space: nowrap; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-subtitle">Klasa II — Historia Polski</div>
+  <h1>Walka o granice &amp; <span>Wojna polsko-radziecka</span></h1>
+  <div class="chapters-badge">
+    <span>Rozdział 24</span>
+    <span>Rozdział 25</span>
+    <span>Lata 1918–1923</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" onclick="switchTab('teoria')">
+    <span class="tab-icon">📖</span>Teoria
+  </button>
+  <button class="tab-btn" onclick="switchTab('quiz')">
+    <span class="tab-icon">✏️</span>Ćwiczenia / Quiz
+  </button>
+</nav>
+
+<!-- ======================== TEORIA ======================== -->
+<div id="panel-teoria" class="panel active">
+
+  <!-- ROZDZIAŁ 24 -->
+  <div class="chapter">
+    <div class="chapter-header">
+      <div class="chapter-num">24</div>
+      <div>
+        <div class="chapter-title">Walka o granice</div>
+        <div style="font-size:0.78rem;color:#c9a060;margin-top:0.2rem">Ukraina · Wielkopolska · Górny Śląsk · Zaolzie · 1918–1921</div>
+      </div>
+    </div>
+    <div class="chapter-body">
+
+      <!-- Timeline -->
+      <div class="timeline">
+        <div class="tl-item">
+          <span class="tl-year">1917</span>
+          <div class="tl-event">Powstanie Komitetu Narodowego Polskiego</div>
+        </div>
+        <div class="tl-item">
+          <span class="tl-year">1918</span>
+          <div class="tl-event">Pokój brzeski; walki polsko-ukraińskie o Lwów; wybuch powstania wielkopolskiego (XII)</div>
+        </div>
+        <div class="tl-item">
+          <span class="tl-year">1919</span>
+          <div class="tl-event">Zajęcie Zaolzia przez wojska czeskie; traktat wersalski (VI); I powstanie śląskie (VIII)</div>
+        </div>
+        <div class="tl-item">
+          <span class="tl-year">1920</span>
+          <div class="tl-event">II powstanie śląskie (VIII)</div>
+        </div>
+        <div class="tl-item">
+          <span class="tl-year">1921</span>
+          <div class="tl-event">III powstanie śląskie (V); podział Górnego Śląska</div>
+        </div>
+      </div>
+
+      <!-- Dwie koncepcje -->
+      <div class="section">
+        <div class="section-title">Dwie koncepcje granic</div>
+        <div class="concepts-grid">
+          <div class="concept-card">
+            <h4>1. Koncepcja federacyjna (Piłsudski)</h4>
+            <p>Blok państw na wschodzie tworzący federację z Polską (Litwa, Białoruś, Ukraina). Miał osłabić Rosję i umocnić pozycję Polski w Europie.</p>
+          </div>
+          <div class="concept-card">
+            <h4>2. Koncepcja inkorporacyjna (Dmowski)</h4>
+            <p>Państwo narodowe — tylko ziemie zamieszkane przez zwarte skupiska Polaków. Białorusini i Ukraińcy na ziemiach polskich mieli zostać poddani polonizacji.</p>
+          </div>
+        </div>
+        <p>Obie koncepcje kolidowały z planami sąsiadów. Niemcy chcieli odzyskać utracone ziemie, Rosjanie dążyli do zniszczenia państw narodowych, Litwini i Ukraińcy chcieli Wilna i Lwowa.</p>
+      </div>
+
+      <!-- Orlęta Lwowskie -->
+      <div class="section">
+        <div class="section-title">Orlęta Lwowskie — walki o Lwów (1918)</div>
+        <p>1 listopada 1918 r. oddziały ukraińskie liczące 2,5 tys. żołnierzy niespodziewanie opanowały główne punkty Lwowa. Polacy chwycili za broń — do walki stanęło kilkuset żołnierzy wspartych przez ochotników. Byli wśród nich <strong class="key-term">Orlęta Lwowskie</strong> — uczniowie polskich szkół (najmłodszy miał dziewięć lat). Krwawe starcia trwały trzy tygodnie. Polacy opanowali miasto po nadejściu odsieczy.</p>
+        <p>W walkach o Lwów zginęło ok. 200 Orląt. Polacy uznali poległych za bohaterów. Dla Ukraińców byli wrogami pragnącymi odebrać część ich ojczyzny — ta różnica ocen dzieli narody do dziś.</p>
+      </div>
+
+      <!-- Polska w traktacie wersalskim -->
+      <div class="section">
+        <div class="section-title">Polska w traktacie wersalskim i Powstanie Wielkopolskie</div>
+        <p>26 grudnia 1918 r. przyjechał do Poznania Ignacy Paderewski. Gdy Niemcy zaczęli zrywać polskie flagi, w Poznaniu wybuchło <strong class="key-term">powstanie wielkopolskie</strong>. Powstańcy szybko opanowali znaczne obszary Wielkopolski. W lutym 1919 r. zawarto rozejm.</p>
+        <p>Polacy wysłali na paryską konferencję pokojową <strong>Romana Dmowskiego</strong> i <strong>Ignacego Paderewskiego</strong>. Postanowienia <strong class="key-term">traktatu wersalskiego</strong> (VI 1919):</p>
+        <div class="summary-box">
+          <h3>Postanowienia traktatu wersalskiego</h3>
+          <ul>
+            <li>Polska otrzymała <strong>większość Wielkopolski</strong> (opanowaną przez powstańców)</li>
+            <li>Uzyskała <strong>Pomorze Gdańskie</strong> bez Gdańska — ogłoszonego wolnym miastem</li>
+            <li>O przyszłości <strong>Górnego Śląska, Warmii i Mazur</strong> miały rozstrzygnąć plebiscyty</li>
+            <li>Granica wschodnia Polski <strong>nie została ustalona</strong> — toczyły się tam walki</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Trzy powstania śląskie -->
+      <div class="section">
+        <div class="section-title">Trzy powstania śląskie</div>
+        <p>Górny Śląsk był jednym z najbardziej uprzemysłowionych regionów Europy. Fabryki należały do Niemców, robotnikami byli głównie Ślązacy, którzy mówili po polsku i pragnęli żyć w Polsce. Niemcy uważali za zdrajcę każdego, kto chciał przyłączyć Górny Śląsk do Polski.</p>
+        <table class="uprising-table">
+          <tr>
+            <th>Powstanie</th>
+            <th>Data</th>
+            <th>Skutki</th>
+          </tr>
+          <tr>
+            <td><strong>I powstanie śląskie</strong></td>
+            <td>sierpień 1919</td>
+            <td>Stłumione przez Niemców po kilku dniach; alianci przysłali wojska aliantów na Górny Śląsk dla utrzymania porządku</td>
+          </tr>
+          <tr>
+            <td><strong>II powstanie śląskie</strong></td>
+            <td>sierpień 1920</td>
+            <td>Przegrana Polaków po tygodniu, lecz przyniosło większą ochronę ze strony aliantów</td>
+          </tr>
+          <tr>
+            <td><strong>Plebiscyt</strong></td>
+            <td>marzec 1921</td>
+            <td>707 tys. głosów za Niemcami, 479 tys. za Polską. Niemcy mogli głosować nawet jeśli nie mieszkali na Śląsku</td>
+          </tr>
+          <tr>
+            <td><strong>III powstanie śląskie</strong></td>
+            <td>2/3 maja – koniec czerwca 1921</td>
+            <td>Dyktatorem: Wojciech Korfanty; zakończone rozdzieleniem walczących przez aliantów</td>
+          </tr>
+          <tr>
+            <td><strong>Podział Górnego Śląska</strong></td>
+            <td>jesień 1921</td>
+            <td>Polska uzyskała mniejszą część obszaru, ale z większością górnośląskiego przemysłu (kopalnie, stalownie). Niemcy — tereny rolnicze</td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Zaolzie, Warmia, Mazury -->
+      <div class="section">
+        <div class="section-title">Zaolzie, Warmia i Mazury</div>
+        <p>W styczniu 1919 r. Czechosłowacja zajęła <strong class="key-term">Zaolzie</strong> (część Śląska Cieszyńskiego za rzeką Olzą). Polska, zajęta konfliktem na Ukrainie, musiała zgodzić się na rozejm. Rada Ambasadorów przyznała Zaolzie Czechosłowacji (lipiec 1920).</p>
+        <p>W lipcu 1920 r. odbył się <strong>plebiscyt na Warmii i Mazurach</strong>. Niemcy przekonywali uczestników o „sezonowym" charakterze państwa polskiego. Za przynależnością do Polski opowiedziało się jedynie ok. 3,3% głosujących.</p>
+      </div>
+
+      <div class="summary-box">
+        <h3>📌 To, co najważniejsze — Rozdział 24</h3>
+        <ul>
+          <li><strong>Koncepcja federacyjna Piłsudskiego:</strong> blok państw na wschodzie tworzący federację z Polską</li>
+          <li><strong>Koncepcja inkorporacyjna Dmowskiego:</strong> państwo narodowe; Białorusini i Ukraińcy poddani polonizacji</li>
+          <li><strong>Walki o Lwów (XI 1918):</strong> zajęcie przez Ukraińców → walki → Orlęta Lwowskie → polskie zwycięstwo</li>
+          <li><strong>Powstanie wielkopolskie (XII 1918 – II 1919):</strong> wybuchło w Poznaniu; powstańcy opanowali znaczne obszary; rozejm w II 1919</li>
+          <li><strong>Traktat wersalski (VI 1919):</strong> Polska uzyskała Wielkopolskę i Pomorze Gdańskie bez Gdańska (wolne miasto)</li>
+          <li><strong>Górny Śląsk:</strong> trzy powstania (1919, 1920, 1921); plebiscyt (1921) — 707 tys. za Niemcami, 479 tys. za Polską; podział 1921 — Polska dostała mniejszą część, ale z przemysłem</li>
+          <li><strong>Zaolzie (I 1919):</strong> zajęte przez Czechosłowację; Rada Ambasadorów przyznała je Czechosłowacji (VII 1920)</li>
+          <li><strong>Warmia i Mazury:</strong> w plebiscycie (VII 1920) tylko ok. 3,3% głosów za Polską</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROZDZIAŁ 25 -->
+  <div class="chapter">
+    <div class="chapter-header" style="background: linear-gradient(135deg, #6b1010, #3d0808);">
+      <div class="chapter-num" style="color:#ff9999">25</div>
+      <div>
+        <div class="chapter-title">Wojna polsko-radziecka</div>
+        <div style="font-size:0.78rem;color:#e09090;margin-top:0.2rem">1919–1921 · Bitwa Warszawska · Cud nad Wisłą</div>
+      </div>
+    </div>
+    <div class="chapter-body">
+
+      <!-- Timeline -->
+      <div class="timeline">
+        <div class="tl-item">
+          <span class="tl-year" style="color:#e07070">1919</span>
+          <div class="tl-event">Początek walk polsko-radzieckich; Polska ofensywa na Ukrainie</div>
+        </div>
+        <div class="tl-item">
+          <span class="tl-year" style="color:#e07070">1920</span>
+          <div class="tl-event">V — zajęcie Kijowa; VIII — Bitwa Warszawska (13–16 VIII); IX — bitwa nad Niemnem; X — zajęcie Wileńszczyzny przez gen. Żeligowskiego</div>
+        </div>
+        <div class="tl-item">
+          <span class="tl-year" style="color:#e07070">1921</span>
+          <div class="tl-event">III — pokój ryski</div>
+        </div>
+        <div class="tl-item">
+          <span class="tl-year" style="color:#e07070">1922</span>
+          <div class="tl-event">Przyłączenie Wileńszczyzny do Polski</div>
+        </div>
+        <div class="tl-item">
+          <span class="tl-year" style="color:#e07070">1923</span>
+          <div class="tl-event">Zatwierdzenie wschodniej granicy Polski przez Radę Ambasadorów</div>
+        </div>
+      </div>
+
+      <!-- Początek wojny -->
+      <div class="section">
+        <div class="section-title">Początek wojny</div>
+        <p>W listopadzie 1918 r. Polacy opanowali Lwów, lecz walki polsko-ukraińskie nadal toczyły się w Galicji Wschodniej. W <strong>maju 1919 r.</strong> Józef Piłsudski poprowadził <strong class="key-term">ofensywę na Ukrainie</strong>. Do lipca Polacy wyparli wojska ukraińskie z Galicji Wschodniej.</p>
+        <p>W 1919 r. bolszewicy zapowiadali, że ich celem jest wywołanie „wszechświatowej rewolucji komunistycznej". Armia Czerwona dążyła do Niemiec przez Polskę. W 1919 r. Armia Czerwona zdobyła Mińsk i Wilno. W lutym 1919 r. doszło do pierwszych starć z Armią Czerwoną. Polacy zdobyli Wilno (IV) i Mińsk (VIII).</p>
+        <p>Jesienią 1919 r. Piłsudski wstrzymał polską ofensywę — za groźniejszą dla Polski uważał „białą" Rosję. Pozwoliło to bolszewikom rozgromić armię „białych".</p>
+      </div>
+
+      <!-- Wyprawa kijowska -->
+      <div class="section">
+        <div class="section-title">Wyprawa kijowska (1920)</div>
+        <p>Zgodnie z koncepcją federacyjną Piłsudski chciał, by Ukraina stała się częścią federacji z Polską. W <strong>kwietniu 1920 r.</strong> zawarł sojusz z dowódcą wojsk ukraińskich, <strong>Symonem Petlurą</strong>. Polska uznała niepodległość Ukrainy, a ta zrzekła się Galicji Wschodniej.</p>
+        <p>Wkrótce potem 60 tys. żołnierzy polskich i oddziały Petlury ruszyły w ofensywę. W <strong>początku maja 1920 r.</strong> polskie wojska zajęły <strong class="key-term">Kijów</strong> — pierwszy polski patrol wjechał do miasta tramwajem.</p>
+      </div>
+
+      <!-- Ofensywa Armii Czerwonej -->
+      <div class="section">
+        <div class="section-title">Ofensywa Armii Czerwonej i zagrożenie Warszawy</div>
+        <p>Radziecka ofensywa na północy ruszyła w połowie maja 1920 r. W czerwcu 1920 r. radziecka konna armia zaatakowała Polaków na Ukrainie. Wojska polskie musiały opuścić Kijów. W lipcu 1920 r. padły Wilno, Grodno oraz Białystok. W Białymstoku komuniści założyli komitet rewolucyjny i zapowiedzieli utworzenie polskiej republiki rad — jednym z twórców komitetu był <strong>Feliks Dzierżyński</strong>.</p>
+        <p>1 lipca 1920 r. politycy utworzyli <strong class="key-term">Radę Obrony Państwa</strong>, kierowaną przez Piłsudskiego. Ogłoszono apel „Ojczyzna w niebezpieczeństwie!" — stawiło się ponad 100 tys. ochotników, wśród nich uczniowie gimnazjów.</p>
+      </div>
+
+      <!-- Bitwa Warszawska -->
+      <div class="section">
+        <div class="section-title">Bitwa Warszawska — „Cud nad Wisłą"</div>
+        <p>W pierwszej połowie sierpnia 1920 r. Armia Czerwona dotarła pod Warszawę. <strong>6 sierpnia</strong> Piłsudski zdecydował się na atak z południa, znad rzeki Wieprz. Przygotowania do polskiej kontrofensywy trwały ponad tydzień.</p>
+        <p><strong class="key-term">Bitwa Warszawska</strong> trwała od <strong>13 do 16 sierpnia 1920 r.</strong> Rankiem 16 sierpnia ruszyła polska kontrofensywa: pięć dywizji z nad Wieprza wbiło się w lukę między wojskami bolszewików. Następnego dnia Rosjanie zarządzili odwrót, który szybko przerodził się w bezładną ucieczkę.</p>
+        <p>Zwycięstwo zostało nazwane <strong class="key-term">Cudem nad Wisłą</strong>. Bitwę Warszawską uważa się za 18. decydującą bitwę w dziejach świata — powstrzymała „czerwony marsz" bolszewików na zachód i uniemożliwiła połączenie sił Armii Czerwonej z Niemcami.</p>
+      </div>
+
+      <!-- Tabela chronologia -->
+      <div class="section">
+        <div class="section-title">Chronologia — Wojna polsko-radziecka 1919–1923</div>
+        <table class="war-table">
+          <tr><th>Data</th><th>Wydarzenie</th></tr>
+          <tr><td class="date-cell">Luty 1919</td><td>Pierwsze starcia wojsk polskich z Armią Czerwoną</td></tr>
+          <tr><td class="date-cell">Maj–lipiec 1919</td><td>Polska ofensywa na Ukrainie; wyparcie wojsk ukraińskich z Galicji Wschodniej</td></tr>
+          <tr><td class="date-cell">Kwiecień 1920</td><td>Sojusz Piłsudski–Petlura; Polska uznaje niepodległość Ukrainy i oddaje Galicję Wschodnią; początek wyprawy kijowskiej</td></tr>
+          <tr><td class="date-cell">Maj 1920</td><td>Zajęcie Kijowa przez Polaków; początek marszu Armii Czerwonej na Warszawę</td></tr>
+          <tr><td class="date-cell">Czerwiec 1920</td><td>Odwrót wojsk polskich z Ukrainy</td></tr>
+          <tr><td class="date-cell">Lipiec 1920</td><td>Powołanie Rady Obrony Państwa; upadek Wilna, Grodna i Białegostoku; komitet rewolucyjny w Białymstoku</td></tr>
+          <tr><td class="date-cell">13–16 VIII 1920</td><td>Bitwa Warszawska — obrona stolicy; 16 VIII polska kontrofensywa znad Wieprza → odwrót i ucieczka Armii Czerwonej</td></tr>
+          <tr><td class="date-cell">Wrzesień 1920</td><td>Zwycięstwo Polaków nad Armią Czerwoną w bitwie nad Niemnem</td></tr>
+          <tr><td class="date-cell">Październik 1920</td><td>„Bunt" gen. Żeligowskiego — zajęcie Wileńszczyzny i utworzenie Litwy Środkowej</td></tr>
+          <tr><td class="date-cell">Marzec 1921</td><td>Pokój ryski: granica dzieliła Białoruś i Ukrainę na część polską i radziecką; Rosja miała zwrócić dobra kulturalne zabrane od 1772 r.; upadek koncepcji federacyjnej</td></tr>
+          <tr><td class="date-cell">1922</td><td>Decyzja sejmu Litwy Środkowej o połączeniu z Polską</td></tr>
+          <tr><td class="date-cell">1923</td><td>Uznanie wschodniej granicy Polski przez Radę Ambasadorów</td></tr>
+        </table>
+      </div>
+
+      <div class="summary-box" style="border-left-color: var(--red);">
+        <h3>📌 To, co najważniejsze — Rozdział 25</h3>
+        <ul>
+          <li><strong>Początek konfliktu:</strong> polsko-ukraińskie walki w Galicji + bolszewicka Rosja dążąca do rewolucji przez Polskę</li>
+          <li><strong>Wyprawa kijowska (IV–V 1920):</strong> sojusz z Petlurą; zajęcie Kijowa w maju 1920 r.</li>
+          <li><strong>Ofensywa sowiecka:</strong> cofnięcie Polaków, Armia Czerwona pod Warszawą (VIII 1920)</li>
+          <li><strong>Rada Obrony Państwa (1 VII 1920):</strong> zjednoczenie polityczne + 100 tys. ochotników</li>
+          <li><strong>Bitwa Warszawska (13–16 VIII 1920):</strong> polska kontrofensywa znad Wieprza → rozbicie Armii Czerwonej → „Cud nad Wisłą"</li>
+          <li><strong>Pokój ryski (III 1921):</strong> granica wschodnia; upadek koncepcji federacyjnej Piłsudskiego</li>
+          <li><strong>Wileńszczyzna:</strong> zajęta przez gen. Żeligowskiego (X 1920) → Litwa Środkowa → przyłączenie do Polski (1922); uznana przez Radę Ambasadorów (1923)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+</div>
+<!-- ======================== QUIZ ======================== -->
+<div id="panel-quiz" class="panel">
+
+  <div class="quiz-intro">
+    <h2>✏️ Test wiedzy</h2>
+    <p>Odpowiedz na pytania z rozdziałów 24 i 25. Po kliknięciu opcji zobaczysz wyjaśnienie.</p>
+    <div class="quiz-stats">
+      <div class="stat"><strong id="answered-count">0</strong>Odpowiedziano</div>
+      <div class="stat"><strong id="correct-count">0</strong>Poprawnych</div>
+      <div class="stat"><strong id="total-count">20</strong>Wszystkich</div>
+    </div>
+  </div>
+
+  <div class="questions-list" id="questions-container"></div>
+  <div style="height:80px"></div>
+</div>
+
+<div id="result-bar">
+  <div>
+    <div class="result-text">Wynik końcowy</div>
+    <div class="result-score"><span id="final-score">0</span> / <span id="final-total">20</span></div>
+  </div>
+  <div class="result-text" id="result-comment" style="text-align:center;font-size:0.9rem;color:var(--gold)"></div>
+  <button class="reset-btn" onclick="resetQuiz()">↺ Zacznij od nowa</button>
+</div>
+
+<script>
+const questions = [
+  {
+    q: "Kto był twórcą koncepcji federacyjnej granic Polski?",
+    opts: ["Roman Dmowski", "Józef Piłsudski", "Ignacy Paderewski", "Wojciech Korfanty"],
+    ans: 1,
+    exp: "Józef Piłsudski pragnął stworzyć blok państw na wschodzie (Litwa, Białoruś, Ukraina) tworzących federację z Polską, co miało osłabić Rosję."
+  },
+  {
+    q: "Na czym polegała koncepcja inkorporacyjna Romana Dmowskiego?",
+    opts: ["Stworzenie federacji z Ukrainą i Litwą", "Włączenie do Polski tylko ziem z polską większością i polonizacja mniejszości", "Powrót do granic z 1772 r.", "Oddanie kresów Rosji"],
+    ans: 1,
+    exp: "Dmowski chciał państwa narodowego. Białorusini i Ukraińcy mieszkający na ziemiach polskich mieli zostać poddani polonizacji."
+  },
+  {
+    q: "Kim były Orlęta Lwowskie?",
+    opts: ["Oddział kawaleryjski Piłsudskiego", "Uczniowie polskich szkół walczący o Lwów w 1918 r.", "Austriaccy żołnierze broniący Lwowa", "Harcerze z Krakowa"],
+    ans: 1,
+    exp: "Orlęta Lwowskie to uczniowie polskich szkół, którzy stanęli do walki o Lwów w listopadzie 1918 r. Najmłodszy miał zaledwie 9 lat."
+  },
+  {
+    q: "Kiedy wybuchło powstanie wielkopolskie?",
+    opts: ["Sierpień 1919", "Grudzień 1918", "Listopad 1918", "Marzec 1921"],
+    ans: 1,
+    exp: "Powstanie wybuchło 27 grudnia 1918 r. w Poznaniu po przyjeździe Ignacego Paderewskiego, gdy Niemcy zaczęli zrywać polskie flagi."
+  },
+  {
+    q: "Jakie postanowienie traktatu wersalskiego dotyczyło Gdańska?",
+    opts: ["Gdańsk przypadł Polsce w całości", "Gdańsk przyznano Niemcom", "Gdańsk ogłoszono wolnym miastem — nie należącym do żadnego państwa", "Gdańsk przypadł Czechosłowacji"],
+    ans: 2,
+    exp: "Polska uzyskała Pomorze Gdańskie, ale bez samego Gdańska, który ogłoszono Wolnym Miastem — formalnie pod nadzorem Ligi Narodów."
+  },
+  {
+    q: "Jakie były wyniki plebiscytu na Górnym Śląsku w 1921 r.?",
+    opts: ["707 tys. za Polską, 479 tys. za Niemcami", "707 tys. za Niemcami, 479 tys. za Polską", "Wyniki były równe — 600 tys. : 600 tys.", "Plebiscyt wygrała Polska"],
+    ans: 1,
+    exp: "W marcu 1921 r. 707 tys. głosów oddano za przynależnością do Niemiec, a 479 tys. za Polską. Niemcy mogli głosować nawet nieresydenci (urodzeń na Śląsku)."
+  },
+  {
+    q: "Kto był dyktatorem III powstania śląskiego?",
+    opts: ["Józef Piłsudski", "Roman Dmowski", "Wojciech Korfanty", "Ignacy Paderewski"],
+    ans: 2,
+    exp: "Wojciech Korfanty był dyktatorem III powstania śląskiego (2/3 maja – koniec czerwca 1921 r.). Po podziale Śląska Polska dostała mniejszą część terytorialnie, ale z większością przemysłu."
+  },
+  {
+    q: "Dlaczego Polska przegrała plebiscyt na Warmii i Mazurach?",
+    opts: ["Polska zbojkotowała plebiscyt", "Niemcy przekonywali mieszkańców, że Polska zaraz upadnie; za Polską opowiedziało się tylko ~3,3%", "Polska nie miała prawa brać udziału w plebiscycie", "Wygrała Litwa"],
+    ans: 1,
+    exp: "Niemcy przekonywali uczestników o „sezonowym" charakterze państwa polskiego (zbliżała się Armia Czerwona). Za przynależnością do Polski opowiedziało się ok. 3,3% głosujących."
+  },
+  {
+    q: "Kiedy Wojska czeskie zajęły Zaolzie?",
+    opts: ["Grudzień 1918", "Styczeń 1919", "Lipiec 1920", "Marzec 1921"],
+    ans: 1,
+    exp: "Czechosłowacja zajęła Zaolzie w styczniu 1919 r., gdy Polska była zajęta walkami na Ukrainie. Rada Ambasadorów przyznała Zaolzie Czechosłowacji w lipcu 1920 r."
+  },
+  {
+    q: "W jakim celu Piłsudski wstrzymał polską ofensywę jesienią 1919 r.?",
+    opts: ["Chciał zawrzeć pokój z bolszewikami", "Uważał \"białą\" Rosję za groźniejszego wroga i nie chciał jej osłabiać", "Armia polska była zbyt słaba", "Na rozkaz Ligi Narodów"],
+    ans: 1,
+    exp: "Piłsudski za groźniejszą dla Polski uważał dawną „białą" Rosję, dlatego nie chciał dopuścić do jej odrodzenia. Wstrzymał ofensywę, co pozwoliło bolszewikom rozgromić armię „białych"."
+  },
+  {
+    q: "Z kim Piłsudski zawarł sojusz w kwietniu 1920 r.?",
+    opts: ["Z Leninem", "Z Symonem Petlurą — dowódcą wojsk ukraińskich", "Z gen. Denikinem", "Z rządem litewskim"],
+    ans: 1,
+    exp: "W kwietniu 1920 r. Piłsudski zawarł sojusz z Symonem Petlurą. Polska uznała niepodległość Ukrainy, a ta zrzekła się Galicji Wschodniej. Razem ruszyli na Kijów."
+  },
+  {
+    q: "Kiedy Polacy zajęli Kijów?",
+    opts: ["Kwiecień 1919", "Maj 1920", "Lipiec 1920", "Marzec 1921"],
+    ans: 1,
+    exp: "Na początku maja 1920 r. polscy żołnierze zajęli Kijów. Nie napotkali oporu Armii Czerwonej — pierwszy polski patrol wjechał do miasta tramwajem."
+  },
+  {
+    q: "Kto był jednym z twórców komitetu rewolucyjnego w Białymstoku w 1920 r.?",
+    opts: ["Leon Trocki", "Feliks Dzierżyński", "Michaił Tuchaczewski", "Grigorij Zinowiew"],
+    ans: 1,
+    exp: "Feliks Dzierżyński — zrusyfikowany Polak i organizator czerwonego terroru — był jednym z twórców Białostockiego Komitetu Rewolucyjnego."
+  },
+  {
+    q: "Kiedy powołano Radę Obrony Państwa?",
+    opts: ["13 sierpnia 1920 r.", "1 lipca 1920 r.", "6 sierpnia 1920 r.", "Marzec 1921 r."],
+    ans: 1,
+    exp: "1 lipca 1920 r. politycy różnych partii utworzyli Radę Obrony Państwa kierowaną przez Piłsudskiego w obliczu zagrożenia ze strony Armii Czerwonej."
+  },
+  {
+    q: "Kiedy dokładnie trwała Bitwa Warszawska?",
+    opts: ["1–7 sierpnia 1920 r.", "13–16 sierpnia 1920 r.", "16–20 sierpnia 1920 r.", "6–13 sierpnia 1920 r."],
+    ans: 1,
+    exp: "Bitwa Warszawska trwała od 13 do 16 sierpnia 1920 r. 16 sierpnia ruszyła polska kontrofensywa znad Wieprza, która rozgromiła Armię Czerwoną."
+  },
+  {
+    q: "Dlaczego Bitwę Warszawską nazywa się \"Cudem nad Wisłą\"?",
+    opts: ["Polacy walczyli bez broni", "Zwycięstwo było nieoczekiwane i uratowało Europę przed rewolucją komunistyczną", "Nad Wisłą pojawiło się religijne zjawisko", "Rzeka Wisła zmieniła bieg i uratowała Polskę"],
+    ans: 1,
+    exp: "Bitwę Warszawską uważa się za 18. decydującą bitwę w dziejach świata. Powstrzymała „czerwony marsz" bolszewików na zachód i uniemożliwiła połączenie Armii Czerwonej z Niemcami."
+  },
+  {
+    q: "Co postanowił pokój ryski (marzec 1921)?",
+    opts: ["Polska odzyska Kijów i Lwów", "Granica wschodnia dzieliła Białoruś i Ukrainę; Rosja miała oddać dobra kulturalne; koniec koncepcji federacyjnej", "Polska wchodzi do sojuszu z ZSRR", "Rosja uznała granicę z 1772 r."],
+    ans: 1,
+    exp: "Pokój ryski ustalił wschodnią granicę Polski, dzieląc Białoruś i Ukrainę na część polską i radziecką. Rosja miała zwrócić dobra kulturalne zabrane od 1772 r. Był to upadek koncepcji federacyjnej Piłsudskiego."
+  },
+  {
+    q: "W jaki sposób Polska przyłączyła Wileńszczyznę?",
+    opts: ["Na mocy traktatu wersalskiego", "Gen. Żeligowski przeprowadził „bunt" i zajął Wilno (X 1920) → Litwa Środkowa → przyłączenie do Polski (1922)", "W wyniku referendum ludności", "Litwa dobrowolnie oddała Wilno"],
+    ans: 1,
+    exp: "W październiku 1920 r. gen. Żeligowski zorganizował pozorny „bunt" i zajął Wileńszczyznę, tworząc Litwę Środkową. W 1922 r. jej sejm głosował za połączeniem z Polską."
+  },
+  {
+    q: "Które z poniższych zdań opisuje wynik podziału Górnego Śląska po III powstaniu?",
+    opts: ["Polska dostała większą część terytorialną z przemysłem", "Polska dostała mniejszą część terenu, ale z większością górnośląskiego przemysłu", "Cały Śląsk przypadł Niemcom", "Śląsk stał się wolnym miastem jak Gdańsk"],
+    ans: 1,
+    exp: "Polska uzyskała mniejszą część obszaru plebiscytowego, lecz właśnie tam koncentrowała się większość górnośląskiego przemysłu (kopalnie, stalownie, wielkie piece). Niemcy uzyskali obszary rolnicze."
+  },
+  {
+    q: "Kiedy Rada Ambasadorów zatwierdziła wschodnią granicę Polski?",
+    opts: ["1921 r.", "1922 r.", "1923 r.", "1926 r."],
+    ans: 2,
+    exp: "Decyzja Rady Ambasadorów z 1923 r. zamknęła proces kształtowania się polskich granic (1918–1923). Zakończyła też proces przyłączania Wileńszczyzny do Polski."
+  }
+];
+
+let answeredCount = 0;
+let correctCount = 0;
+let answered = new Array(questions.length).fill(false);
+
+function buildQuiz() {
+  const container = document.getElementById('questions-container');
+  container.innerHTML = '';
+  document.getElementById('total-count').textContent = questions.length;
+  document.getElementById('final-total').textContent = questions.length;
+
+  questions.forEach((q, qi) => {
+    const letters = ['A','B','C','D'];
+    const card = document.createElement('div');
+    card.className = 'question-card';
+    card.id = `q-${qi}`;
+
+    const header = document.createElement('div');
+    header.className = 'question-header';
+    header.innerHTML = `<div class="q-num">${qi+1}</div><div class="q-text">${q.q}</div>`;
+
+    const options = document.createElement('div');
+    options.className = 'options-list';
+    q.opts.forEach((opt, oi) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.id = `btn-${qi}-${oi}`;
+      btn.innerHTML = `<span class="option-letter">${letters[oi]}</span>${opt}`;
+      btn.onclick = () => selectAnswer(qi, oi);
+      options.appendChild(btn);
+    });
+
+    const exp = document.createElement('div');
+    exp.className = 'explanation';
+    exp.id = `exp-${qi}`;
+    exp.innerHTML = `<strong>Wyjaśnienie:</strong> ${q.exp}`;
+
+    card.appendChild(header);
+    card.appendChild(options);
+    card.appendChild(exp);
+    container.appendChild(card);
+  });
+}
+
+function selectAnswer(qi, oi) {
+  if (answered[qi]) return;
+  answered[qi] = true;
+  answeredCount++;
+
+  const q = questions[qi];
+  const isCorrect = (oi === q.ans);
+  if (isCorrect) correctCount++;
+
+  // Style options
+  q.opts.forEach((_, i) => {
+    const btn = document.getElementById(`btn-${qi}-${i}`);
+    btn.disabled = true;
+    if (i === q.ans) btn.classList.add('correct-ans');
+    else if (i === oi && !isCorrect) btn.classList.add('wrong-ans');
+  });
+
+  // Show explanation
+  document.getElementById(`exp-${qi}`).classList.add('visible');
+
+  // Mark card
+  const card = document.getElementById(`q-${qi}`);
+  card.classList.add(isCorrect ? 'correct' : 'wrong');
+
+  // Update stats
+  document.getElementById('answered-count').textContent = answeredCount;
+  document.getElementById('correct-count').textContent = correctCount;
+
+  // Show result bar when all answered
+  if (answeredCount === questions.length) {
+    const bar = document.getElementById('result-bar');
+    bar.classList.add('visible');
+    document.getElementById('final-score').textContent = correctCount;
+    const pct = Math.round(correctCount / questions.length * 100);
+    let comment = pct >= 90 ? '🏆 Doskonały wynik!' : pct >= 70 ? '👍 Bardzo dobrze!' : pct >= 50 ? '📚 Powtórz materiał' : '❗ Koniecznie powtórz notatki';
+    document.getElementById('result-comment').textContent = `${pct}% — ${comment}`;
+  }
+}
+
+function resetQuiz() {
+  answeredCount = 0; correctCount = 0;
+  answered = new Array(questions.length).fill(false);
+  document.getElementById('answered-count').textContent = 0;
+  document.getElementById('correct-count').textContent = 0;
+  document.getElementById('result-bar').classList.remove('visible');
+  buildQuiz();
+  window.scrollTo({top: document.getElementById('panel-quiz').offsetTop - 60, behavior: 'smooth'});
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-' + tab).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+buildQuiz();
+</script>
+</body>
+</html>
